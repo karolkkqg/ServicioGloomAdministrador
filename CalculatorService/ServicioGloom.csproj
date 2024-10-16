@@ -45,10 +45,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ServiceImplementation.cs" />
-    <Compile Include="ICalculatorService.cs" />
-    <Compile Include="IUsersManager.cs" />
+    <Compile Include="ImplementacionServicio.cs" />
+    <Compile Include="IServicioAdministrador.cs" />
+    <Compile Include="IJugador.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AccesoDatos\AccesoDatos.csproj">
+      <Project>{E9275BE6-8502-4B31-955F-300DA6C47708}</Project>
+      <Name>AccesoDatos</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BlbibliotecaClases\BlbibliotecaClases.csproj">
+      <Project>{CF1EF776-68A3-4CBB-85D7-5F7B28959F11}</Project>
+      <Name>BlbibliotecaClases</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -13,7 +13,7 @@ namespace Pruebas
         [ClassInitialize]
         public static void InitializeClass(TestContext context)
         {
-            serviceHost = new ServiceHost(typeof(CalculatorService.ServiceImplementation));
+            serviceHost = new ServiceHost(typeof(CalculatorService.ImplementacionServicio));
             serviceHost.Open();
         }
 
