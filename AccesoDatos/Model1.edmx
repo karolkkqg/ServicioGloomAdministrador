@@ -1,0 +1,517 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="ModeloGloom.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Amigos">
+          <Key>
+            <PropertyRef Name="NombreUsuario" />
+          </Key>
+          <Property Name="NombreUsuario" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="JugadorAmigo" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Estado" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="CartaEvento">
+          <Key>
+            <PropertyRef Name="IdCarta" />
+          </Key>
+          <Property Name="IdCarta" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="estado" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="robarCarta" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="IdjugadorARobar" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="retirar" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CartaFamiliar">
+          <Key>
+            <PropertyRef Name="IdCarta" />
+          </Key>
+          <Property Name="IdCarta" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="estado" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="nombre" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="familia" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="descripcion" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="vida" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Jugador">
+          <Key>
+            <PropertyRef Name="NombreUsuario" />
+          </Key>
+          <Property Name="NombreUsuario" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Nombre" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Apellidos" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Correo" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Contraseña" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Tipo" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Icono" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'Gloom.dbo.Mensaje' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <EntityType Name="Mensaje">
+          <Key>
+            <PropertyRef Name="JugadorEmisor" />
+            <PropertyRef Name="JugadorReceptor" />
+            <PropertyRef Name="Contenido" />
+            <PropertyRef Name="Estado" />
+          </Key>
+          <Property Name="JugadorEmisor" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="JugadorReceptor" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Contenido" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Estado" Type="nchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Modificador">
+          <Key>
+            <PropertyRef Name="IdCarta" />
+          </Key>
+          <Property Name="IdCarta" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="estado" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="valor" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Muerte">
+          <Key>
+            <PropertyRef Name="IdCarta" />
+          </Key>
+          <Property Name="IdCarta" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="estado" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'Gloom.dbo.Participantes' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <EntityType Name="Participantes">
+          <Key>
+            <PropertyRef Name="IdPartida" />
+            <PropertyRef Name="NombreUsuario" />
+          </Key>
+          <Property Name="IdPartida" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="NombreUsuario" Type="nvarchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Partida">
+          <Key>
+            <PropertyRef Name="IdPartida" />
+          </Key>
+          <Property Name="IdPartida" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Ganador" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Fecha" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="IdAdministrador" Type="nvarchar" MaxLength="255" />
+          <Property Name="Tipo" Type="nvarchar" MaxLength="255" />
+          <Property Name="IdSala" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Sala">
+          <Key>
+            <PropertyRef Name="IdSala" />
+          </Key>
+          <Property Name="IdSala" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Nombre" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="TipoSala" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="TipoPartida" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="NoJugadores" Type="binary" MaxLength="50" />
+          <Property Name="Contraseña" Type="nchar" MaxLength="10" />
+        </EntityType>
+        <Association Name="FK_Amigos_Jugador">
+          <End Role="Jugador" Type="Self.Jugador" Multiplicity="1" />
+          <End Role="Amigos" Type="Self.Amigos" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Jugador">
+              <PropertyRef Name="NombreUsuario" />
+            </Principal>
+            <Dependent Role="Amigos">
+              <PropertyRef Name="NombreUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Mensaje_Jugador">
+          <End Role="Jugador" Type="Self.Jugador" Multiplicity="1" />
+          <End Role="Mensaje" Type="Self.Mensaje" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Jugador">
+              <PropertyRef Name="NombreUsuario" />
+            </Principal>
+            <Dependent Role="Mensaje">
+              <PropertyRef Name="JugadorEmisor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Participantes_Jugador">
+          <End Role="Jugador" Type="Self.Jugador" Multiplicity="1" />
+          <End Role="Participantes" Type="Self.Participantes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Jugador">
+              <PropertyRef Name="NombreUsuario" />
+            </Principal>
+            <Dependent Role="Participantes">
+              <PropertyRef Name="NombreUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Participantes_Partida">
+          <End Role="Partida" Type="Self.Partida" Multiplicity="1" />
+          <End Role="Participantes" Type="Self.Participantes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Partida">
+              <PropertyRef Name="IdPartida" />
+            </Principal>
+            <Dependent Role="Participantes">
+              <PropertyRef Name="IdPartida" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Partida_Sala">
+          <End Role="Sala" Type="Self.Sala" Multiplicity="0..1" />
+          <End Role="Partida" Type="Self.Partida" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sala">
+              <PropertyRef Name="IdSala" />
+            </Principal>
+            <Dependent Role="Partida">
+              <PropertyRef Name="IdSala" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ModeloGloomStoreContainer">
+          <EntitySet Name="Amigos" EntityType="Self.Amigos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CartaEvento" EntityType="Self.CartaEvento" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CartaFamiliar" EntityType="Self.CartaFamiliar" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Jugador" EntityType="Self.Jugador" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Modificador" EntityType="Self.Modificador" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Muerte" EntityType="Self.Muerte" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Partida" EntityType="Self.Partida" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Sala" EntityType="Self.Sala" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Mensaje" EntityType="Self.Mensaje" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Mensaje].[JugadorEmisor] AS [JugadorEmisor], 
+    [Mensaje].[JugadorReceptor] AS [JugadorReceptor], 
+    [Mensaje].[Contenido] AS [Contenido], 
+    [Mensaje].[Estado] AS [Estado]
+    FROM [dbo].[Mensaje] AS [Mensaje]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="Participantes" EntityType="Self.Participantes" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Participantes].[IdPartida] AS [IdPartida], 
+    [Participantes].[NombreUsuario] AS [NombreUsuario]
+    FROM [dbo].[Participantes] AS [Participantes]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_Amigos_Jugador" Association="Self.FK_Amigos_Jugador">
+            <End Role="Jugador" EntitySet="Jugador" />
+            <End Role="Amigos" EntitySet="Amigos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Mensaje_Jugador" Association="Self.FK_Mensaje_Jugador">
+            <End Role="Jugador" EntitySet="Jugador" />
+            <End Role="Mensaje" EntitySet="Mensaje" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Participantes_Jugador" Association="Self.FK_Participantes_Jugador">
+            <End Role="Jugador" EntitySet="Jugador" />
+            <End Role="Participantes" EntitySet="Participantes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Participantes_Partida" Association="Self.FK_Participantes_Partida">
+            <End Role="Partida" EntitySet="Partida" />
+            <End Role="Participantes" EntitySet="Participantes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Partida_Sala" Association="Self.FK_Partida_Sala">
+            <End Role="Sala" EntitySet="Sala" />
+            <End Role="Partida" EntitySet="Partida" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ModeloGloom" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Amigos">
+          <Key>
+            <PropertyRef Name="NombreUsuario" />
+          </Key>
+          <Property Name="NombreUsuario" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="JugadorAmigo" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Estado" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Jugador" Relationship="Self.FK_Amigos_Jugador" FromRole="Amigos" ToRole="Jugador" />
+        </EntityType>
+        <EntityType Name="CartaEvento">
+          <Key>
+            <PropertyRef Name="IdCarta" />
+          </Key>
+          <Property Name="IdCarta" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="estado" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="robarCarta" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IdjugadorARobar" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="retirar" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CartaFamiliar">
+          <Key>
+            <PropertyRef Name="IdCarta" />
+          </Key>
+          <Property Name="IdCarta" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="estado" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="familia" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="descripcion" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="vida" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Jugador">
+          <Key>
+            <PropertyRef Name="NombreUsuario" />
+          </Key>
+          <Property Name="NombreUsuario" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Apellidos" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Correo" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Contraseña" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Tipo" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Icono" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Amigos" Relationship="Self.FK_Amigos_Jugador" FromRole="Jugador" ToRole="Amigos" />
+          <NavigationProperty Name="Mensaje" Relationship="Self.FK_Mensaje_Jugador" FromRole="Jugador" ToRole="Mensaje" />
+          <NavigationProperty Name="Partida" Relationship="Self.Participantes" FromRole="Jugador" ToRole="Partida" />
+        </EntityType>
+        <EntityType Name="Modificador">
+          <Key>
+            <PropertyRef Name="IdCarta" />
+          </Key>
+          <Property Name="IdCarta" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="estado" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="valor" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Muerte">
+          <Key>
+            <PropertyRef Name="IdCarta" />
+          </Key>
+          <Property Name="IdCarta" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="estado" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Partida">
+          <Key>
+            <PropertyRef Name="IdPartida" />
+          </Key>
+          <Property Name="IdPartida" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Ganador" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Fecha" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IdAdministrador" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Tipo" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="IdSala" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Sala" Relationship="Self.FK_Partida_Sala" FromRole="Partida" ToRole="Sala" />
+          <NavigationProperty Name="Jugador" Relationship="Self.Participantes" FromRole="Partida" ToRole="Jugador" />
+        </EntityType>
+        <EntityType Name="Sala">
+          <Key>
+            <PropertyRef Name="IdSala" />
+          </Key>
+          <Property Name="IdSala" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="TipoSala" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="TipoPartida" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="NoJugadores" Type="Binary" MaxLength="50" FixedLength="true" />
+          <Property Name="Contraseña" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Partida" Relationship="Self.FK_Partida_Sala" FromRole="Sala" ToRole="Partida" />
+        </EntityType>
+        <EntityType Name="Mensaje">
+          <Key>
+            <PropertyRef Name="JugadorEmisor" />
+            <PropertyRef Name="JugadorReceptor" />
+            <PropertyRef Name="Contenido" />
+            <PropertyRef Name="Estado" />
+          </Key>
+          <Property Name="JugadorEmisor" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="JugadorReceptor" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Contenido" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Estado" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Jugador" Relationship="Self.FK_Mensaje_Jugador" FromRole="Mensaje" ToRole="Jugador" />
+        </EntityType>
+        <Association Name="FK_Amigos_Jugador">
+          <End Role="Jugador" Type="Self.Jugador" Multiplicity="1" />
+          <End Role="Amigos" Type="Self.Amigos" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Jugador">
+              <PropertyRef Name="NombreUsuario" />
+            </Principal>
+            <Dependent Role="Amigos">
+              <PropertyRef Name="NombreUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Mensaje_Jugador">
+          <End Role="Jugador" Type="Self.Jugador" Multiplicity="1" />
+          <End Role="Mensaje" Type="Self.Mensaje" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Jugador">
+              <PropertyRef Name="NombreUsuario" />
+            </Principal>
+            <Dependent Role="Mensaje">
+              <PropertyRef Name="JugadorEmisor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Partida_Sala">
+          <End Role="Sala" Type="Self.Sala" Multiplicity="0..1" />
+          <End Role="Partida" Type="Self.Partida" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sala">
+              <PropertyRef Name="IdSala" />
+            </Principal>
+            <Dependent Role="Partida">
+              <PropertyRef Name="IdSala" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Participantes">
+          <End Role="Jugador" Type="Self.Jugador" Multiplicity="*" />
+          <End Role="Partida" Type="Self.Partida" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="EntidadesGloom" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Amigos" EntityType="Self.Amigos" />
+          <EntitySet Name="CartaEvento" EntityType="Self.CartaEvento" />
+          <EntitySet Name="CartaFamiliar" EntityType="Self.CartaFamiliar" />
+          <EntitySet Name="Jugador" EntityType="Self.Jugador" />
+          <EntitySet Name="Modificador" EntityType="Self.Modificador" />
+          <EntitySet Name="Muerte" EntityType="Self.Muerte" />
+          <EntitySet Name="Partida" EntityType="Self.Partida" />
+          <EntitySet Name="Sala" EntityType="Self.Sala" />
+          <EntitySet Name="Mensaje" EntityType="Self.Mensaje" />
+          <AssociationSet Name="FK_Amigos_Jugador" Association="Self.FK_Amigos_Jugador">
+            <End Role="Jugador" EntitySet="Jugador" />
+            <End Role="Amigos" EntitySet="Amigos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Mensaje_Jugador" Association="Self.FK_Mensaje_Jugador">
+            <End Role="Jugador" EntitySet="Jugador" />
+            <End Role="Mensaje" EntitySet="Mensaje" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Partida_Sala" Association="Self.FK_Partida_Sala">
+            <End Role="Sala" EntitySet="Sala" />
+            <End Role="Partida" EntitySet="Partida" />
+          </AssociationSet>
+          <AssociationSet Name="Participantes" Association="Self.Participantes">
+            <End Role="Jugador" EntitySet="Jugador" />
+            <End Role="Partida" EntitySet="Partida" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ModeloGloomStoreContainer" CdmEntityContainer="EntidadesGloom">
+          <EntitySetMapping Name="Amigos">
+            <EntityTypeMapping TypeName="ModeloGloom.Amigos">
+              <MappingFragment StoreEntitySet="Amigos">
+                <ScalarProperty Name="NombreUsuario" ColumnName="NombreUsuario" />
+                <ScalarProperty Name="JugadorAmigo" ColumnName="JugadorAmigo" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CartaEvento">
+            <EntityTypeMapping TypeName="ModeloGloom.CartaEvento">
+              <MappingFragment StoreEntitySet="CartaEvento">
+                <ScalarProperty Name="IdCarta" ColumnName="IdCarta" />
+                <ScalarProperty Name="estado" ColumnName="estado" />
+                <ScalarProperty Name="robarCarta" ColumnName="robarCarta" />
+                <ScalarProperty Name="IdjugadorARobar" ColumnName="IdjugadorARobar" />
+                <ScalarProperty Name="retirar" ColumnName="retirar" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CartaFamiliar">
+            <EntityTypeMapping TypeName="ModeloGloom.CartaFamiliar">
+              <MappingFragment StoreEntitySet="CartaFamiliar">
+                <ScalarProperty Name="IdCarta" ColumnName="IdCarta" />
+                <ScalarProperty Name="estado" ColumnName="estado" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="familia" ColumnName="familia" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="vida" ColumnName="vida" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Jugador">
+            <EntityTypeMapping TypeName="ModeloGloom.Jugador">
+              <MappingFragment StoreEntitySet="Jugador">
+                <ScalarProperty Name="NombreUsuario" ColumnName="NombreUsuario" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Apellidos" ColumnName="Apellidos" />
+                <ScalarProperty Name="Correo" ColumnName="Correo" />
+                <ScalarProperty Name="Contraseña" ColumnName="Contraseña" />
+                <ScalarProperty Name="Tipo" ColumnName="Tipo" />
+                <ScalarProperty Name="Icono" ColumnName="Icono" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Modificador">
+            <EntityTypeMapping TypeName="ModeloGloom.Modificador">
+              <MappingFragment StoreEntitySet="Modificador">
+                <ScalarProperty Name="IdCarta" ColumnName="IdCarta" />
+                <ScalarProperty Name="estado" ColumnName="estado" />
+                <ScalarProperty Name="valor" ColumnName="valor" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Muerte">
+            <EntityTypeMapping TypeName="ModeloGloom.Muerte">
+              <MappingFragment StoreEntitySet="Muerte">
+                <ScalarProperty Name="IdCarta" ColumnName="IdCarta" />
+                <ScalarProperty Name="estado" ColumnName="estado" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Partida">
+            <EntityTypeMapping TypeName="ModeloGloom.Partida">
+              <MappingFragment StoreEntitySet="Partida">
+                <ScalarProperty Name="IdPartida" ColumnName="IdPartida" />
+                <ScalarProperty Name="Ganador" ColumnName="Ganador" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="IdAdministrador" ColumnName="IdAdministrador" />
+                <ScalarProperty Name="Tipo" ColumnName="Tipo" />
+                <ScalarProperty Name="IdSala" ColumnName="IdSala" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sala">
+            <EntityTypeMapping TypeName="ModeloGloom.Sala">
+              <MappingFragment StoreEntitySet="Sala">
+                <ScalarProperty Name="IdSala" ColumnName="IdSala" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="TipoSala" ColumnName="TipoSala" />
+                <ScalarProperty Name="TipoPartida" ColumnName="TipoPartida" />
+                <ScalarProperty Name="NoJugadores" ColumnName="NoJugadores" />
+                <ScalarProperty Name="Contraseña" ColumnName="Contraseña" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Mensaje">
+            <EntityTypeMapping TypeName="ModeloGloom.Mensaje">
+              <MappingFragment StoreEntitySet="Mensaje">
+                <ScalarProperty Name="JugadorEmisor" ColumnName="JugadorEmisor" />
+                <ScalarProperty Name="JugadorReceptor" ColumnName="JugadorReceptor" />
+                <ScalarProperty Name="Contenido" ColumnName="Contenido" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="Participantes" TypeName="ModeloGloom.Participantes" StoreEntitySet="Participantes">
+            <EndProperty Name="Jugador">
+              <ScalarProperty Name="NombreUsuario" ColumnName="NombreUsuario" />
+            </EndProperty>
+            <EndProperty Name="Partida">
+              <ScalarProperty Name="IdPartida" ColumnName="IdPartida" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

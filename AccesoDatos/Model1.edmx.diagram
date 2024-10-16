@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="26126e178c28453499870d02e7bddcbc" Name="Diagram1">
+        <EntityTypeShape EntityType="ModeloGloom.Amigos" Width="1.5" PointX="3" PointY="4.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="ModeloGloom.CartaEvento" Width="1.5" PointX="5.75" PointY="2.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ModeloGloom.CartaFamiliar" Width="1.5" PointX="2.75" PointY="7.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ModeloGloom.Jugador" Width="1.5" PointX="0.75" PointY="5.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ModeloGloom.Modificador" Width="1.5" PointX="7.75" PointY="2.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ModeloGloom.Muerte" Width="1.5" PointX="5.75" PointY="9.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ModeloGloom.Partida" Width="1.5" PointX="6" PointY="5.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="ModeloGloom.Sala" Width="1.5" PointX="3.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ModeloGloom.Mensaje" Width="1.5" PointX="3" PointY="10.5" IsExpanded="true" />
+        <AssociationConnector Association="ModeloGloom.FK_Amigos_Jugador" ManuallyRouted="false" />
+        <AssociationConnector Association="ModeloGloom.FK_Mensaje_Jugador" ManuallyRouted="false" />
+        <AssociationConnector Association="ModeloGloom.FK_Partida_Sala" ManuallyRouted="false" />
+        <AssociationConnector Association="ModeloGloom.Participantes" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
