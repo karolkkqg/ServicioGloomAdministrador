@@ -5,18 +5,12 @@ using System.Runtime.InteropServices;
 // La información general de un ensamblado se controla mediante el siguiente 
 // conjunto de atributos. Cambie estos valores de atributo para modificar la información
 // asociada con un ensamblado.
-[assembly: AssemblyTitle("AccesoDatos")]
+[assembly: AssemblyTitle("BlbibliotecaClases")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-<<<<<<< HEAD
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("AccesoDatos")]
-[assembly: AssemblyCopyright("Copyright ©  2024")]
-=======
 [assembly: AssemblyCompany("HP")]
-[assembly: AssemblyProduct("AccesoDatos")]
+[assembly: AssemblyProduct("BlbibliotecaClases")]
 [assembly: AssemblyCopyright("Copyright © HP 2024")]
->>>>>>> 5ec2b89aaf7ac2c7b34fdc2df023a6a58a73bacb
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -26,11 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // El siguiente GUID sirve como id. de typelib si este proyecto se expone a COM.
-<<<<<<< HEAD
-[assembly: Guid("efd17502-57b5-427e-8e7d-72cdff3c59b8")]
-=======
-[assembly: Guid("e9275be6-8502-4b31-955f-300da6c47708")]
->>>>>>> 5ec2b89aaf7ac2c7b34fdc2df023a6a58a73bacb
+[assembly: Guid("cf1ef776-68a3-4cbb-85d7-5f7b28959f11")]
 
 // La información de versión de un ensamblado consta de los cuatro valores siguientes:
 //

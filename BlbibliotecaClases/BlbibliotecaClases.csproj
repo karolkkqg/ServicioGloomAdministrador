@@ -4,16 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{911AD607-5F20-4F27-A48E-9BD80C28B440}</ProjectGuid>
+    <ProjectGuid>{CF1EF776-68A3-4CBB-85D7-5F7B28959F11}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CalculatorService</RootNamespace>
-    <AssemblyName>CalculatorService</AssemblyName>
+    <RootNamespace>BlbibliotecaClases</RootNamespace>
+    <AssemblyName>BlbibliotecaClases</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
-    <WcfConfigValidationEnabled>True</WcfConfigValidationEnabled>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -45,20 +43,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ImplementacionServicio.cs" />
-    <Compile Include="IServicioAdministrador.cs" />
-    <Compile Include="IJugador.cs" />
+    <Compile Include="Jugador.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\AccesoDatos\AccesoDatos.csproj">
-      <Project>{E9275BE6-8502-4B31-955F-300DA6C47708}</Project>
-      <Name>AccesoDatos</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BlbibliotecaClases\BlbibliotecaClases.csproj">
-      <Project>{CF1EF776-68A3-4CBB-85D7-5F7B28959F11}</Project>
-      <Name>BlbibliotecaClases</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
