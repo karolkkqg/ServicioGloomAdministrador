@@ -96,5 +96,17 @@ namespace AccesoDatos
                 }
             }
         }
+        public static Jugador ValidarJugadorParaAutenticacion(Jugador jugador)
+        {
+            using (var contexto = new EntidadesGloom())
+            {
+                var jugadorEncontrado = contexto.Jugador.FirstOrDefault(j => j.Correo == jugador.Correo && j.Contraseña == jugador.Contraseña);
+                if (jugadorEncontrado == null)
+                {
+                    throw new ManejadorExcepciones(TipoErrorJugador.DatosInvalidos, "El jugador no fue encontrado, verifique su correo o contraseña.");
+                }
+                return jugadorEncontrado;
+            }
+        }
     }
 }

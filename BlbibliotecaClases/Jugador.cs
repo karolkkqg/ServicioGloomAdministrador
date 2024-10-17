@@ -45,6 +45,7 @@ namespace BlbibliotecaClases
             if (instancia == null)
             {
                 instancia = new Jugador();
+                instancia.nombreUsuario = "UsuarioIncial0000";
             }
             return instancia;
         }

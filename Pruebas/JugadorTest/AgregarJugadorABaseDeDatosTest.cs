@@ -103,9 +103,7 @@ namespace ServicioGloom.Tests
             {
                 AccesoBaseDeDatos.AgregarJugadorABaseDeDatos(jugadorConNombreRepetido);
             });
-
             Assert.AreEqual("Este nombre de usuario ya está registrado en el sistema.", exception.Message);
-
             LimpiarDatosDePrueba();
         }
 
@@ -114,12 +112,12 @@ namespace ServicioGloom.Tests
         {
             using (var contexto = new EntidadesGloom())
             {
-                var jugadores = contexto.Jugador.ToList(); // Obtener todos los jugadores para eliminarlos.
+                var jugadores = contexto.Jugador.ToList();
                 foreach (var jugador in jugadores)
                 {
                     contexto.Jugador.Remove(jugador);
                 }
-                contexto.SaveChanges(); // Guardar cambios para eliminar los jugadores.
+                contexto.SaveChanges();
             }
         }
     }

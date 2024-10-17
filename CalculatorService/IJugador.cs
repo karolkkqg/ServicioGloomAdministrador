@@ -15,6 +15,9 @@ namespace ServicioAdministrador
         [OperationContract(IsOneWay = true)]
         void ActualizarJugador(Jugador jugador);
 
+        [OperationContract(IsOneWay = true)]
+        void AutenticarJugador(Jugador jugador);
+
         //[OperationContract(IsOneWay = true)]
         //void SendMessage(string message);
     }
