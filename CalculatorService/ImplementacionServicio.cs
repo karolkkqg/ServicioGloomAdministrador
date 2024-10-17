@@ -88,7 +88,7 @@ namespace ServicioGloom
         private Jugador CrearJugadorValidoParaInicio(string correo, string contrasena)
         {
             Jugador jugador = new Jugador();
-
+            //Jugador jugador = Jugador.GetInstancia();
             //jugador.LimpiarSesion();
             jugador.Correo = correo;
             jugador.Contraseña = contrasena;

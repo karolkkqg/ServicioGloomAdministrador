@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -40,6 +41,7 @@ namespace BlbibliotecaClases
             icono = "default_icon.png";
         }
 
+        [OperationContract]
         public static Jugador GetInstancia()
         {
             if (instancia == null)
@@ -50,6 +52,7 @@ namespace BlbibliotecaClases
             return instancia;
         }
 
+        [OperationContract]
         public void LimpiarSesion()
         {
             nombreUsuario = "AC00000";
