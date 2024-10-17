@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 using System.ServiceModel;
 using System.Threading;
 
-namespace CalculatorService
+namespace ServicioGloom
 {
     // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "CalculatorService" in both code and config file together.
     [ServiceBehavior(ConcurrencyMode= ConcurrencyMode.Reentrant)]
@@ -18,16 +18,17 @@ namespace CalculatorService
             {
                 var nuevoJugador = new Jugador
                 {
-                    nombreUsuario = jugador.nombreUsuario,
-                    nombre = jugador.nombre,
-                    apellidos = jugador.apellidos,
-                    correo = jugador.correo,
-                    contraseña = jugador.contraseña,
-                    tipo = jugador.tipo,
+                    NombreUsuario = jugador.NombreUsuario,
+                    Nombre = jugador.Nombre,
+                    Apellidos = jugador.Apellidos,
+                    Correo = jugador.Correo,
+                    Contraseña = jugador.Contraseña,
+                    Tipo = jugador.Tipo,
+                    Icono= jugador.Icono,
                 };
 
                 AccesoBaseDeDatos.AgregarJugadorABaseDeDatos(nuevoJugador);
-                String mensaje = "Jugador agregado " + jugador.nombreUsuario;
+                String mensaje = "Jugador agregado " + jugador.NombreUsuario;
                 OperationContext.Current.GetCallbackChannel<IJugadorCallback>().RespuestaJugador(mensaje);
 
 
@@ -45,16 +46,17 @@ namespace CalculatorService
             {
                 var nuevoJugador = new Jugador
                 {
-                    nombreUsuario = jugador.nombreUsuario,
-                    nombre = jugador.nombre,
-                    apellidos = jugador.apellidos,
-                    correo = jugador.correo,
-                    contraseña = jugador.contraseña,
-                    tipo = jugador.tipo,
+                    NombreUsuario = jugador.NombreUsuario,
+                    Nombre = jugador.Nombre,
+                    Apellidos = jugador.Apellidos,
+                    Correo = jugador.Correo,
+                    Contraseña = jugador.Contraseña,
+                    Tipo = jugador.Tipo,
+                    Icono = jugador.Icono,
                 };
 
                 AccesoBaseDeDatos.ActualizarJugadorABaseDeDatos(nuevoJugador);
-                String mensaje = "Jugador actualizado " + jugador.nombreUsuario;
+                String mensaje = "Jugador actualizado " + jugador.NombreUsuario;
                 OperationContext.Current.GetCallbackChannel<IJugadorCallback>().RespuestaJugador(mensaje);
 
 
@@ -74,6 +76,8 @@ namespace CalculatorService
         {
             throw new NotImplementedException();
         }
+
+        private void
     }
 
 }

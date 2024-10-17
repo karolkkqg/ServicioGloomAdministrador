@@ -15,11 +15,13 @@ namespace AccesoDatos
         {
             return new Jugador
             {
-                nombreUsuario = jugador.nombreUsuario,
-                nombre = jugador.nombre,
-                apellidos = jugador.apellidos,
-                correo = jugador.correo,
-                tipo = jugador.tipo,
+                NombreUsuario = jugador.NombreUsuario,
+                Nombre = jugador.Nombre,
+                Apellidos = jugador.Apellidos,
+                Correo = jugador.Correo,
+                Contraseña = jugador.Contraseña,
+                Tipo = jugador.Tipo,
+                Icono = jugador.Icono,
             };
         }
         public static void AgregarJugadorABaseDeDatos(Jugador jugador)
