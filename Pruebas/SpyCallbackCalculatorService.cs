@@ -1,9 +1,10 @@
-﻿using CalculatorService;
+﻿
 using System.Collections.Generic;
 
 namespace Pruebas
-{
-    internal class SpyCallbackCalculatorService : ICalculatorServiceCallback
+    
+{/*
+    internal class SpyCallbackCalculatorService : IAdministradorServiceCallback
     {
         private readonly List<int> results;
 
@@ -22,4 +23,5 @@ namespace Pruebas
             get { return this.results; }
         }
     }
+    */
 }

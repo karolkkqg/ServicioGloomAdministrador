@@ -1,10 +1,10 @@
-﻿/*using BlbibliotecaClases;
+﻿using BlbibliotecaClases;
 using System;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 
 
-namespace ServicioGloom
+namespace ServicioGloomm
 {
     [ServiceContract(CallbackContract = typeof(IJugadorCallback))]
     public interface IJugador
@@ -33,4 +33,3 @@ namespace ServicioGloom
         void RespuestaJugador(string response);
     }
 }
-*/
