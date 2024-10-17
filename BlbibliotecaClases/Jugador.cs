@@ -11,6 +11,8 @@ namespace BlbibliotecaClases
 
     public class Jugador
     {
+        private static Jugador instancia;
+
         [DataMember]
         public String nombreUsuario { get; set; }
         [DataMember]
@@ -25,5 +27,39 @@ namespace BlbibliotecaClases
         public String tipo { get; set; }
         [DataMember]
         public String icono { get; set; }
+
+
+        private Jugador()
+        {
+            nombreUsuario = "Usuario0000";
+            nombre = "UsuarioSinNombre";
+            apellidos = "UsuarioSinApellidos";
+            correo = "correo@delUsuario";
+            contraseña = "si@ScoNtrasa4";
+            tipo = "Invitado";
+            icono = "default_icon.png";
+        }
+
+        public static Jugador GetInstancia()
+        {
+            if (instancia == null)
+            {
+                instancia = new Jugador();
+            }
+            return instancia;
+        }
+
+        public void LimpiarSesion()
+        {
+            nombreUsuario = "AC00000";
+            nombre = "Anonimo";
+            apellidos = "SinApellidos";
+            correo = "anonimo@uv.mx";
+            contraseña = "si@ScoNtrasa4";
+            tipo = "sin_usuario";
+            icono = "default_icon.png";
+        }
+
     }
+
 }
