@@ -63,5 +63,9 @@ namespace AccesoDatos
             string mensaje = ObtenerMensajeError(sqlEx.Number);
             return new ManejadorExcepciones(tipoError, mensaje, sqlEx);
         }
+        public static ManejadorExcepciones PropagarExpcecion(ManejadorExcepciones ex)
+        {
+            return new ManejadorExcepciones(TipoErrorJugador.DatosInvalidos, ex.Message);
+        }
     }
 }

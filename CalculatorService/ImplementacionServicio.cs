@@ -2,16 +2,16 @@
 using ServicioAdministrador;
 using System;
 using System.Data.SqlClient;
+using System.Linq;
 using System.ServiceModel;
 using System.Threading;
 
 namespace ServicioGloom
 {
     // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "CalculatorService" in both code and config file together.
-    [ServiceBehavior(ConcurrencyMode= ConcurrencyMode.Reentrant)]
+    [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Reentrant)]
     public partial class ImplementacionServicio : IJugador
     {
-
         public void AgregarJugador(Jugador jugador)
         {
             try
@@ -24,7 +24,7 @@ namespace ServicioGloom
                     Correo = jugador.Correo,
                     Contraseña = jugador.Contraseña,
                     Tipo = jugador.Tipo,
-                    Icono= jugador.Icono,
+                    Icono = jugador.Icono,
                 };
 
                 AccesoBaseDeDatos.AgregarJugadorABaseDeDatos(nuevoJugador);
@@ -77,7 +77,5 @@ namespace ServicioGloom
             throw new NotImplementedException();
         }
 
-        private void
     }
-
 }

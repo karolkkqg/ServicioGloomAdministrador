@@ -42,13 +42,6 @@ namespace ServicioGloom.Tests
             }
             catch (DbEntityValidationException ex)
             {
-                foreach (var validationErrors in ex.EntityValidationErrors)
-                {
-                    foreach (var validationError in validationErrors.ValidationErrors)
-                    {
-                        Console.WriteLine($"Property: {validationError.PropertyName} Error: {validationError.ErrorMessage}");
-                    }
-                }
                 Assert.Fail("Se produjeron errores de validación al insertar el jugador.");
             }
 
@@ -63,12 +56,56 @@ namespace ServicioGloom.Tests
                 Assert.AreEqual("hectJuarPato@gmail.com", jugadorInsertado.Correo, "El correo del jugador no coincide");
                 Assert.AreEqual("Registrado", jugadorInsertado.Tipo, "El tipo de jugador no coincide");
             }
+            LimpiarDatosDePrueba();
+        }
+
+        [TestMethod()]
+        public void TestInsertarJugadorABaseDeDatosFallidoCorreoRepetido()
+        {
+            AccesoBaseDeDatos.AgregarJugadorABaseDeDatos(jugador);
+            var exception = Assert.ThrowsException<ManejadorExcepciones>(() =>
+            {
+                AccesoBaseDeDatos.AgregarJugadorABaseDeDatos(jugador);
+            });
+            Assert.AreEqual("Este correo ya está registrado en el sistema.", exception.Message);
+            LimpiarDatosDePrueba();
         }
 
         [TestMethod()]
         public void TestInsertarJugadorABaseDeDatosFallidoNombreRepetido()
         {
-            Assert.ThrowsException<DbUpdateException>(() => AccesoBaseDeDatos.AgregarJugadorABaseDeDatos(jugador));
+            var jugadorConCorreoUnico = new AccesoDatos.Jugador
+            {
+                NombreUsuario = "Jugador1",
+                Nombre = "Nombre1",
+                Apellidos = "Apellido1",
+                Correo = "correo1@example.com",
+                Contraseña = "Contraseña1",
+                Tipo = "Tipo1",
+                Icono = "Icono1"
+            };
+
+            AccesoBaseDeDatos.AgregarJugadorABaseDeDatos(jugadorConCorreoUnico);
+
+            var jugadorConNombreRepetido = new AccesoDatos.Jugador
+            {
+                NombreUsuario = "Jugador1",
+                Nombre = "Nombre2",
+                Apellidos = "Apellido2",
+                Correo = "correo2@example.com",
+                Contraseña = "Contraseña2",
+                Tipo = "Tipo2",
+                Icono = "Icono2"
+            };
+
+            var exception = Assert.ThrowsException<ManejadorExcepciones>(() =>
+            {
+                AccesoBaseDeDatos.AgregarJugadorABaseDeDatos(jugadorConNombreRepetido);
+            });
+
+            Assert.AreEqual("Este nombre de usuario ya está registrado en el sistema.", exception.Message);
+
+            LimpiarDatosDePrueba();
         }
 
         [ClassCleanup]

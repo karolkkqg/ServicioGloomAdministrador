@@ -24,7 +24,23 @@ namespace AccesoDatos
                 Icono = jugador.Icono,
             };
         }
+
         public static void AgregarJugadorABaseDeDatos(Jugador jugador)
+        {
+            try
+            {
+                ValidarCorreoJugador(jugador);
+                ValidarUsuarioJugador(jugador);
+                EjecutarAgregarJugadorABaseDeDatos(jugador);
+
+            }
+            catch (ManejadorExcepciones ex)
+            {
+                throw ManejadorExcepciones.PropagarExpcecion(ex);
+            }
+        }
+
+        public static void EjecutarAgregarJugadorABaseDeDatos(Jugador jugador)
         {
             try
             {
@@ -55,6 +71,29 @@ namespace AccesoDatos
             catch (SqlException ex)
             {
                 throw ManejadorExcepciones.CrearSqlException(ex);
+            }
+        }
+
+        private static void ValidarCorreoJugador(Jugador jugador)
+        {
+            using (var contexto = new EntidadesGloom())
+            {
+                var jugadorConCorreo = contexto.Jugador.FirstOrDefault(j => j.Correo == jugador.Correo);
+                if (jugadorConCorreo != null)
+                {
+                    throw new ManejadorExcepciones(TipoErrorJugador.DatosInvalidos, "Este correo ya está registrado en el sistema.");
+                }
+            }
+        }
+        private static void ValidarUsuarioJugador(Jugador jugador)
+        {
+            using (var contexto = new EntidadesGloom())
+            {
+                var jugadorConNombreUsuario = contexto.Jugador.FirstOrDefault(j => j.NombreUsuario == jugador.NombreUsuario);
+                if (jugadorConNombreUsuario != null)
+                {
+                    throw new ManejadorExcepciones(TipoErrorJugador.DatosInvalidos, "Este nombre de usuario ya está registrado en el sistema.");
+                }
             }
         }
     }
