@@ -60,6 +60,7 @@
     <Reference Include="System.ServiceModel" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="JugadorTest\ActualizarJugadorABaseDeDatosTest.cs" />
     <Compile Include="JugadorTest\AgregarJugadorABaseDeDatosTest.cs" />
     <Compile Include="SpyCallbackCalculatorService.cs" />
     <Compile Include="UnitTest1.cs" />

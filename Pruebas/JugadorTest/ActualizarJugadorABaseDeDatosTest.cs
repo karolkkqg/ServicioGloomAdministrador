@@ -1,19 +1,16 @@
 ﻿using AccesoDatos;
-using BlbibliotecaClases;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServicioGloom.Tests
+namespace Pruebas.JugadorTest
 {
     [TestClass()]
-    public class AgregarJugadorABaseDeDatosTest
+    public class ActualizarJugadorABaseDeDatosTest
     {
         private AccesoDatos.Jugador jugador;
 
@@ -30,15 +27,25 @@ namespace ServicioGloom.Tests
                 Tipo = "Registrado",
                 Icono = "Icono1",
             };
+            AccesoBaseDeDatos.AgregarJugadorABaseDeDatos(jugador);
         }
 
         [TestMethod()]
-        public void TestInsertarJugadorABaseDeDatosExitoso()
+        public void TestActualizarJugadorABaseDeDatosMismaInformacionExitoso()
         {
-
             try
             {
-                AccesoBaseDeDatos.AgregarJugadorABaseDeDatos(jugador);
+                jugador = new AccesoDatos.Jugador
+                {
+                    NombreUsuario = "TacoDoradoDePato",
+                    Nombre = "Hector",
+                    Apellidos = "Juarez Castillo",
+                    Correo = "hectJuarPato@gmail.com",
+                    Contraseña = "123456",
+                    Tipo = "Registrado",
+                    Icono = "Icono1",
+                };
+                AccesoBaseDeDatos.ActualizarJugadorABaseDeDatos(jugador);
             }
             catch (DbEntityValidationException ex)
             {
@@ -61,51 +68,39 @@ namespace ServicioGloom.Tests
         }
 
         [TestMethod()]
-        public void TestInsertarJugadorABaseDeDatosFallidoCorreoRepetido()
+        public void TestActualizarJugadorABaseDeDatosDiferenteInformacionExitoso()
         {
-            AccesoBaseDeDatos.AgregarJugadorABaseDeDatos(jugador);
-            var exception = Assert.ThrowsException<ManejadorExcepciones>(() =>
+            try
             {
-                AccesoBaseDeDatos.AgregarJugadorABaseDeDatos(jugador);
-            });
-            Assert.AreEqual("Este correo ya está registrado en el sistema.", exception.Message);
-            LimpiarDatosDePrueba();
-        }
-
-        [TestMethod()]
-        public void TestInsertarJugadorABaseDeDatosFallidoNombreRepetido()
-        {
-            var jugadorConCorreoUnico = new AccesoDatos.Jugador
+                jugador = new AccesoDatos.Jugador
+                {
+                    NombreUsuario = "TacoDoradoDePato",
+                    Nombre = "Gloria",
+                    Apellidos = "Trevi",
+                    Correo = "gloriaADIos@hotmail.com",
+                    Contraseña = "123456",
+                    Tipo = "Registrado",
+                    Icono = "Icono3",
+                };
+                AccesoBaseDeDatos.ActualizarJugadorABaseDeDatos(jugador);
+            }
+            catch (DbEntityValidationException ex)
             {
-                NombreUsuario = "Jugador1",
-                Nombre = "Nombre1",
-                Apellidos = "Apellido1",
-                Correo = "correo1@example.com",
-                Contraseña = "Contraseña1",
-                Tipo = "Tipo1",
-                Icono = "Icono1"
-            };
+                Assert.Fail("Se produjeron errores de validación al insertar el jugador.");
+            }
 
-            AccesoBaseDeDatos.AgregarJugadorABaseDeDatos(jugadorConCorreoUnico);
-
-            var jugadorConNombreRepetido = new AccesoDatos.Jugador
+            using (var contexto = new EntidadesGloom())
             {
-                NombreUsuario = "Jugador1",
-                Nombre = "Nombre2",
-                Apellidos = "Apellido2",
-                Correo = "correo2@example.com",
-                Contraseña = "Contraseña2",
-                Tipo = "Tipo2",
-                Icono = "Icono2"
-            };
+                var jugadorInsertado = contexto.Jugador.FirstOrDefault(j => j.NombreUsuario == "TacoDoradoDePato");
 
-            var exception = Assert.ThrowsException<ManejadorExcepciones>(() =>
-            {
-                AccesoBaseDeDatos.AgregarJugadorABaseDeDatos(jugadorConNombreRepetido);
-            });
+                Assert.IsNotNull(jugadorInsertado, "El jugador no fue encontrado en la base de datos");
 
-            Assert.AreEqual("Este nombre de usuario ya está registrado en el sistema.", exception.Message);
-
+                Assert.AreEqual("Gloria", jugadorInsertado.Nombre, "El nombre del jugador no coincide");
+                Assert.AreEqual("Trevi", jugadorInsertado.Apellidos, "Los apellidos del jugador no coinciden");
+                Assert.AreEqual("gloriaADIos@hotmail.com", jugadorInsertado.Correo, "El correo del jugador no coincide");
+                Assert.AreEqual("Registrado", jugadorInsertado.Tipo, "El tipo de jugador no coincide");
+                Assert.AreEqual("Icono3", jugadorInsertado.Icono, "El iconoc del jugador no coincide");
+            }
             LimpiarDatosDePrueba();
         }
 
@@ -124,4 +119,3 @@ namespace ServicioGloom.Tests
         }
     }
 }
-
