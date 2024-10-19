@@ -1,9 +1,11 @@
 ﻿using AccesoDatos;
+using BlbibliotecaClases;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Linq;
+using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -33,15 +35,15 @@ namespace Pruebas.JugadorTest
         [TestMethod()]
         public void TestAuteticarUsuarioExitoso()
         {
-           Jugador jugadorEncontrado = AccesoBaseDeDatos.ValidarJugadorParaAutenticacion(jugador);   
-           Assert.IsNotNull(jugadorEncontrado, "El jugador no fue encontrado en la base de datos");
+           int jugadorEncontrado = AccesoBaseDeDatos.ValidarJugadorParaAutenticacion(jugador);
+            Assert.AreEqual(1, jugadorEncontrado);
             LimpiarDatosDePrueba();
         }
 
         [TestMethod()]
-        public void TestAuteticarUsuarioCorreoNoenonctradoFallido()
+        public void TestAuteticarUsuarioUsuarioNoenonctradoFallido()
         {
-            jugador.NombreUsuario = "TacoDoradoDePato";
+            jugador.NombreUsuario = "TacoDoradoDePapa";
             jugador.Nombre = "Hector";
             jugador.Apellidos = "Juarez Castillo";
             jugador.Contraseña = "123456";
@@ -49,11 +51,12 @@ namespace Pruebas.JugadorTest
             jugador.Icono = "Icono1";
             jugador.Correo = "usuarioNoRegistrado@hotmail.com";
 
-            var exception = Assert.ThrowsException<ManejadorExcepciones>(() =>
+            var exception = Assert.ThrowsException<FaultException<ManejadorExcepciones>>(() =>
             {
                 AccesoBaseDeDatos.ValidarJugadorParaAutenticacion(jugador);
             });
-            Assert.AreEqual("El jugador no fue encontrado, verifique su correo o contraseña.", exception.Message);
+
+            Assert.AreEqual("3", exception.Detail.mensaje);
 
             LimpiarDatosDePrueba();
         }
@@ -69,11 +72,11 @@ namespace Pruebas.JugadorTest
             jugador.Icono = "Icono1";
             jugador.Correo = "hectJuarPato@gmail.com";
 
-            var exception = Assert.ThrowsException<ManejadorExcepciones>(() =>
+            var exception = Assert.ThrowsException<FaultException<ManejadorExcepciones>>(() =>
             {
                 AccesoBaseDeDatos.ValidarJugadorParaAutenticacion(jugador);
             });
-            Assert.AreEqual("El jugador no fue encontrado, verifique su correo o contraseña.", exception.Message);
+            Assert.AreEqual("3", exception.Detail.mensaje);
 
             LimpiarDatosDePrueba();
         }
@@ -83,12 +86,15 @@ namespace Pruebas.JugadorTest
         {
             using (var contexto = new EntidadesGloom())
             {
-                var jugadores = contexto.Jugador.ToList();
-                foreach (var jugador in jugadores)
+                var jugador = contexto.Jugador
+                    .FirstOrDefault(j => j.NombreUsuario == "TacoDoradoDePato");
+
+                if (jugador != null)
                 {
                     contexto.Jugador.Remove(jugador);
+                    contexto.SaveChanges();
                 }
-                contexto.SaveChanges();
+
             }
         }
     }

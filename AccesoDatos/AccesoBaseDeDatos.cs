@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Linq;
+using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,22 +26,22 @@ namespace AccesoDatos
             };
         }
 
-        public static void AgregarJugadorABaseDeDatos(Jugador jugador)
+        public static int AgregarJugadorABaseDeDatos(Jugador jugador)
         {
             try
             {
-                ValidarCorreoJugador(jugador);
-                ValidarUsuarioJugador(jugador);
-                EjecutarAgregarJugadorABaseDeDatos(jugador);
-
+                Jugador jugadrovalidoCorreo = ValidarCorreoJugador(jugador);
+                Jugador jugadorValidoNombre = ValidarUsuarioJugador(jugadrovalidoCorreo);
+                var filasAfectadas = EjecutarAgregarJugadorABaseDeDatos(jugadorValidoNombre);
+                return filasAfectadas;
             }
-            catch (ManejadorExcepciones ex)
+            catch (SqlException ex)
             {
-                throw ManejadorExcepciones.PropagarExpcecion(ex);
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString()));
             }
         }
 
-        public static void EjecutarAgregarJugadorABaseDeDatos(Jugador jugador)
+        public static int EjecutarAgregarJugadorABaseDeDatos(Jugador jugador)
         {
             try
             {
@@ -48,15 +49,16 @@ namespace AccesoDatos
                 {
                     var jugadorEntidad = ConvertirAJugador(jugador);
                     contexto.Jugador.Add(jugadorEntidad);
-                    contexto.SaveChanges();
+                    int filasAfectadas = contexto.SaveChanges();
+                    return filasAfectadas;
                 }
             }
             catch (SqlException ex)
             {
-                throw ManejadorExcepciones.CrearSqlException(ex);
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString()));
             }
         }
-        public static void ActualizarJugadorABaseDeDatos(Jugador jugador)
+        public static int ActualizarJugadorABaseDeDatos(Jugador jugador)
         {
             try
             {
@@ -65,47 +67,50 @@ namespace AccesoDatos
                     var jugadorEntidad = ConvertirAJugador(jugador);
                     contexto.Jugador.Attach(jugadorEntidad);
                     contexto.Entry(jugadorEntidad).State = EntityState.Modified;
-                    contexto.SaveChanges();
+                    int filasAfectadas = contexto.SaveChanges();
+                    return filasAfectadas;
                 }
             }
             catch (SqlException ex)
             {
-                throw ManejadorExcepciones.CrearSqlException(ex);
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString()));
             }
         }
 
-        private static void ValidarCorreoJugador(Jugador jugador)
+        private static Jugador ValidarCorreoJugador(Jugador jugador)
         {
             using (var contexto = new EntidadesGloom())
             {
                 var jugadorConCorreo = contexto.Jugador.FirstOrDefault(j => j.Correo == jugador.Correo);
                 if (jugadorConCorreo != null)
                 {
-                    throw new ManejadorExcepciones(TipoErrorJugador.DatosInvalidos, "Este correo ya está registrado en el sistema.");
+                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("2"));
                 }
+                return jugador;
             }
         }
-        private static void ValidarUsuarioJugador(Jugador jugador)
+        private static Jugador ValidarUsuarioJugador(Jugador jugador)
         {
             using (var contexto = new EntidadesGloom())
             {
                 var jugadorConNombreUsuario = contexto.Jugador.FirstOrDefault(j => j.NombreUsuario == jugador.NombreUsuario);
                 if (jugadorConNombreUsuario != null)
                 {
-                    throw new ManejadorExcepciones(TipoErrorJugador.DatosInvalidos, "Este nombre de usuario ya está registrado en el sistema.");
+                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("1"));
                 }
+                return jugador;
             }
         }
-        public static Jugador ValidarJugadorParaAutenticacion(Jugador jugador)
+        public static int ValidarJugadorParaAutenticacion(Jugador jugador)
         {
             using (var contexto = new EntidadesGloom())
             {
-                var jugadorEncontrado = contexto.Jugador.FirstOrDefault(j => j.Correo == jugador.Correo && j.Contraseña == jugador.Contraseña);
+                var jugadorEncontrado = contexto.Jugador.FirstOrDefault(j => j.NombreUsuario == jugador.NombreUsuario && j.Contraseña == jugador.Contraseña);
                 if (jugadorEncontrado == null)
                 {
-                    throw new ManejadorExcepciones(TipoErrorJugador.DatosInvalidos, "El jugador no fue encontrado, verifique su correo o contraseña.");
+                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("3"));
                 }
-                return jugadorEncontrado;
+                return 1;
             }
         }
     }

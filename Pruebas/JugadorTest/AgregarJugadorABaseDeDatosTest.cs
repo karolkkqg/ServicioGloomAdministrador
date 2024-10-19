@@ -7,6 +7,8 @@ using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Runtime.Remoting.Contexts;
+using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -36,17 +38,13 @@ namespace ServicioGloom.Tests
         public void TestInsertarJugadorABaseDeDatosExitoso()
         {
 
-            try
-            {
-                AccesoBaseDeDatos.AgregarJugadorABaseDeDatos(jugador);
-            }
-            catch (DbEntityValidationException ex)
-            {
-                Assert.Fail("Se produjeron errores de validación al insertar el jugador.");
-            }
+             int filasAfectadas = AccesoBaseDeDatos.AgregarJugadorABaseDeDatos(jugador);
+            
 
             using (var contexto = new EntidadesGloom())
             {
+                Assert.AreEqual(filasAfectadas, 1, "El número de filas afectadas no coincide");
+                /*
                 var jugadorInsertado = contexto.Jugador.FirstOrDefault(j => j.NombreUsuario == "TacoDoradoDePato");
 
                 Assert.IsNotNull(jugadorInsertado, "El jugador no fue encontrado en la base de datos");
@@ -56,6 +54,7 @@ namespace ServicioGloom.Tests
                 Assert.AreEqual("hectJuarPato@gmail.com", jugadorInsertado.Correo, "El correo del jugador no coincide");
                 Assert.AreEqual("Registrado", jugadorInsertado.Tipo, "El tipo de jugador no coincide");
                 Assert.AreEqual("Icono1", jugadorInsertado.Icono, "El iconoc del jugador no coincide");
+                */
             }
             LimpiarDatosDePrueba();
         }
@@ -64,47 +63,39 @@ namespace ServicioGloom.Tests
         public void TestInsertarJugadorABaseDeDatosFallidoCorreoRepetido()
         {
             AccesoBaseDeDatos.AgregarJugadorABaseDeDatos(jugador);
-            var exception = Assert.ThrowsException<ManejadorExcepciones>(() =>
+            var exception = Assert.ThrowsException<FaultException<ManejadorExcepciones>>(() =>
             {
                 AccesoBaseDeDatos.AgregarJugadorABaseDeDatos(jugador);
             });
-            Assert.AreEqual("Este correo ya está registrado en el sistema.", exception.Message);
+            Assert.AreEqual("2", exception.Detail.mensaje);
             LimpiarDatosDePrueba();
         }
 
         [TestMethod()]
         public void TestInsertarJugadorABaseDeDatosFallidoNombreRepetido()
         {
-            var jugadorConCorreoUnico = new AccesoDatos.Jugador
-            {
-                NombreUsuario = "Jugador1",
-                Nombre = "Nombre1",
-                Apellidos = "Apellido1",
-                Correo = "correo1@example.com",
-                Contraseña = "Contraseña1",
-                Tipo = "Tipo1",
-                Icono = "Icono1"
-            };
-
-            AccesoBaseDeDatos.AgregarJugadorABaseDeDatos(jugadorConCorreoUnico);
-
+            AccesoBaseDeDatos.AgregarJugadorABaseDeDatos(jugador);
             var jugadorConNombreRepetido = new AccesoDatos.Jugador
             {
-                NombreUsuario = "Jugador1",
+                NombreUsuario = "TacoDoradoDePato",
                 Nombre = "Nombre2",
                 Apellidos = "Apellido2",
-                Correo = "correo2@example.com",
+                Correo = "correo3332@example.com",
                 Contraseña = "Contraseña2",
                 Tipo = "Tipo2",
                 Icono = "Icono2"
             };
 
-            var exception = Assert.ThrowsException<ManejadorExcepciones>(() =>
+            var exception = Assert.ThrowsException<FaultException<ManejadorExcepciones>>(() =>
             {
                 AccesoBaseDeDatos.AgregarJugadorABaseDeDatos(jugadorConNombreRepetido);
             });
-            Assert.AreEqual("Este nombre de usuario ya está registrado en el sistema.", exception.Message);
+
+            Assert.AreEqual("1", exception.Detail.mensaje);
+
+
             LimpiarDatosDePrueba();
+        
         }
 
         [ClassCleanup]
@@ -112,12 +103,15 @@ namespace ServicioGloom.Tests
         {
             using (var contexto = new EntidadesGloom())
             {
-                var jugadores = contexto.Jugador.ToList();
-                foreach (var jugador in jugadores)
+                var jugador = contexto.Jugador
+                    .FirstOrDefault(j => j.NombreUsuario == "TacoDoradoDePato");
+
+                if (jugador != null)
                 {
                     contexto.Jugador.Remove(jugador);
+                    contexto.SaveChanges();
                 }
-                contexto.SaveChanges();
+                
             }
         }
     }

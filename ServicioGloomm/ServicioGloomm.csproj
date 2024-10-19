@@ -8,8 +8,8 @@
     <ProjectGuid>{82FA4201-60B4-4F4B-9CB4-70FBE0C39F17}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CalculatorService</RootNamespace>
-    <AssemblyName>CalculatorService</AssemblyName>
+    <RootNamespace>ServicioGlomm</RootNamespace>
+    <AssemblyName>ServicioGloomm</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -52,7 +52,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IJugador.cs" />
     <Compile Include="ImplementacionServicio.cs" />

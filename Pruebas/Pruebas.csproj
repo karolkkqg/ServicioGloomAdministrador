@@ -64,7 +64,6 @@
     <Compile Include="JugadorTest\AgregarJugadorABaseDeDatosTest.cs" />
     <Compile Include="JugadorTest\AutenticarJugadorTest.cs" />
     <Compile Include="SpyCallbackCalculatorService.cs" />
-    <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -79,10 +78,6 @@
     <ProjectReference Include="..\BlbibliotecaClases\BlbibliotecaClases.csproj">
       <Project>{CF1EF776-68A3-4CBB-85D7-5F7B28959F11}</Project>
       <Name>BlbibliotecaClases</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CalculatorService\ServicioGloom.csproj">
-      <Project>{911ad607-5f20-4f27-a48e-9bd80c28b440}</Project>
-      <Name>ServicioGloom</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

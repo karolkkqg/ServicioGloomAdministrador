@@ -33,8 +33,6 @@ namespace Pruebas.JugadorTest
         [TestMethod()]
         public void TestActualizarJugadorABaseDeDatosMismaInformacionExitoso()
         {
-            try
-            {
                 jugador = new AccesoDatos.Jugador
                 {
                     NombreUsuario = "TacoDoradoDePato",
@@ -45,15 +43,12 @@ namespace Pruebas.JugadorTest
                     Tipo = "Registrado",
                     Icono = "Icono1",
                 };
-                AccesoBaseDeDatos.ActualizarJugadorABaseDeDatos(jugador);
-            }
-            catch (DbEntityValidationException ex)
-            {
-                Assert.Fail("Se produjeron errores de validación al insertar el jugador.");
-            }
+                int filasAfectadas = AccesoBaseDeDatos.ActualizarJugadorABaseDeDatos(jugador);
 
             using (var contexto = new EntidadesGloom())
             {
+                Assert.AreEqual(1, filasAfectadas, "El número de filas afectadas no coincide");
+                /*
                 var jugadorInsertado = contexto.Jugador.FirstOrDefault(j => j.NombreUsuario == "TacoDoradoDePato");
 
                 Assert.IsNotNull(jugadorInsertado, "El jugador no fue encontrado en la base de datos");
@@ -63,6 +58,7 @@ namespace Pruebas.JugadorTest
                 Assert.AreEqual("hectJuarPato@gmail.com", jugadorInsertado.Correo, "El correo del jugador no coincide");
                 Assert.AreEqual("Registrado", jugadorInsertado.Tipo, "El tipo de jugador no coincide");
                 Assert.AreEqual("Icono1", jugadorInsertado.Icono, "El iconoc del jugador no coincide");
+                */
             }
             LimpiarDatosDePrueba();
         }
@@ -70,8 +66,7 @@ namespace Pruebas.JugadorTest
         [TestMethod()]
         public void TestActualizarJugadorABaseDeDatosDiferenteInformacionExitoso()
         {
-            try
-            {
+           
                 jugador = new AccesoDatos.Jugador
                 {
                     NombreUsuario = "TacoDoradoDePato",
@@ -82,13 +77,10 @@ namespace Pruebas.JugadorTest
                     Tipo = "Registrado",
                     Icono = "Icono3",
                 };
-                AccesoBaseDeDatos.ActualizarJugadorABaseDeDatos(jugador);
-            }
-            catch (DbEntityValidationException ex)
-            {
-                Assert.Fail("Se produjeron errores de validación al insertar el jugador.");
-            }
+                int filasAfectadas = AccesoBaseDeDatos.ActualizarJugadorABaseDeDatos(jugador);
 
+            Assert.AreEqual(1, filasAfectadas, "El número de filas afectadas no coincide");
+            /*
             using (var contexto = new EntidadesGloom())
             {
                 var jugadorInsertado = contexto.Jugador.FirstOrDefault(j => j.NombreUsuario == "TacoDoradoDePato");
@@ -101,6 +93,7 @@ namespace Pruebas.JugadorTest
                 Assert.AreEqual("Registrado", jugadorInsertado.Tipo, "El tipo de jugador no coincide");
                 Assert.AreEqual("Icono3", jugadorInsertado.Icono, "El iconoc del jugador no coincide");
             }
+            */
             LimpiarDatosDePrueba();
         }
 

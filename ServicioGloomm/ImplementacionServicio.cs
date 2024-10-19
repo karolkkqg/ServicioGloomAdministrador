@@ -1,43 +1,17 @@
 ﻿using AccesoDatos;
+using BlbibliotecaClases;
 using System;
 using System.Data.SqlClient;
 using System.ServiceModel;
 
 namespace ServicioGloomm
 {
-    // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "CalculatorService" in both code and config file together.
+   
     [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Reentrant)]
     public partial class ImplementacionServicio : IServicioAdministrador, IJugador
-    {
-        public void AgregarJugador(Jugador jugador)
-        {
-            try
-            {
-                var nuevoJugador = new Jugador
-                {
-                    NombreUsuario = jugador.NombreUsuario,
-                    Nombre = jugador.Nombre,
-                    Apellidos = jugador.Apellidos,
-                    Correo = jugador.Correo,
-                    Contraseña = jugador.Contraseña,
-                    Tipo = jugador.Tipo,
-                    Icono = jugador.Icono,
-                };
+    {  
 
-                AccesoBaseDeDatos.AgregarJugadorABaseDeDatos(nuevoJugador);
-                String mensaje = "Jugador agregado " + jugador.NombreUsuario;
-                OperationContext.Current.GetCallbackChannel<IJugadorCallback>().RespuestaJugador(mensaje);
-
-
-            }
-            catch (SqlException ex)
-            {
-                throw ManejadorExcepciones.CrearSqlException(ex);
-            }
-
-        }
-
-        public void ActualizarJugador(Jugador jugador)
+     /*   public void ActualizarJugador(Jugador jugador)
         {
             try
             {
@@ -72,7 +46,7 @@ namespace ServicioGloomm
 
                 AccesoBaseDeDatos.ValidarJugadorParaAutenticacion(jugadorValido);
                 String mensaje = "Jugador autenticado" + jugador.NombreUsuario;
-                OperationContext.Current.GetCallbackChannel<IJugadorCallback>().RespuestaJugador(mensaje);
+                OperationContext.Current.GetCallbackChannel<IJugadorCallback>().RespuestaJugador( ,mensaje);
 
 
             }
@@ -90,21 +64,82 @@ namespace ServicioGloomm
             jugador.Correo = correo;
             jugador.Contraseña = contrasena;
             return jugador;
+        }*/
+
+        public int AgregarJugador(BlbibliotecaClases.Jugador jugador)
+        {
+            int resultado;
+            try
+            {
+                var nuevoJugador = new AccesoDatos.Jugador
+                {
+                    NombreUsuario = jugador.nombreUsuario,
+                    Nombre = jugador.nombre,
+                    Apellidos = jugador.apellidos,
+                    Correo = jugador.correo,
+                    Contraseña = jugador.contraseña,
+                    Tipo = jugador.tipo,
+                    Icono = jugador.icono,
+                };
+
+                 resultado= AccesoBaseDeDatos.AgregarJugadorABaseDeDatos(nuevoJugador);
+                String mensaje = "Jugador agregado " + jugador.nombreUsuario;
+                return resultado;
+
+            }
+            catch (FaultException<ManejadorExcepciones> ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.mensaje));
+            }
+            
         }
 
-        void IJugador.AgregarJugador(BlbibliotecaClases.Jugador jugador)
+        public int ActualizarJugador(BlbibliotecaClases.Jugador jugador)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var nuevoJugador = new AccesoDatos.Jugador
+                {
+                    NombreUsuario = jugador.nombreUsuario,
+                    Nombre = jugador.nombre,
+                    Apellidos = jugador.apellidos,
+                    Correo = jugador.correo,
+                    Contraseña = jugador.contraseña,
+                    Tipo = jugador.tipo,
+                    Icono = jugador.icono,
+                };
+
+                int resultado = AccesoBaseDeDatos.ActualizarJugadorABaseDeDatos(nuevoJugador);
+                String mensaje = "Jugador actualizado " + jugador.nombreUsuario;
+                return resultado;
+
+            }
+            catch (FaultException<ManejadorExcepciones> ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.mensaje));
+            }
         }
 
-        void IJugador.ActualizarJugador(BlbibliotecaClases.Jugador jugador)
+        public int AutenticarJugador(BlbibliotecaClases.Jugador jugador)
         {
-            throw new NotImplementedException();
-        }
+            try
+            {
+                var nuevoJugador = new AccesoDatos.Jugador
+                {
+                    NombreUsuario = jugador.nombreUsuario,
+                    Contraseña = jugador.contraseña,
 
-        void IJugador.AutenticarJugador(BlbibliotecaClases.Jugador jugador)
-        {
-            throw new NotImplementedException();
+                };
+
+                int resultado = AccesoBaseDeDatos.ValidarJugadorParaAutenticacion(nuevoJugador);
+                String mensaje = "Jugador actualizado " + jugador.nombreUsuario;
+                return resultado;
+
+            }
+            catch (FaultException<ManejadorExcepciones> ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.mensaje));
+            }
         }
     }
 }
