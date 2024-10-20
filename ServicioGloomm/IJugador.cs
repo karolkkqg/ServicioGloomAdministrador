@@ -20,6 +20,10 @@ namespace ServicioGloomm
         [FaultContract(typeof(ManejadorExcepciones))]
         int AutenticarJugador(Jugador jugador);
 
+        [OperationContract]
+        [FaultContract(typeof(ManejadorExcepciones))]
+        Jugador ObtenerJugador(String nombreUsuario);
+
     }
 
 }

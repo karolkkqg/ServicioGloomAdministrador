@@ -62,6 +62,20 @@ namespace AccesoDatos
         {
             try
             {
+                ValidarCorreoActualizacionJugador(jugador);
+                int resultado = EjecutarActualizacionABaseDeDatos(jugador);
+                return resultado;
+            }
+            catch (SqlException ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString()));
+            }
+        }
+
+        private static int EjecutarActualizacionABaseDeDatos(Jugador jugador)
+        {
+            try
+            {
                 using (var contexto = new EntidadesGloom())
                 {
                     var jugadorEntidad = ConvertirAJugador(jugador);
@@ -74,6 +88,21 @@ namespace AccesoDatos
             catch (SqlException ex)
             {
                 throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString()));
+            }
+        }
+        private static Jugador ValidarCorreoActualizacionJugador(Jugador jugador)
+        {
+            using (var contexto = new EntidadesGloom())
+            {
+                var jugadorConCorreo = contexto.Jugador
+                    .FirstOrDefault(j => j.Correo == jugador.Correo && j.NombreUsuario != jugador.NombreUsuario);
+
+                if (jugadorConCorreo != null)
+                {
+                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("2"));
+                }
+
+                return jugador;
             }
         }
 
@@ -112,6 +141,37 @@ namespace AccesoDatos
                 }
                 return 1;
             }
+        }
+
+        public static Jugador BuscarJugadorPorNombreUsuario(string nombreUsuario)
+        {
+            using (var contexto = new EntidadesGloom())
+            {
+                var jugadorConNombreUsuario = contexto.Jugador.FirstOrDefault(j => j.NombreUsuario == nombreUsuario);
+                if (jugadorConNombreUsuario == null)
+                {
+                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("Jugador no encontrado"));
+                }
+                BlbibliotecaClases.Jugador jugadorBiblioteca = ConvertirAClasesBiblioteca(jugadorConNombreUsuario);
+                return jugadorConNombreUsuario;
+            }
+        }
+
+        private static BlbibliotecaClases.Jugador ConvertirAClasesBiblioteca(Jugador jugadorDb)
+        {
+            var jugador = new BlbibliotecaClases.Jugador
+            {
+                nombreUsuario = jugadorDb.NombreUsuario,
+                nombre = jugadorDb.Nombre,
+                apellidos = jugadorDb.Apellidos,
+                correo = jugadorDb.Correo,
+                contraseña = jugadorDb.Contraseña,
+                tipo = jugadorDb.Tipo,
+                icono = jugadorDb.Icono,
+
+            };
+
+            return jugador;
         }
     }
 }

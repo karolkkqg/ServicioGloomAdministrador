@@ -63,6 +63,7 @@
     <Compile Include="JugadorTest\ActualizarJugadorABaseDeDatosTest.cs" />
     <Compile Include="JugadorTest\AgregarJugadorABaseDeDatosTest.cs" />
     <Compile Include="JugadorTest\AutenticarJugadorTest.cs" />
+    <Compile Include="JugadorTest\BuscarJugadorPorNombreUsuarioTest.cs" />
     <Compile Include="SpyCallbackCalculatorService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

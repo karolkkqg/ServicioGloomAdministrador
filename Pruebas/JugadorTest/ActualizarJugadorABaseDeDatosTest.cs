@@ -102,12 +102,15 @@ namespace Pruebas.JugadorTest
         {
             using (var contexto = new EntidadesGloom())
             {
-                var jugadores = contexto.Jugador.ToList();
-                foreach (var jugador in jugadores)
+                var jugador = contexto.Jugador
+                    .FirstOrDefault(j => j.NombreUsuario == "TacoDoradoDePato");
+
+                if (jugador != null)
                 {
                     contexto.Jugador.Remove(jugador);
+                    contexto.SaveChanges();
                 }
-                contexto.SaveChanges();
+
             }
         }
     }

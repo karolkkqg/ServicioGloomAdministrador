@@ -10,62 +10,6 @@ namespace ServicioGloomm
     [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Reentrant)]
     public partial class ImplementacionServicio : IServicioAdministrador, IJugador
     {  
-
-     /*   public void ActualizarJugador(Jugador jugador)
-        {
-            try
-            {
-                var nuevoJugador = new Jugador
-                {
-                    NombreUsuario = jugador.NombreUsuario,
-                    Nombre = jugador.Nombre,
-                    Apellidos = jugador.Apellidos,
-                    Correo = jugador.Correo,
-                    Contraseña = jugador.Contraseña,
-                    Tipo = jugador.Tipo,
-                    Icono = jugador.Icono,
-                };
-
-                AccesoBaseDeDatos.ActualizarJugadorABaseDeDatos(nuevoJugador);
-                String mensaje = "Jugador actualizado " + jugador.NombreUsuario;
-                OperationContext.Current.GetCallbackChannel<IJugadorCallback>().RespuestaJugador(mensaje);
-
-
-            }
-            catch (SqlException ex)
-            {
-                throw ManejadorExcepciones.CrearSqlException(ex);
-            }
-        }
-
-        public void AutenticarJugador(Jugador jugador)
-        {
-            try
-            {
-                Jugador jugadorValido = CrearJugadorValidoParaInicio(jugador.Correo, jugador.Contraseña);
-
-                AccesoBaseDeDatos.ValidarJugadorParaAutenticacion(jugadorValido);
-                String mensaje = "Jugador autenticado" + jugador.NombreUsuario;
-                OperationContext.Current.GetCallbackChannel<IJugadorCallback>().RespuestaJugador( ,mensaje);
-
-
-            }
-            catch (SqlException ex)
-            {
-                throw ManejadorExcepciones.CrearSqlException(ex);
-            }
-        }
-
-        private Jugador CrearJugadorValidoParaInicio(string correo, string contrasena)
-        {
-            Jugador jugador = new Jugador();
-            //Jugador jugador = Jugador.GetInstancia();
-            //jugador.LimpiarSesion();
-            jugador.Correo = correo;
-            jugador.Contraseña = contrasena;
-            return jugador;
-        }*/
-
         public int AgregarJugador(BlbibliotecaClases.Jugador jugador)
         {
             int resultado;
@@ -135,6 +79,30 @@ namespace ServicioGloomm
                 String mensaje = "Jugador actualizado " + jugador.nombreUsuario;
                 return resultado;
 
+            }
+            catch (FaultException<ManejadorExcepciones> ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.mensaje));
+            }
+        }
+
+        public BlbibliotecaClases.Jugador ObtenerJugador(string nombreUsuario)
+        {
+            try
+            {
+                AccesoDatos.Jugador jugadorDb;
+                BlbibliotecaClases.Jugador jugadorBiblioteca = new BlbibliotecaClases.Jugador();
+
+                jugadorDb = AccesoBaseDeDatos.BuscarJugadorPorNombreUsuario(nombreUsuario);
+                jugadorBiblioteca.nombreUsuario = jugadorDb.NombreUsuario;
+                jugadorBiblioteca.nombre = jugadorDb.Nombre;
+                jugadorBiblioteca.correo = jugadorDb.Correo;
+                jugadorBiblioteca.contraseña = jugadorDb.Contraseña;
+                jugadorBiblioteca.apellidos = jugadorDb.Apellidos;
+                jugadorBiblioteca.tipo = jugadorDb.Tipo;
+                jugadorBiblioteca.icono = jugadorDb.Icono;
+
+                return jugadorBiblioteca;
             }
             catch (FaultException<ManejadorExcepciones> ex)
             {
