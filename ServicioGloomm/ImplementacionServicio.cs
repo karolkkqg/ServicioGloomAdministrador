@@ -1,5 +1,6 @@
 ﻿using AccesoDatos;
 using BlbibliotecaClases;
+using ServicioGlomm;
 using System;
 using System.Data.SqlClient;
 using System.ServiceModel;
@@ -8,7 +9,7 @@ namespace ServicioGloomm
 {
    
     [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Reentrant)]
-    public partial class ImplementacionServicio : IServicioAdministrador, IJugador
+    public partial class ImplementacionServicio : IServicioAdministrador, IJugador, IPartida
     {  
         public int AgregarJugador(BlbibliotecaClases.Jugador jugador)
         {
@@ -108,6 +109,32 @@ namespace ServicioGloomm
             {
                 throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.mensaje));
             }
+        }
+
+        public int CrearPartida(BibliotecaClases.Partida partida)
+        {
+            try
+            {
+                var nuevaPartida = new AccesoDatos.Partida
+                {
+                    IdPartida = partida.idPartida,
+                    Ganador = partida.ganador,
+                    Apellidos = partida.fecha,
+                    IdAdministrador = partida.idAdministrador,
+                    Tipo = partida.tipo,
+                    IdSala = partida.idSala,
+                }
+        
+
+                int resultado = AccesoBaseDeDatos.AgregarPartidaABaseDeDatos(nuevaPartida);
+                String mensaje = "Partida creada " + partida.idPartida;
+                return resultado;
+            }
+            catch (FaultException<ManejadorExcepciones> ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.mensaje));
+            }
+
         }
     }
 }
