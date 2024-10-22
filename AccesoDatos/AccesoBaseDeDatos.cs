@@ -45,7 +45,7 @@ namespace AccesoDatos
         {
             try
             {
-                using (var contexto = new EntidadesGloom())
+                using (var contexto = new EntidadGloom())
                 {
                     var jugadorEntidad = ConvertirAJugador(jugador);
                     contexto.Jugador.Add(jugadorEntidad);
@@ -76,7 +76,7 @@ namespace AccesoDatos
         {
             try
             {
-                using (var contexto = new EntidadesGloom())
+                using (var contexto = new EntidadGloom())
                 {
                     var jugadorEntidad = ConvertirAJugador(jugador);
                     contexto.Jugador.Attach(jugadorEntidad);
@@ -92,7 +92,7 @@ namespace AccesoDatos
         }
         private static Jugador ValidarCorreoActualizacionJugador(Jugador jugador)
         {
-            using (var contexto = new EntidadesGloom())
+            using (var contexto = new EntidadGloom())
             {
                 var jugadorConCorreo = contexto.Jugador
                     .FirstOrDefault(j => j.Correo == jugador.Correo && j.NombreUsuario != jugador.NombreUsuario);
@@ -108,7 +108,7 @@ namespace AccesoDatos
 
         private static Jugador ValidarCorreoJugador(Jugador jugador)
         {
-            using (var contexto = new EntidadesGloom())
+            using (var contexto = new EntidadGloom())
             {
                 var jugadorConCorreo = contexto.Jugador.FirstOrDefault(j => j.Correo == jugador.Correo);
                 if (jugadorConCorreo != null)
@@ -120,7 +120,7 @@ namespace AccesoDatos
         }
         private static Jugador ValidarUsuarioJugador(Jugador jugador)
         {
-            using (var contexto = new EntidadesGloom())
+            using (var contexto = new EntidadGloom())
             {
                 var jugadorConNombreUsuario = contexto.Jugador.FirstOrDefault(j => j.NombreUsuario == jugador.NombreUsuario);
                 if (jugadorConNombreUsuario != null)
@@ -132,7 +132,7 @@ namespace AccesoDatos
         }
         public static int ValidarJugadorParaAutenticacion(Jugador jugador)
         {
-            using (var contexto = new EntidadesGloom())
+            using (var contexto = new EntidadGloom())
             {
                 var jugadorEncontrado = contexto.Jugador.FirstOrDefault(j => j.NombreUsuario == jugador.NombreUsuario && j.Contraseña == jugador.Contraseña);
                 if (jugadorEncontrado == null)
@@ -145,7 +145,7 @@ namespace AccesoDatos
 
         public static Jugador BuscarJugadorPorNombreUsuario(string nombreUsuario)
         {
-            using (var contexto = new EntidadesGloom())
+            using (var contexto = new EntidadGloom())
             {
                 var jugadorConNombreUsuario = contexto.Jugador.FirstOrDefault(j => j.NombreUsuario == nombreUsuario);
                 if (jugadorConNombreUsuario == null)

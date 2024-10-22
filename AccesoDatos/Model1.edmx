@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="ModeloGloom.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="GloomModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Amigos">
           <Key>
             <PropertyRef Name="NombreUsuario" />
@@ -167,7 +167,7 @@ advertencia 6002: La tabla o vista 'Gloom.dbo.Participantes' no tiene definida n
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="ModeloGloomStoreContainer">
+        <EntityContainer Name="GloomModelStoreContainer">
           <EntitySet Name="Amigos" EntityType="Self.Amigos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CartaEvento" EntityType="Self.CartaEvento" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CartaFamiliar" EntityType="Self.CartaFamiliar" Schema="dbo" store:Type="Tables" />
@@ -215,7 +215,7 @@ advertencia 6002: La tabla o vista 'Gloom.dbo.Participantes' no tiene definida n
     </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="ModeloGloom" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="GloomModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="Amigos">
           <Key>
             <PropertyRef Name="NombreUsuario" />
@@ -354,7 +354,7 @@ advertencia 6002: La tabla o vista 'Gloom.dbo.Participantes' no tiene definida n
           <End Role="Jugador" Type="Self.Jugador" Multiplicity="*" />
           <End Role="Partida" Type="Self.Partida" Multiplicity="*" />
         </Association>
-        <EntityContainer Name="EntidadesGloom" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="EntidadGloom" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Amigos" EntityType="Self.Amigos" />
           <EntitySet Name="CartaEvento" EntityType="Self.CartaEvento" />
           <EntitySet Name="CartaFamiliar" EntityType="Self.CartaFamiliar" />
@@ -386,9 +386,9 @@ advertencia 6002: La tabla o vista 'Gloom.dbo.Participantes' no tiene definida n
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="ModeloGloomStoreContainer" CdmEntityContainer="EntidadesGloom">
+        <EntityContainerMapping StorageEntityContainer="GloomModelStoreContainer" CdmEntityContainer="EntidadGloom">
           <EntitySetMapping Name="Amigos">
-            <EntityTypeMapping TypeName="ModeloGloom.Amigos">
+            <EntityTypeMapping TypeName="GloomModel.Amigos">
               <MappingFragment StoreEntitySet="Amigos">
                 <ScalarProperty Name="NombreUsuario" ColumnName="NombreUsuario" />
                 <ScalarProperty Name="JugadorAmigo" ColumnName="JugadorAmigo" />
@@ -397,7 +397,7 @@ advertencia 6002: La tabla o vista 'Gloom.dbo.Participantes' no tiene definida n
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CartaEvento">
-            <EntityTypeMapping TypeName="ModeloGloom.CartaEvento">
+            <EntityTypeMapping TypeName="GloomModel.CartaEvento">
               <MappingFragment StoreEntitySet="CartaEvento">
                 <ScalarProperty Name="IdCarta" ColumnName="IdCarta" />
                 <ScalarProperty Name="estado" ColumnName="estado" />
@@ -408,7 +408,7 @@ advertencia 6002: La tabla o vista 'Gloom.dbo.Participantes' no tiene definida n
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CartaFamiliar">
-            <EntityTypeMapping TypeName="ModeloGloom.CartaFamiliar">
+            <EntityTypeMapping TypeName="GloomModel.CartaFamiliar">
               <MappingFragment StoreEntitySet="CartaFamiliar">
                 <ScalarProperty Name="IdCarta" ColumnName="IdCarta" />
                 <ScalarProperty Name="estado" ColumnName="estado" />
@@ -420,7 +420,7 @@ advertencia 6002: La tabla o vista 'Gloom.dbo.Participantes' no tiene definida n
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Jugador">
-            <EntityTypeMapping TypeName="ModeloGloom.Jugador">
+            <EntityTypeMapping TypeName="GloomModel.Jugador">
               <MappingFragment StoreEntitySet="Jugador">
                 <ScalarProperty Name="NombreUsuario" ColumnName="NombreUsuario" />
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
@@ -433,7 +433,7 @@ advertencia 6002: La tabla o vista 'Gloom.dbo.Participantes' no tiene definida n
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Modificador">
-            <EntityTypeMapping TypeName="ModeloGloom.Modificador">
+            <EntityTypeMapping TypeName="GloomModel.Modificador">
               <MappingFragment StoreEntitySet="Modificador">
                 <ScalarProperty Name="IdCarta" ColumnName="IdCarta" />
                 <ScalarProperty Name="estado" ColumnName="estado" />
@@ -442,7 +442,7 @@ advertencia 6002: La tabla o vista 'Gloom.dbo.Participantes' no tiene definida n
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Muerte">
-            <EntityTypeMapping TypeName="ModeloGloom.Muerte">
+            <EntityTypeMapping TypeName="GloomModel.Muerte">
               <MappingFragment StoreEntitySet="Muerte">
                 <ScalarProperty Name="IdCarta" ColumnName="IdCarta" />
                 <ScalarProperty Name="estado" ColumnName="estado" />
@@ -450,7 +450,7 @@ advertencia 6002: La tabla o vista 'Gloom.dbo.Participantes' no tiene definida n
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Partida">
-            <EntityTypeMapping TypeName="ModeloGloom.Partida">
+            <EntityTypeMapping TypeName="GloomModel.Partida">
               <MappingFragment StoreEntitySet="Partida">
                 <ScalarProperty Name="IdPartida" ColumnName="IdPartida" />
                 <ScalarProperty Name="Ganador" ColumnName="Ganador" />
@@ -462,7 +462,7 @@ advertencia 6002: La tabla o vista 'Gloom.dbo.Participantes' no tiene definida n
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Sala">
-            <EntityTypeMapping TypeName="ModeloGloom.Sala">
+            <EntityTypeMapping TypeName="GloomModel.Sala">
               <MappingFragment StoreEntitySet="Sala">
                 <ScalarProperty Name="IdSala" ColumnName="IdSala" />
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
@@ -474,7 +474,7 @@ advertencia 6002: La tabla o vista 'Gloom.dbo.Participantes' no tiene definida n
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Mensaje">
-            <EntityTypeMapping TypeName="ModeloGloom.Mensaje">
+            <EntityTypeMapping TypeName="GloomModel.Mensaje">
               <MappingFragment StoreEntitySet="Mensaje">
                 <ScalarProperty Name="JugadorEmisor" ColumnName="JugadorEmisor" />
                 <ScalarProperty Name="JugadorReceptor" ColumnName="JugadorReceptor" />
@@ -483,7 +483,7 @@ advertencia 6002: La tabla o vista 'Gloom.dbo.Participantes' no tiene definida n
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="Participantes" TypeName="ModeloGloom.Participantes" StoreEntitySet="Participantes">
+          <AssociationSetMapping Name="Participantes" TypeName="GloomModel.Participantes" StoreEntitySet="Participantes">
             <EndProperty Name="Jugador">
               <ScalarProperty Name="NombreUsuario" ColumnName="NombreUsuario" />
             </EndProperty>

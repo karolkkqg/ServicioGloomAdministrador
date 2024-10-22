@@ -9,6 +9,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Host", "Host\Host.csproj", 
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pruebas", "Pruebas\Pruebas.csproj", "{FAEAC872-DA6D-4CB1-8CB9-31F181200870}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E9275BE6-8502-4B31-955F-300DA6C47708} = {E9275BE6-8502-4B31-955F-300DA6C47708}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccesoDatos", "AccesoDatos\AccesoDatos.csproj", "{E9275BE6-8502-4B31-955F-300DA6C47708}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -18,6 +21,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlbibliotecaClases", "BlbibliotecaClases\BlbibliotecaClases.csproj", "{CF1EF776-68A3-4CBB-85D7-5F7B28959F11}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServicioGloomm", "ServicioGloomm\ServicioGloomm.csproj", "{82FA4201-60B4-4F4B-9CB4-70FBE0C39F17}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E9275BE6-8502-4B31-955F-300DA6C47708} = {E9275BE6-8502-4B31-955F-300DA6C47708}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

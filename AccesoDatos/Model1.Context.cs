@@ -13,10 +13,10 @@ namespace AccesoDatos
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class EntidadesGloom : DbContext
+    public partial class EntidadGloom : DbContext
     {
-        public EntidadesGloom()
-            : base("name=EntidadesGloom")
+        public EntidadGloom()
+            : base("name=EntidadGloom")
         {
         }
     

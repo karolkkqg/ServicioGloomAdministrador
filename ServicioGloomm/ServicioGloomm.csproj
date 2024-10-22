@@ -59,7 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AccesoDatos\AccesoDatos.csproj">
-      <Project>{e9275be6-8502-4b31-955f-300da6c47708}</Project>
+      <Project>{E9275BE6-8502-4B31-955F-300DA6C47708}</Project>
       <Name>AccesoDatos</Name>
     </ProjectReference>
     <ProjectReference Include="..\BlbibliotecaClases\BlbibliotecaClases.csproj">

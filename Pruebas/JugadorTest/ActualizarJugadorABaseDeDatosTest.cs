@@ -45,7 +45,7 @@ namespace Pruebas.JugadorTest
                 };
                 int filasAfectadas = AccesoBaseDeDatos.ActualizarJugadorABaseDeDatos(jugador);
 
-            using (var contexto = new EntidadesGloom())
+            using (var contexto = new EntidadGloom())
             {
                 Assert.AreEqual(1, filasAfectadas, "El número de filas afectadas no coincide");
                 /*
@@ -100,7 +100,7 @@ namespace Pruebas.JugadorTest
         [ClassCleanup]
         public static void LimpiarDatosDePrueba()
         {
-            using (var contexto = new EntidadesGloom())
+            using (var contexto = new EntidadGloom())
             {
                 var jugador = contexto.Jugador
                     .FirstOrDefault(j => j.NombreUsuario == "TacoDoradoDePato");

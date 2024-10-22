@@ -51,7 +51,7 @@ namespace Pruebas.JugadorTest
             [ClassCleanup]
             public static void LimpiarDatosDePrueba()
             {
-                using (var contexto = new EntidadesGloom())
+                using (var contexto = new EntidadGloom())
                 {
                     var jugador = contexto.Jugador
                         .FirstOrDefault(j => j.NombreUsuario == "TacoDoradoDePato");
