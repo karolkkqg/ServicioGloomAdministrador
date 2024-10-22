@@ -52,7 +52,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IPartida.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IJugador.cs" />
     <Compile Include="ImplementacionServicio.cs" />
