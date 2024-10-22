@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Linq;
+using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,7 +25,23 @@ namespace AccesoDatos
                 Icono = jugador.Icono,
             };
         }
-        public static void AgregarJugadorABaseDeDatos(Jugador jugador)
+
+        public static int AgregarJugadorABaseDeDatos(Jugador jugador)
+        {
+            try
+            {
+                Jugador jugadrovalidoCorreo = ValidarCorreoJugador(jugador);
+                Jugador jugadorValidoNombre = ValidarUsuarioJugador(jugadrovalidoCorreo);
+                var filasAfectadas = EjecutarAgregarJugadorABaseDeDatos(jugadorValidoNombre);
+                return filasAfectadas;
+            }
+            catch (SqlException ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString()));
+            }
+        }
+
+        public static int EjecutarAgregarJugadorABaseDeDatos(Jugador jugador)
         {
             try
             {
@@ -32,15 +49,30 @@ namespace AccesoDatos
                 {
                     var jugadorEntidad = ConvertirAJugador(jugador);
                     contexto.Jugador.Add(jugadorEntidad);
-                    contexto.SaveChanges();
+                    int filasAfectadas = contexto.SaveChanges();
+                    return filasAfectadas;
                 }
             }
             catch (SqlException ex)
             {
-                throw ManejadorExcepciones.CrearSqlException(ex);
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString()));
             }
         }
-        public static void ActualizarJugadorABaseDeDatos(Jugador jugador)
+        public static int ActualizarJugadorABaseDeDatos(Jugador jugador)
+        {
+            try
+            {
+                ValidarCorreoActualizacionJugador(jugador);
+                int resultado = EjecutarActualizacionABaseDeDatos(jugador);
+                return resultado;
+            }
+            catch (SqlException ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString()));
+            }
+        }
+
+        private static int EjecutarActualizacionABaseDeDatos(Jugador jugador)
         {
             try
             {
@@ -49,13 +81,97 @@ namespace AccesoDatos
                     var jugadorEntidad = ConvertirAJugador(jugador);
                     contexto.Jugador.Attach(jugadorEntidad);
                     contexto.Entry(jugadorEntidad).State = EntityState.Modified;
-                    contexto.SaveChanges();
+                    int filasAfectadas = contexto.SaveChanges();
+                    return filasAfectadas;
                 }
             }
             catch (SqlException ex)
             {
-                throw ManejadorExcepciones.CrearSqlException(ex);
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString()));
             }
+        }
+        private static Jugador ValidarCorreoActualizacionJugador(Jugador jugador)
+        {
+            using (var contexto = new EntidadesGloom())
+            {
+                var jugadorConCorreo = contexto.Jugador
+                    .FirstOrDefault(j => j.Correo == jugador.Correo && j.NombreUsuario != jugador.NombreUsuario);
+
+                if (jugadorConCorreo != null)
+                {
+                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("2"));
+                }
+
+                return jugador;
+            }
+        }
+
+        private static Jugador ValidarCorreoJugador(Jugador jugador)
+        {
+            using (var contexto = new EntidadesGloom())
+            {
+                var jugadorConCorreo = contexto.Jugador.FirstOrDefault(j => j.Correo == jugador.Correo);
+                if (jugadorConCorreo != null)
+                {
+                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("2"));
+                }
+                return jugador;
+            }
+        }
+        private static Jugador ValidarUsuarioJugador(Jugador jugador)
+        {
+            using (var contexto = new EntidadesGloom())
+            {
+                var jugadorConNombreUsuario = contexto.Jugador.FirstOrDefault(j => j.NombreUsuario == jugador.NombreUsuario);
+                if (jugadorConNombreUsuario != null)
+                {
+                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("1"));
+                }
+                return jugador;
+            }
+        }
+        public static int ValidarJugadorParaAutenticacion(Jugador jugador)
+        {
+            using (var contexto = new EntidadesGloom())
+            {
+                var jugadorEncontrado = contexto.Jugador.FirstOrDefault(j => j.NombreUsuario == jugador.NombreUsuario && j.Contraseña == jugador.Contraseña);
+                if (jugadorEncontrado == null)
+                {
+                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("3"));
+                }
+                return 1;
+            }
+        }
+
+        public static Jugador BuscarJugadorPorNombreUsuario(string nombreUsuario)
+        {
+            using (var contexto = new EntidadesGloom())
+            {
+                var jugadorConNombreUsuario = contexto.Jugador.FirstOrDefault(j => j.NombreUsuario == nombreUsuario);
+                if (jugadorConNombreUsuario == null)
+                {
+                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("Jugador no encontrado"));
+                }
+                BlbibliotecaClases.Jugador jugadorBiblioteca = ConvertirAClasesBiblioteca(jugadorConNombreUsuario);
+                return jugadorConNombreUsuario;
+            }
+        }
+
+        private static BlbibliotecaClases.Jugador ConvertirAClasesBiblioteca(Jugador jugadorDb)
+        {
+            var jugador = new BlbibliotecaClases.Jugador
+            {
+                nombreUsuario = jugadorDb.NombreUsuario,
+                nombre = jugadorDb.Nombre,
+                apellidos = jugadorDb.Apellidos,
+                correo = jugadorDb.Correo,
+                contraseña = jugadorDb.Contraseña,
+                tipo = jugadorDb.Tipo,
+                icono = jugadorDb.Icono,
+
+            };
+
+            return jugador;
         }
     }
 }

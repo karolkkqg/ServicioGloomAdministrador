@@ -5,16 +5,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{911AD607-5F20-4F27-A48E-9BD80C28B440}</ProjectGuid>
+    <ProjectGuid>{82FA4201-60B4-4F4B-9CB4-70FBE0C39F17}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ServicioGloom</RootNamespace>
-    <AssemblyName>ServicioGloom</AssemblyName>
+    <RootNamespace>ServicioGlomm</RootNamespace>
+    <AssemblyName>ServicioGloomm</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
-    <WcfConfigValidationEnabled>True</WcfConfigValidationEnabled>
-    <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
   </PropertyGroup>
@@ -26,7 +24,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -46,7 +43,6 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -56,37 +52,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="IJugador.cs" />
     <Compile Include="ImplementacionServicio.cs" />
     <Compile Include="IServicioAdministrador.cs" />
-    <Compile Include="IJugador.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AccesoDatos\AccesoDatos.csproj">
-      <Project>{E9275BE6-8502-4B31-955F-300DA6C47708}</Project>
+      <Project>{e9275be6-8502-4b31-955f-300da6c47708}</Project>
       <Name>AccesoDatos</Name>
     </ProjectReference>
     <ProjectReference Include="..\BlbibliotecaClases\BlbibliotecaClases.csproj">
-      <Project>{CF1EF776-68A3-4CBB-85D7-5F7B28959F11}</Project>
+      <Project>{cf1ef776-68a3-4cbb-85d7-5f7b28959f11}</Project>
       <Name>BlbibliotecaClases</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ServicioGloomm\ServicioGloomm.csproj">
-      <Project>{82fa4201-60b4-4f4b-9cb4-70fbe0c39f17}</Project>
-      <Name>ServicioGloomm</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

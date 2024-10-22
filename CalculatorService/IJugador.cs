@@ -1,19 +1,22 @@
-﻿using BlbibliotecaClases;
+﻿/*using BlbibliotecaClases;
 using System;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 
 
-namespace ServicioAdministrador
+namespace ServicioGloom
 {
     [ServiceContract(CallbackContract = typeof(IJugadorCallback))]
-    interface IJugador
+    public interface IJugador
     {
         [OperationContract(IsOneWay = true)]
         void AgregarJugador(Jugador jugador);
 
         [OperationContract(IsOneWay = true)]
         void ActualizarJugador(Jugador jugador);
+
+        [OperationContract(IsOneWay = true)]
+        void AutenticarJugador(Jugador jugador);
 
         //[OperationContract(IsOneWay = true)]
         //void SendMessage(string message);
@@ -30,3 +33,4 @@ namespace ServicioAdministrador
         void RespuestaJugador(string response);
     }
 }
+*/

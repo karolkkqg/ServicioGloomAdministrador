@@ -7,7 +7,7 @@ namespace Host
     {
         static void Main(string[] args)
         {
-            using (ServiceHost host = new ServiceHost(typeof(CalculatorService.ImplementacionServicio)))
+            using (ServiceHost host = new ServiceHost(typeof(ServicioGloomm.ImplementacionServicio)))
             {
                 host.Open();
                 Console.WriteLine("Server is running");

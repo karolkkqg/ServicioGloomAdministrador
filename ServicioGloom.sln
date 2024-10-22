@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServicioGloom", "CalculatorService\ServicioGloom.csproj", "{911AD607-5F20-4F27-A48E-9BD80C28B440}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Host", "Host\Host.csproj", "{607C7302-7CFE-4EE3-8249-E70A99482D3B}"
 	ProjectSection(ProjectDependencies) = postProject
 		{E9275BE6-8502-4B31-955F-300DA6C47708} = {E9275BE6-8502-4B31-955F-300DA6C47708}
@@ -19,16 +17,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccesoDatos", "AccesoDatos\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlbibliotecaClases", "BlbibliotecaClases\BlbibliotecaClases.csproj", "{CF1EF776-68A3-4CBB-85D7-5F7B28959F11}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServicioGloomm", "ServicioGloomm\ServicioGloomm.csproj", "{82FA4201-60B4-4F4B-9CB4-70FBE0C39F17}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{911AD607-5F20-4F27-A48E-9BD80C28B440}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{911AD607-5F20-4F27-A48E-9BD80C28B440}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{911AD607-5F20-4F27-A48E-9BD80C28B440}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{911AD607-5F20-4F27-A48E-9BD80C28B440}.Release|Any CPU.Build.0 = Release|Any CPU
 		{607C7302-7CFE-4EE3-8249-E70A99482D3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{607C7302-7CFE-4EE3-8249-E70A99482D3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{607C7302-7CFE-4EE3-8249-E70A99482D3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -45,6 +41,10 @@ Global
 		{CF1EF776-68A3-4CBB-85D7-5F7B28959F11}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF1EF776-68A3-4CBB-85D7-5F7B28959F11}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF1EF776-68A3-4CBB-85D7-5F7B28959F11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82FA4201-60B4-4F4B-9CB4-70FBE0C39F17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82FA4201-60B4-4F4B-9CB4-70FBE0C39F17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82FA4201-60B4-4F4B-9CB4-70FBE0C39F17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82FA4201-60B4-4F4B-9CB4-70FBE0C39F17}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
