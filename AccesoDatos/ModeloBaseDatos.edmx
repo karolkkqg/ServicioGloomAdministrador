@@ -4,14 +4,15 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="GloomModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="ModeloGloom.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Amigos">
           <Key>
-            <PropertyRef Name="NombreUsuario" />
+            <PropertyRef Name="Id" />
           </Key>
           <Property Name="NombreUsuario" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="JugadorAmigo" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="Estado" Type="nvarchar" MaxLength="255" />
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
         </EntityType>
         <EntityType Name="CartaEvento">
           <Key>
@@ -75,41 +76,41 @@ advertencia 6002: La tabla o vista 'Gloom.dbo.Mensaje' no tiene definida ninguna
           <Property Name="IdCarta" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="estado" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'Gloom.dbo.Participantes' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="Participantes">
           <Key>
-            <PropertyRef Name="IdPartida" />
-            <PropertyRef Name="NombreUsuario" />
+            <PropertyRef Name="Id" />
           </Key>
           <Property Name="IdPartida" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="NombreUsuario" Type="nvarchar" MaxLength="255" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Partida">
-          <Key>
-            <PropertyRef Name="IdPartida" />
-          </Key>
-          <Property Name="IdPartida" Type="nvarchar" MaxLength="255" Nullable="false" />
-          <Property Name="Ganador" Type="nvarchar" MaxLength="255" Nullable="false" />
-          <Property Name="Fecha" Type="nvarchar" MaxLength="255" Nullable="false" />
-          <Property Name="IdAdministrador" Type="nvarchar" MaxLength="255" />
-          <Property Name="Tipo" Type="nvarchar" MaxLength="255" />
-          <Property Name="IdSala" Type="nvarchar" MaxLength="50" />
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
         </EntityType>
         <EntityType Name="Sala">
           <Key>
             <PropertyRef Name="IdSala" />
           </Key>
-          <Property Name="IdSala" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Nombre" Type="nchar" MaxLength="10" Nullable="false" />
-          <Property Name="TipoSala" Type="nchar" MaxLength="10" Nullable="false" />
-          <Property Name="TipoPartida" Type="nchar" MaxLength="10" Nullable="false" />
-          <Property Name="NoJugadores" Type="binary" MaxLength="50" />
-          <Property Name="Contraseña" Type="nchar" MaxLength="10" />
+          <Property Name="IdSala" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="NombreSala" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="TipoSala" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="TipoPartida" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="NoJugadores" Type="int" Nullable="false" />
+          <Property Name="Codigo" Type="varchar" MaxLength="50" />
+          <Property Name="IdAdministrador" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Fecha" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Ganador" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
         </EntityType>
         <Association Name="FK_Amigos_Jugador">
           <End Role="Jugador" Type="Self.Jugador" Multiplicity="1" />
-          <End Role="Amigos" Type="Self.Amigos" Multiplicity="0..1" />
+          <End Role="Amigos" Type="Self.Amigos" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Jugador">
               <PropertyRef Name="NombreUsuario" />
@@ -131,51 +132,16 @@ advertencia 6002: La tabla o vista 'Gloom.dbo.Participantes' no tiene definida n
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Participantes_Jugador">
-          <End Role="Jugador" Type="Self.Jugador" Multiplicity="1" />
-          <End Role="Participantes" Type="Self.Participantes" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Jugador">
-              <PropertyRef Name="NombreUsuario" />
-            </Principal>
-            <Dependent Role="Participantes">
-              <PropertyRef Name="NombreUsuario" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Participantes_Partida">
-          <End Role="Partida" Type="Self.Partida" Multiplicity="1" />
-          <End Role="Participantes" Type="Self.Participantes" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Partida">
-              <PropertyRef Name="IdPartida" />
-            </Principal>
-            <Dependent Role="Participantes">
-              <PropertyRef Name="IdPartida" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Partida_Sala">
-          <End Role="Sala" Type="Self.Sala" Multiplicity="0..1" />
-          <End Role="Partida" Type="Self.Partida" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Sala">
-              <PropertyRef Name="IdSala" />
-            </Principal>
-            <Dependent Role="Partida">
-              <PropertyRef Name="IdSala" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityContainer Name="GloomModelStoreContainer">
+        <EntityContainer Name="ModeloGloomStoreContainer">
           <EntitySet Name="Amigos" EntityType="Self.Amigos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CartaEvento" EntityType="Self.CartaEvento" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CartaFamiliar" EntityType="Self.CartaFamiliar" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Jugador" EntityType="Self.Jugador" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Modificador" EntityType="Self.Modificador" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Muerte" EntityType="Self.Muerte" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Partida" EntityType="Self.Partida" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Participantes" EntityType="Self.Participantes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Sala" EntityType="Self.Sala" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Mensaje" EntityType="Self.Mensaje" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [Mensaje].[JugadorEmisor] AS [JugadorEmisor], 
@@ -183,12 +149,6 @@ advertencia 6002: La tabla o vista 'Gloom.dbo.Participantes' no tiene definida n
     [Mensaje].[Contenido] AS [Contenido], 
     [Mensaje].[Estado] AS [Estado]
     FROM [dbo].[Mensaje] AS [Mensaje]</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="Participantes" EntityType="Self.Participantes" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [Participantes].[IdPartida] AS [IdPartida], 
-    [Participantes].[NombreUsuario] AS [NombreUsuario]
-    FROM [dbo].[Participantes] AS [Participantes]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="FK_Amigos_Jugador" Association="Self.FK_Amigos_Jugador">
             <End Role="Jugador" EntitySet="Jugador" />
@@ -198,31 +158,20 @@ advertencia 6002: La tabla o vista 'Gloom.dbo.Participantes' no tiene definida n
             <End Role="Jugador" EntitySet="Jugador" />
             <End Role="Mensaje" EntitySet="Mensaje" />
           </AssociationSet>
-          <AssociationSet Name="FK_Participantes_Jugador" Association="Self.FK_Participantes_Jugador">
-            <End Role="Jugador" EntitySet="Jugador" />
-            <End Role="Participantes" EntitySet="Participantes" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Participantes_Partida" Association="Self.FK_Participantes_Partida">
-            <End Role="Partida" EntitySet="Partida" />
-            <End Role="Participantes" EntitySet="Participantes" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Partida_Sala" Association="Self.FK_Partida_Sala">
-            <End Role="Sala" EntitySet="Sala" />
-            <End Role="Partida" EntitySet="Partida" />
-          </AssociationSet>
         </EntityContainer>
       </Schema>
     </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="GloomModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="ModeloGloom" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="Amigos">
           <Key>
-            <PropertyRef Name="NombreUsuario" />
+            <PropertyRef Name="Id" />
           </Key>
           <Property Name="NombreUsuario" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="JugadorAmigo" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Estado" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <NavigationProperty Name="Jugador" Relationship="Self.FK_Amigos_Jugador" FromRole="Amigos" ToRole="Jugador" />
         </EntityType>
         <EntityType Name="CartaEvento">
@@ -259,7 +208,6 @@ advertencia 6002: La tabla o vista 'Gloom.dbo.Participantes' no tiene definida n
           <Property Name="Icono" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Amigos" Relationship="Self.FK_Amigos_Jugador" FromRole="Jugador" ToRole="Amigos" />
           <NavigationProperty Name="Mensaje" Relationship="Self.FK_Mensaje_Jugador" FromRole="Jugador" ToRole="Mensaje" />
-          <NavigationProperty Name="Partida" Relationship="Self.Participantes" FromRole="Jugador" ToRole="Partida" />
         </EntityType>
         <EntityType Name="Modificador">
           <Key>
@@ -276,30 +224,37 @@ advertencia 6002: La tabla o vista 'Gloom.dbo.Participantes' no tiene definida n
           <Property Name="IdCarta" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="estado" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
-        <EntityType Name="Partida">
+        <EntityType Name="Participantes">
           <Key>
-            <PropertyRef Name="IdPartida" />
+            <PropertyRef Name="Id" />
           </Key>
           <Property Name="IdPartida" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Ganador" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Fecha" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="IdAdministrador" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="Tipo" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="IdSala" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Sala" Relationship="Self.FK_Partida_Sala" FromRole="Partida" ToRole="Sala" />
-          <NavigationProperty Name="Jugador" Relationship="Self.Participantes" FromRole="Partida" ToRole="Jugador" />
+          <Property Name="NombreUsuario" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
         </EntityType>
         <EntityType Name="Sala">
           <Key>
             <PropertyRef Name="IdSala" />
           </Key>
-          <Property Name="IdSala" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Nombre" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="TipoSala" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="TipoPartida" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="NoJugadores" Type="Binary" MaxLength="50" FixedLength="true" />
-          <Property Name="Contraseña" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
-          <NavigationProperty Name="Partida" Relationship="Self.FK_Partida_Sala" FromRole="Sala" ToRole="Partida" />
+          <Property Name="IdSala" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="NombreSala" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="TipoSala" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="TipoPartida" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="NoJugadores" Type="Int32" Nullable="false" />
+          <Property Name="Codigo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IdAdministrador" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Fecha" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Ganador" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
         </EntityType>
         <EntityType Name="Mensaje">
           <Key>
@@ -316,7 +271,7 @@ advertencia 6002: La tabla o vista 'Gloom.dbo.Participantes' no tiene definida n
         </EntityType>
         <Association Name="FK_Amigos_Jugador">
           <End Role="Jugador" Type="Self.Jugador" Multiplicity="1" />
-          <End Role="Amigos" Type="Self.Amigos" Multiplicity="0..1" />
+          <End Role="Amigos" Type="Self.Amigos" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Jugador">
               <PropertyRef Name="NombreUsuario" />
@@ -338,31 +293,16 @@ advertencia 6002: La tabla o vista 'Gloom.dbo.Participantes' no tiene definida n
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Partida_Sala">
-          <End Role="Sala" Type="Self.Sala" Multiplicity="0..1" />
-          <End Role="Partida" Type="Self.Partida" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Sala">
-              <PropertyRef Name="IdSala" />
-            </Principal>
-            <Dependent Role="Partida">
-              <PropertyRef Name="IdSala" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="Participantes">
-          <End Role="Jugador" Type="Self.Jugador" Multiplicity="*" />
-          <End Role="Partida" Type="Self.Partida" Multiplicity="*" />
-        </Association>
-        <EntityContainer Name="EntidadGloom" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="EntidadesGloom" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Amigos" EntityType="Self.Amigos" />
           <EntitySet Name="CartaEvento" EntityType="Self.CartaEvento" />
           <EntitySet Name="CartaFamiliar" EntityType="Self.CartaFamiliar" />
           <EntitySet Name="Jugador" EntityType="Self.Jugador" />
           <EntitySet Name="Modificador" EntityType="Self.Modificador" />
           <EntitySet Name="Muerte" EntityType="Self.Muerte" />
-          <EntitySet Name="Partida" EntityType="Self.Partida" />
+          <EntitySet Name="Participantes" EntityType="Self.Participantes" />
           <EntitySet Name="Sala" EntityType="Self.Sala" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
           <EntitySet Name="Mensaje" EntityType="Self.Mensaje" />
           <AssociationSet Name="FK_Amigos_Jugador" Association="Self.FK_Amigos_Jugador">
             <End Role="Jugador" EntitySet="Jugador" />
@@ -372,32 +312,25 @@ advertencia 6002: La tabla o vista 'Gloom.dbo.Participantes' no tiene definida n
             <End Role="Jugador" EntitySet="Jugador" />
             <End Role="Mensaje" EntitySet="Mensaje" />
           </AssociationSet>
-          <AssociationSet Name="FK_Partida_Sala" Association="Self.FK_Partida_Sala">
-            <End Role="Sala" EntitySet="Sala" />
-            <End Role="Partida" EntitySet="Partida" />
-          </AssociationSet>
-          <AssociationSet Name="Participantes" Association="Self.Participantes">
-            <End Role="Jugador" EntitySet="Jugador" />
-            <End Role="Partida" EntitySet="Partida" />
-          </AssociationSet>
         </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="GloomModelStoreContainer" CdmEntityContainer="EntidadGloom">
+        <EntityContainerMapping StorageEntityContainer="ModeloGloomStoreContainer" CdmEntityContainer="EntidadesGloom">
           <EntitySetMapping Name="Amigos">
-            <EntityTypeMapping TypeName="GloomModel.Amigos">
+            <EntityTypeMapping TypeName="ModeloGloom.Amigos">
               <MappingFragment StoreEntitySet="Amigos">
                 <ScalarProperty Name="NombreUsuario" ColumnName="NombreUsuario" />
                 <ScalarProperty Name="JugadorAmigo" ColumnName="JugadorAmigo" />
                 <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CartaEvento">
-            <EntityTypeMapping TypeName="GloomModel.CartaEvento">
+            <EntityTypeMapping TypeName="ModeloGloom.CartaEvento">
               <MappingFragment StoreEntitySet="CartaEvento">
                 <ScalarProperty Name="IdCarta" ColumnName="IdCarta" />
                 <ScalarProperty Name="estado" ColumnName="estado" />
@@ -408,7 +341,7 @@ advertencia 6002: La tabla o vista 'Gloom.dbo.Participantes' no tiene definida n
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CartaFamiliar">
-            <EntityTypeMapping TypeName="GloomModel.CartaFamiliar">
+            <EntityTypeMapping TypeName="ModeloGloom.CartaFamiliar">
               <MappingFragment StoreEntitySet="CartaFamiliar">
                 <ScalarProperty Name="IdCarta" ColumnName="IdCarta" />
                 <ScalarProperty Name="estado" ColumnName="estado" />
@@ -420,7 +353,7 @@ advertencia 6002: La tabla o vista 'Gloom.dbo.Participantes' no tiene definida n
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Jugador">
-            <EntityTypeMapping TypeName="GloomModel.Jugador">
+            <EntityTypeMapping TypeName="ModeloGloom.Jugador">
               <MappingFragment StoreEntitySet="Jugador">
                 <ScalarProperty Name="NombreUsuario" ColumnName="NombreUsuario" />
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
@@ -433,7 +366,7 @@ advertencia 6002: La tabla o vista 'Gloom.dbo.Participantes' no tiene definida n
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Modificador">
-            <EntityTypeMapping TypeName="GloomModel.Modificador">
+            <EntityTypeMapping TypeName="ModeloGloom.Modificador">
               <MappingFragment StoreEntitySet="Modificador">
                 <ScalarProperty Name="IdCarta" ColumnName="IdCarta" />
                 <ScalarProperty Name="estado" ColumnName="estado" />
@@ -442,39 +375,50 @@ advertencia 6002: La tabla o vista 'Gloom.dbo.Participantes' no tiene definida n
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Muerte">
-            <EntityTypeMapping TypeName="GloomModel.Muerte">
+            <EntityTypeMapping TypeName="ModeloGloom.Muerte">
               <MappingFragment StoreEntitySet="Muerte">
                 <ScalarProperty Name="IdCarta" ColumnName="IdCarta" />
                 <ScalarProperty Name="estado" ColumnName="estado" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Partida">
-            <EntityTypeMapping TypeName="GloomModel.Partida">
-              <MappingFragment StoreEntitySet="Partida">
+          <EntitySetMapping Name="Participantes">
+            <EntityTypeMapping TypeName="ModeloGloom.Participantes">
+              <MappingFragment StoreEntitySet="Participantes">
                 <ScalarProperty Name="IdPartida" ColumnName="IdPartida" />
-                <ScalarProperty Name="Ganador" ColumnName="Ganador" />
-                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
-                <ScalarProperty Name="IdAdministrador" ColumnName="IdAdministrador" />
-                <ScalarProperty Name="Tipo" ColumnName="Tipo" />
-                <ScalarProperty Name="IdSala" ColumnName="IdSala" />
+                <ScalarProperty Name="NombreUsuario" ColumnName="NombreUsuario" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Sala">
-            <EntityTypeMapping TypeName="GloomModel.Sala">
+            <EntityTypeMapping TypeName="ModeloGloom.Sala">
               <MappingFragment StoreEntitySet="Sala">
                 <ScalarProperty Name="IdSala" ColumnName="IdSala" />
-                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="NombreSala" ColumnName="NombreSala" />
                 <ScalarProperty Name="TipoSala" ColumnName="TipoSala" />
                 <ScalarProperty Name="TipoPartida" ColumnName="TipoPartida" />
                 <ScalarProperty Name="NoJugadores" ColumnName="NoJugadores" />
-                <ScalarProperty Name="Contraseña" ColumnName="Contraseña" />
+                <ScalarProperty Name="Codigo" ColumnName="Codigo" />
+                <ScalarProperty Name="IdAdministrador" ColumnName="IdAdministrador" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="Ganador" ColumnName="Ganador" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="ModeloGloom.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Mensaje">
-            <EntityTypeMapping TypeName="GloomModel.Mensaje">
+            <EntityTypeMapping TypeName="ModeloGloom.Mensaje">
               <MappingFragment StoreEntitySet="Mensaje">
                 <ScalarProperty Name="JugadorEmisor" ColumnName="JugadorEmisor" />
                 <ScalarProperty Name="JugadorReceptor" ColumnName="JugadorReceptor" />
@@ -483,14 +427,6 @@ advertencia 6002: La tabla o vista 'Gloom.dbo.Participantes' no tiene definida n
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="Participantes" TypeName="GloomModel.Participantes" StoreEntitySet="Participantes">
-            <EndProperty Name="Jugador">
-              <ScalarProperty Name="NombreUsuario" ColumnName="NombreUsuario" />
-            </EndProperty>
-            <EndProperty Name="Partida">
-              <ScalarProperty Name="IdPartida" ColumnName="IdPartida" />
-            </EndProperty>
-          </AssociationSetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -17,8 +17,8 @@ namespace AccesoDatos
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Jugador()
         {
+            this.Amigos = new HashSet<Amigos>();
             this.Mensaje = new HashSet<Mensaje>();
-            this.Partida = new HashSet<Partida>();
         }
     
         public string NombreUsuario { get; set; }
@@ -29,10 +29,9 @@ namespace AccesoDatos
         public string Tipo { get; set; }
         public string Icono { get; set; }
     
-        public virtual Amigos Amigos { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Amigos> Amigos { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Mensaje> Mensaje { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Partida> Partida { get; set; }
     }
 }

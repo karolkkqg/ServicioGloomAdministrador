@@ -1,16 +1,19 @@
 ﻿using AccesoDatos;
-using BlbibliotecaClases;
+using BibliotecaClases;
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 using System.ServiceModel;
+using System.ServiceModel.Channels;
 
 namespace ServicioGloomm
 {
    
-    [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Reentrant)]
-    public partial class ImplementacionServicio : IServicioAdministrador, IJugador
+    //[ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Reentrant)]
+    public partial class ServicioJuego : IJugador
     {  
-        public int AgregarJugador(BlbibliotecaClases.Jugador jugador)
+        public int AgregarJugador(BibliotecaClases.Jugador jugador)
         {
             int resultado;
             try
@@ -26,7 +29,7 @@ namespace ServicioGloomm
                     Icono = jugador.icono,
                 };
 
-                 resultado= AccesoBaseDeDatos.AgregarJugadorABaseDeDatos(nuevoJugador);
+                resultado= AccesoJugador.AgregarJugadorABaseDeDatos(nuevoJugador);
                 String mensaje = "Jugador agregado " + jugador.nombreUsuario;
                 return resultado;
 
@@ -38,7 +41,7 @@ namespace ServicioGloomm
             
         }
 
-        public int ActualizarJugador(BlbibliotecaClases.Jugador jugador)
+        public int ActualizarJugador(BibliotecaClases.Jugador jugador)
         {
             try
             {
@@ -53,7 +56,7 @@ namespace ServicioGloomm
                     Icono = jugador.icono,
                 };
 
-                int resultado = AccesoBaseDeDatos.ActualizarJugadorABaseDeDatos(nuevoJugador);
+                int resultado = AccesoJugador.ActualizarJugadorABaseDeDatos(nuevoJugador);
                 String mensaje = "Jugador actualizado " + jugador.nombreUsuario;
                 return resultado;
 
@@ -64,7 +67,7 @@ namespace ServicioGloomm
             }
         }
 
-        public int AutenticarJugador(BlbibliotecaClases.Jugador jugador)
+        public int AutenticarJugador(BibliotecaClases.Jugador jugador)
         {
             try
             {
@@ -75,7 +78,7 @@ namespace ServicioGloomm
 
                 };
 
-                int resultado = AccesoBaseDeDatos.ValidarJugadorParaAutenticacion(nuevoJugador);
+                int resultado = AccesoJugador.ValidarJugadorParaAutenticacion(nuevoJugador);
                 String mensaje = "Jugador actualizado " + jugador.nombreUsuario;
                 return resultado;
 
@@ -86,14 +89,14 @@ namespace ServicioGloomm
             }
         }
 
-        public BlbibliotecaClases.Jugador ObtenerJugador(string nombreUsuario)
+        public BibliotecaClases.Jugador ObtenerJugador(string nombreUsuario)
         {
             try
             {
                 AccesoDatos.Jugador jugadorDb;
-                BlbibliotecaClases.Jugador jugadorBiblioteca = new BlbibliotecaClases.Jugador();
+                BibliotecaClases.Jugador jugadorBiblioteca = new BibliotecaClases.Jugador();
 
-                jugadorDb = AccesoBaseDeDatos.BuscarJugadorPorNombreUsuario(nombreUsuario);
+                jugadorDb = AccesoJugador.BuscarJugadorPorNombreUsuario(nombreUsuario);
                 jugadorBiblioteca.nombreUsuario = jugadorDb.NombreUsuario;
                 jugadorBiblioteca.nombre = jugadorDb.Nombre;
                 jugadorBiblioteca.correo = jugadorDb.Correo;
@@ -108,6 +111,23 @@ namespace ServicioGloomm
             {
                 throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.mensaje));
             }
+        }
+
+        public List<BibliotecaClases.Jugador> BuscarJugadoresPorNombreUsuario(string nombreUsuarioParcial)
+        {
+            var jugadores = AccesoJugador.BuscarJugadoresPorNombreUsuario(nombreUsuarioParcial);
+
+            var listaJugadores = jugadores.Select(j => new BibliotecaClases.Jugador
+            {
+                nombreUsuario = j.nombreUsuario,
+                nombre = j.nombre,
+                apellidos = j.apellidos,
+                correo = j.correo,
+                tipo = j.tipo,
+                icono = j.icono
+            }).ToList();
+
+            return listaJugadores;
         }
     }
 }

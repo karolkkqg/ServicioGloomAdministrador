@@ -1,35 +1,36 @@
 ﻿using BibliotecaClases;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.ServiceModel;
-
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ServicioGloomm
 {
     [ServiceContract]
-    public interface IJugador
+    public interface IAmigos
     {
         [OperationContract]
         [FaultContract(typeof(ManejadorExcepciones))]
-        int AgregarJugador(Jugador jugador);
+        int EnviarSolcitudAmistad(Amistad solicitud);
 
         [OperationContract]
         [FaultContract(typeof(ManejadorExcepciones))]
-        int ActualizarJugador(Jugador jugador);
+        int ValidarSolcitudAmistad(Amistad solicitud);
 
         [OperationContract]
         [FaultContract(typeof(ManejadorExcepciones))]
-        int AutenticarJugador(Jugador jugador);
+        int ArchivarAmistad(Amistad solicitud);
 
         [OperationContract]
         [FaultContract(typeof(ManejadorExcepciones))]
-        Jugador ObtenerJugador(String nombreUsuario);
+        List<BibliotecaClases.Amistad> ObtenerListaAmigos(String nombreUsuario);
+
 
         [OperationContract]
         [FaultContract(typeof(ManejadorExcepciones))]
-        List<BibliotecaClases.Jugador> BuscarJugadoresPorNombreUsuario(String nombreUsuarioParcial);
+        List<BibliotecaClases.Amistad> ObtenerSolicitudesDeAmistadPorJugador(String nombreUsuario);
         
-
     }
-
 }

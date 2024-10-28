@@ -1,4 +1,4 @@
-﻿using BlbibliotecaClases;
+﻿using BibliotecaClases;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace AccesoDatos
 {
-    public class AccesoBaseDeDatos
+    public class AccesoJugador
     {
         public static Jugador ConvertirAJugador(Jugador jugador)
         {
@@ -45,7 +45,7 @@ namespace AccesoDatos
         {
             try
             {
-                using (var contexto = new EntidadGloom())
+                using (var contexto = new EntidadesGloom())
                 {
                     var jugadorEntidad = ConvertirAJugador(jugador);
                     contexto.Jugador.Add(jugadorEntidad);
@@ -76,7 +76,7 @@ namespace AccesoDatos
         {
             try
             {
-                using (var contexto = new EntidadGloom())
+                using (var contexto = new EntidadesGloom())
                 {
                     var jugadorEntidad = ConvertirAJugador(jugador);
                     contexto.Jugador.Attach(jugadorEntidad);
@@ -92,7 +92,7 @@ namespace AccesoDatos
         }
         private static Jugador ValidarCorreoActualizacionJugador(Jugador jugador)
         {
-            using (var contexto = new EntidadGloom())
+            using (var contexto = new EntidadesGloom())
             {
                 var jugadorConCorreo = contexto.Jugador
                     .FirstOrDefault(j => j.Correo == jugador.Correo && j.NombreUsuario != jugador.NombreUsuario);
@@ -108,7 +108,7 @@ namespace AccesoDatos
 
         private static Jugador ValidarCorreoJugador(Jugador jugador)
         {
-            using (var contexto = new EntidadGloom())
+            using (var contexto = new EntidadesGloom())
             {
                 var jugadorConCorreo = contexto.Jugador.FirstOrDefault(j => j.Correo == jugador.Correo);
                 if (jugadorConCorreo != null)
@@ -120,7 +120,7 @@ namespace AccesoDatos
         }
         private static Jugador ValidarUsuarioJugador(Jugador jugador)
         {
-            using (var contexto = new EntidadGloom())
+            using (var contexto = new EntidadesGloom())
             {
                 var jugadorConNombreUsuario = contexto.Jugador.FirstOrDefault(j => j.NombreUsuario == jugador.NombreUsuario);
                 if (jugadorConNombreUsuario != null)
@@ -132,7 +132,7 @@ namespace AccesoDatos
         }
         public static int ValidarJugadorParaAutenticacion(Jugador jugador)
         {
-            using (var contexto = new EntidadGloom())
+            using (var contexto = new EntidadesGloom())
             {
                 var jugadorEncontrado = contexto.Jugador.FirstOrDefault(j => j.NombreUsuario == jugador.NombreUsuario && j.Contraseña == jugador.Contraseña);
                 if (jugadorEncontrado == null)
@@ -145,21 +145,37 @@ namespace AccesoDatos
 
         public static Jugador BuscarJugadorPorNombreUsuario(string nombreUsuario)
         {
-            using (var contexto = new EntidadGloom())
+            using (var contexto = new EntidadesGloom())
             {
                 var jugadorConNombreUsuario = contexto.Jugador.FirstOrDefault(j => j.NombreUsuario == nombreUsuario);
                 if (jugadorConNombreUsuario == null)
                 {
                     throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("Jugador no encontrado"));
                 }
-                BlbibliotecaClases.Jugador jugadorBiblioteca = ConvertirAClasesBiblioteca(jugadorConNombreUsuario);
+                BibliotecaClases.Jugador jugadorBiblioteca = ConvertirAClasesBiblioteca(jugadorConNombreUsuario);
                 return jugadorConNombreUsuario;
             }
         }
 
-        private static BlbibliotecaClases.Jugador ConvertirAClasesBiblioteca(Jugador jugadorDb)
+        public static List<BibliotecaClases.Jugador> BuscarJugadoresPorNombreUsuario(string nombreParcial)
         {
-            var jugador = new BlbibliotecaClases.Jugador
+            using (var contexto = new EntidadesGloom())
+            {
+                var jugadoresConCoincidencia = contexto.Jugador
+                    .Where(j => j.NombreUsuario.Contains(nombreParcial))
+                    .ToList();
+
+                var jugadoresBiblioteca = jugadoresConCoincidencia
+                    .Select(j => ConvertirAClasesBiblioteca(j))
+                    .ToList();
+
+                return jugadoresBiblioteca;
+            }
+        }
+
+        private static BibliotecaClases.Jugador ConvertirAClasesBiblioteca(Jugador jugadorDb)
+        {
+            var jugador = new BibliotecaClases.Jugador
             {
                 nombreUsuario = jugadorDb.NombreUsuario,
                 nombre = jugadorDb.Nombre,

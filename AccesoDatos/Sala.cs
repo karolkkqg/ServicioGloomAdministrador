@@ -14,20 +14,14 @@ namespace AccesoDatos
     
     public partial class Sala
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Sala()
-        {
-            this.Partida = new HashSet<Partida>();
-        }
-    
         public string IdSala { get; set; }
-        public string Nombre { get; set; }
+        public string NombreSala { get; set; }
         public string TipoSala { get; set; }
         public string TipoPartida { get; set; }
-        public byte[] NoJugadores { get; set; }
-        public string Contraseña { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Partida> Partida { get; set; }
+        public int NoJugadores { get; set; }
+        public string Codigo { get; set; }
+        public string IdAdministrador { get; set; }
+        public string Fecha { get; set; }
+        public string Ganador { get; set; }
     }
 }

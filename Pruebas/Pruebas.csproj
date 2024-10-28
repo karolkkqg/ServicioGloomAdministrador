@@ -60,10 +60,19 @@
     <Reference Include="System.ServiceModel" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AmistadTest\AgregarSolcitudAmistadTest.cs" />
+    <Compile Include="AmistadTest\CambiarEstadoSolicitudTest.cs" />
+    <Compile Include="AmistadTest\ObtenerAmigosDelJugador.cs" />
+    <Compile Include="AmistadTest\ObtenerSolicitudesJugadorTest.cs" />
     <Compile Include="JugadorTest\ActualizarJugadorABaseDeDatosTest.cs" />
     <Compile Include="JugadorTest\AgregarJugadorABaseDeDatosTest.cs" />
     <Compile Include="JugadorTest\AutenticarJugadorTest.cs" />
+    <Compile Include="JugadorTest\BuscarJugadoresPorNombreUsuarioTest.cs" />
     <Compile Include="JugadorTest\BuscarJugadorPorNombreUsuarioTest.cs" />
+    <Compile Include="SalaTest\AgregarParticipanteTest.cs" />
+    <Compile Include="SalaTest\AgregarPartidaABaseDeDatosTest.cs" />
+    <Compile Include="SalaTest\ObtenerHistorialPartidasTest.cs" />
+    <Compile Include="SalaTest\ObtenerParticipantesDeSalaTest.cs" />
     <Compile Include="SpyCallbackCalculatorService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -76,9 +85,9 @@
       <Project>{E9275BE6-8502-4B31-955F-300DA6C47708}</Project>
       <Name>AccesoDatos</Name>
     </ProjectReference>
-    <ProjectReference Include="..\BlbibliotecaClases\BlbibliotecaClases.csproj">
+    <ProjectReference Include="..\BlbibliotecaClases\BibliotecaClases.csproj">
       <Project>{CF1EF776-68A3-4CBB-85D7-5F7B28959F11}</Project>
-      <Name>BlbibliotecaClases</Name>
+      <Name>BibliotecaClases</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

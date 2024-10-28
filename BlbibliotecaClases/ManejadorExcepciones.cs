@@ -7,18 +7,21 @@ using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlbibliotecaClases
+namespace BibliotecaClases
 {
     [DataContract]
     public class ManejadorExcepciones
     {
         [DataMember]
-        public string mensaje { get; set; }
-        
+        public string mensaje {  get; set; }
 
         public ManejadorExcepciones(string mensajeError)
         {
             mensaje = mensajeError;
+        }
+        public string Mensaje
+        {
+            get { return mensaje; }
         }
 
         public static string ObtenerMensajeError(int codigoError)
@@ -50,9 +53,9 @@ namespace BlbibliotecaClases
             return new ManejadorExcepciones(mensaje);
         }
 
-        public static ManejadorExcepciones PropagarExcepcion(ManejadorExcepciones ex)
+        public static ManejadorExcepciones crearExcpecion(String numeroError)
         {
-            return new ManejadorExcepciones(ex.mensaje);
+            return new ManejadorExcepciones(numeroError);
         }
     }
 }

@@ -18,7 +18,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccesoDatos", "AccesoDatos\
 		{CF1EF776-68A3-4CBB-85D7-5F7B28959F11} = {CF1EF776-68A3-4CBB-85D7-5F7B28959F11}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlbibliotecaClases", "BlbibliotecaClases\BlbibliotecaClases.csproj", "{CF1EF776-68A3-4CBB-85D7-5F7B28959F11}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BibliotecaClases", "BlbibliotecaClases\BibliotecaClases.csproj", "{CF1EF776-68A3-4CBB-85D7-5F7B28959F11}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServicioGloomm", "ServicioGloomm\ServicioGloomm.csproj", "{82FA4201-60B4-4F4B-9CB4-70FBE0C39F17}"
 	ProjectSection(ProjectDependencies) = postProject

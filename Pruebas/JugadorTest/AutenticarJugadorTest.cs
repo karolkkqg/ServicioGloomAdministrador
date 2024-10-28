@@ -1,5 +1,5 @@
 ﻿using AccesoDatos;
-using BlbibliotecaClases;
+using BibliotecaClases;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -29,13 +29,13 @@ namespace Pruebas.JugadorTest
                 Tipo = "Registrado",
                 Icono = "Icono1",
             };
-            AccesoBaseDeDatos.AgregarJugadorABaseDeDatos(jugador);
+            AccesoJugador.AgregarJugadorABaseDeDatos(jugador);
         }
 
         [TestMethod()]
         public void TestAuteticarUsuarioExitoso()
         {
-           int jugadorEncontrado = AccesoBaseDeDatos.ValidarJugadorParaAutenticacion(jugador);
+           int jugadorEncontrado = AccesoJugador.ValidarJugadorParaAutenticacion(jugador);
             Assert.AreEqual(1, jugadorEncontrado);
             LimpiarDatosDePrueba();
         }
@@ -53,7 +53,7 @@ namespace Pruebas.JugadorTest
 
             var exception = Assert.ThrowsException<FaultException<ManejadorExcepciones>>(() =>
             {
-                AccesoBaseDeDatos.ValidarJugadorParaAutenticacion(jugador);
+                AccesoJugador.ValidarJugadorParaAutenticacion(jugador);
             });
 
             Assert.AreEqual("3", exception.Detail.mensaje);
@@ -74,7 +74,7 @@ namespace Pruebas.JugadorTest
 
             var exception = Assert.ThrowsException<FaultException<ManejadorExcepciones>>(() =>
             {
-                AccesoBaseDeDatos.ValidarJugadorParaAutenticacion(jugador);
+                AccesoJugador.ValidarJugadorParaAutenticacion(jugador);
             });
             Assert.AreEqual("3", exception.Detail.mensaje);
 
@@ -84,7 +84,7 @@ namespace Pruebas.JugadorTest
         [ClassCleanup]
         public static void LimpiarDatosDePrueba()
         {
-            using (var contexto = new EntidadGloom())
+            using (var contexto = new EntidadesGloom())
             {
                 var jugador = contexto.Jugador
                     .FirstOrDefault(j => j.NombreUsuario == "TacoDoradoDePato");

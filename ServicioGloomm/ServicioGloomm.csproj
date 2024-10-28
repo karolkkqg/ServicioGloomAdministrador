@@ -52,19 +52,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IAmigos.cs" />
+    <Compile Include="ISala.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IJugador.cs" />
-    <Compile Include="ImplementacionServicio.cs" />
+    <Compile Include="ServicioJugador.cs" />
     <Compile Include="IServicioAdministrador.cs" />
+    <Compile Include="ServicioAmigos.cs" />
+    <Compile Include="ServicioSala.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AccesoDatos\AccesoDatos.csproj">
       <Project>{E9275BE6-8502-4B31-955F-300DA6C47708}</Project>
       <Name>AccesoDatos</Name>
     </ProjectReference>
-    <ProjectReference Include="..\BlbibliotecaClases\BlbibliotecaClases.csproj">
+    <ProjectReference Include="..\BlbibliotecaClases\BibliotecaClases.csproj">
       <Project>{cf1ef776-68a3-4cbb-85d7-5f7b28959f11}</Project>
-      <Name>BlbibliotecaClases</Name>
+      <Name>BibliotecaClases</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -13,10 +13,10 @@ namespace AccesoDatos
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class EntidadGloom : DbContext
+    public partial class EntidadesGloom : DbContext
     {
-        public EntidadGloom()
-            : base("name=EntidadGloom")
+        public EntidadesGloom()
+            : base("name=EntidadesGloom")
         {
         }
     
@@ -31,8 +31,9 @@ namespace AccesoDatos
         public virtual DbSet<Jugador> Jugador { get; set; }
         public virtual DbSet<Modificador> Modificador { get; set; }
         public virtual DbSet<Muerte> Muerte { get; set; }
-        public virtual DbSet<Partida> Partida { get; set; }
+        public virtual DbSet<Participantes> Participantes { get; set; }
         public virtual DbSet<Sala> Sala { get; set; }
+        public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
         public virtual DbSet<Mensaje> Mensaje { get; set; }
     }
 }

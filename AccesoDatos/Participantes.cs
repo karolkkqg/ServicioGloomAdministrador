@@ -12,13 +12,10 @@ namespace AccesoDatos
     using System;
     using System.Collections.Generic;
     
-    public partial class Amigos
+    public partial class Participantes
     {
+        public string IdPartida { get; set; }
         public string NombreUsuario { get; set; }
-        public string JugadorAmigo { get; set; }
-        public string Estado { get; set; }
         public int Id { get; set; }
-    
-        public virtual Jugador Jugador { get; set; }
     }
 }

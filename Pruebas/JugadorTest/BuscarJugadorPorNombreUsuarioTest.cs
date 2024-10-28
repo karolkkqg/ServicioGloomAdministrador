@@ -28,13 +28,13 @@ namespace Pruebas.JugadorTest
                     Tipo = "Registrado",
                     Icono = "Icono1",
                 };
-                AccesoBaseDeDatos.AgregarJugadorABaseDeDatos(jugador);
+                AccesoJugador.AgregarJugadorABaseDeDatos(jugador);
             }
 
             [TestMethod()]
             public void TestBuscarJugadorPorNombreUsuarioExitoso()
             {
-                Jugador jugador = AccesoBaseDeDatos.BuscarJugadorPorNombreUsuario("TacoDoradoDePato");
+                Jugador jugador = AccesoJugador.BuscarJugadorPorNombreUsuario("TacoDoradoDePato");
 
 
                 Assert.IsNotNull(jugador, "El jugador no fue encontrado en la base de datos");
@@ -51,7 +51,7 @@ namespace Pruebas.JugadorTest
             [ClassCleanup]
             public static void LimpiarDatosDePrueba()
             {
-                using (var contexto = new EntidadGloom())
+                using (var contexto = new EntidadesGloom())
                 {
                     var jugador = contexto.Jugador
                         .FirstOrDefault(j => j.NombreUsuario == "TacoDoradoDePato");

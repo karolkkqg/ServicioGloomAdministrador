@@ -1,35 +1,31 @@
 ﻿using BibliotecaClases;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.ServiceModel;
-
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ServicioGloomm
 {
     [ServiceContract]
-    public interface IJugador
+    public interface ISala
     {
         [OperationContract]
         [FaultContract(typeof(ManejadorExcepciones))]
-        int AgregarJugador(Jugador jugador);
+        int AgregarParticipantesAPartida(Sala sala);
 
         [OperationContract]
         [FaultContract(typeof(ManejadorExcepciones))]
-        int ActualizarJugador(Jugador jugador);
+        int CrearPartida(Sala sala);
 
         [OperationContract]
         [FaultContract(typeof(ManejadorExcepciones))]
-        int AutenticarJugador(Jugador jugador);
+        List<BibliotecaClases.Sala> ObtenerDatosHistorial(String nombreUsuario);
+
 
         [OperationContract]
         [FaultContract(typeof(ManejadorExcepciones))]
-        Jugador ObtenerJugador(String nombreUsuario);
-
-        [OperationContract]
-        [FaultContract(typeof(ManejadorExcepciones))]
-        List<BibliotecaClases.Jugador> BuscarJugadoresPorNombreUsuario(String nombreUsuarioParcial);
-        
-
+        List<String> ObtenrParticipantesDeJuego(String identificadorSala);
     }
-
 }

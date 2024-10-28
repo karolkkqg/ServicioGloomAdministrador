@@ -12,13 +12,12 @@ namespace AccesoDatos
     using System;
     using System.Collections.Generic;
     
-    public partial class Amigos
+    public partial class sysdiagrams
     {
-        public string NombreUsuario { get; set; }
-        public string JugadorAmigo { get; set; }
-        public string Estado { get; set; }
-        public int Id { get; set; }
-    
-        public virtual Jugador Jugador { get; set; }
+        public string name { get; set; }
+        public int principal_id { get; set; }
+        public int diagram_id { get; set; }
+        public Nullable<int> version { get; set; }
+        public byte[] definition { get; set; }
     }
 }

@@ -27,7 +27,7 @@ namespace Pruebas.JugadorTest
                 Tipo = "Registrado",
                 Icono = "Icono1",
             };
-            AccesoBaseDeDatos.AgregarJugadorABaseDeDatos(jugador);
+            AccesoJugador.AgregarJugadorABaseDeDatos(jugador);
         }
 
         [TestMethod()]
@@ -43,22 +43,12 @@ namespace Pruebas.JugadorTest
                     Tipo = "Registrado",
                     Icono = "Icono1",
                 };
-                int filasAfectadas = AccesoBaseDeDatos.ActualizarJugadorABaseDeDatos(jugador);
+                int filasAfectadas = AccesoJugador.ActualizarJugadorABaseDeDatos(jugador);
 
-            using (var contexto = new EntidadGloom())
+            using (var contexto = new EntidadesGloom())
             {
                 Assert.AreEqual(1, filasAfectadas, "El número de filas afectadas no coincide");
-                /*
-                var jugadorInsertado = contexto.Jugador.FirstOrDefault(j => j.NombreUsuario == "TacoDoradoDePato");
-
-                Assert.IsNotNull(jugadorInsertado, "El jugador no fue encontrado en la base de datos");
-
-                Assert.AreEqual("Hector", jugadorInsertado.Nombre, "El nombre del jugador no coincide");
-                Assert.AreEqual("Juarez Castillo", jugadorInsertado.Apellidos, "Los apellidos del jugador no coinciden");
-                Assert.AreEqual("hectJuarPato@gmail.com", jugadorInsertado.Correo, "El correo del jugador no coincide");
-                Assert.AreEqual("Registrado", jugadorInsertado.Tipo, "El tipo de jugador no coincide");
-                Assert.AreEqual("Icono1", jugadorInsertado.Icono, "El iconoc del jugador no coincide");
-                */
+             
             }
             LimpiarDatosDePrueba();
         }
@@ -77,30 +67,17 @@ namespace Pruebas.JugadorTest
                     Tipo = "Registrado",
                     Icono = "Icono3",
                 };
-                int filasAfectadas = AccesoBaseDeDatos.ActualizarJugadorABaseDeDatos(jugador);
+                int filasAfectadas = AccesoJugador.ActualizarJugadorABaseDeDatos(jugador);
 
             Assert.AreEqual(1, filasAfectadas, "El número de filas afectadas no coincide");
-            /*
-            using (var contexto = new EntidadesGloom())
-            {
-                var jugadorInsertado = contexto.Jugador.FirstOrDefault(j => j.NombreUsuario == "TacoDoradoDePato");
-
-                Assert.IsNotNull(jugadorInsertado, "El jugador no fue encontrado en la base de datos");
-
-                Assert.AreEqual("Gloria", jugadorInsertado.Nombre, "El nombre del jugador no coincide");
-                Assert.AreEqual("Trevi", jugadorInsertado.Apellidos, "Los apellidos del jugador no coinciden");
-                Assert.AreEqual("gloriaADIos@hotmail.com", jugadorInsertado.Correo, "El correo del jugador no coincide");
-                Assert.AreEqual("Registrado", jugadorInsertado.Tipo, "El tipo de jugador no coincide");
-                Assert.AreEqual("Icono3", jugadorInsertado.Icono, "El iconoc del jugador no coincide");
-            }
-            */
+        
             LimpiarDatosDePrueba();
         }
 
         [ClassCleanup]
         public static void LimpiarDatosDePrueba()
         {
-            using (var contexto = new EntidadGloom())
+            using (var contexto = new EntidadesGloom())
             {
                 var jugador = contexto.Jugador
                     .FirstOrDefault(j => j.NombreUsuario == "TacoDoradoDePato");
