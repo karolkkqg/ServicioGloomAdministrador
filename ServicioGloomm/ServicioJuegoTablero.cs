@@ -30,7 +30,7 @@ namespace ServicioGloomm
 
         public void IngresarJugadorAJuego(string nombreUsuario, string numeroSala, int numeroJugadores)
         {
-            HostBehaviorManager.ChangeToReentrant();
+            //HostBehaviorManager.ChangeToReentrant();
             var callback = OperationContext.Current.GetCallbackChannel<IJuegoAdministradorCallback>();
             if (!JugadoresConectadosCallback.ContainsKey(numeroSala))
             {

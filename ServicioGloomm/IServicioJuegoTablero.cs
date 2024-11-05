@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BlbibliotecaClases;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
@@ -12,6 +13,9 @@ namespace ServicioGloomm
     {
         [OperationContract]
         void IngresarJugadorAJuego(string nombreUsuario, string numeroSala, int numeroJugadores);
+
+        [OperationContract]
+        List<Carta> ObtenerCartasSobrantes();
     }
 
     [ServiceContract]

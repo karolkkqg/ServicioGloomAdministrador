@@ -48,8 +48,7 @@ namespace ServicioGloomm
         [OperationContract]
         Dictionary<string, (string nombrePersonaje, int vida)> ObtenerUsuariosYPersonajes();
 
-        [OperationContract]
-        List<Carta> ObtenerCartasSobrantes();
+        
     }
 
     [ServiceContract]

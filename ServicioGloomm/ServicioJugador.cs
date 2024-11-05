@@ -9,10 +9,12 @@ using System.ServiceModel.Channels;
 
 namespace ServicioGloomm
 {
-   
+
     //[ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Reentrant)]
     public partial class ServicioJuego : IJugador
-    {  
+    {
+        private static readonly Dictionary<string, BibliotecaClases.Jugador> jugadoresInvitados = new Dictionary<string, BibliotecaClases.Jugador>();
+        private static readonly List<int> numeroJugadorInvitado = new List<int>();
         public int AgregarJugador(BibliotecaClases.Jugador jugador)
         {
             int resultado;
@@ -128,6 +130,55 @@ namespace ServicioGloomm
             }).ToList();
 
             return listaJugadores;
+        }
+
+        public void AgregarJugadorInvitado()
+        {
+            int numeroInvitado = (numeroJugadorInvitado.Count > 0) ? numeroJugadorInvitado.Last() + 1 : 1;
+
+            BibliotecaClases.Jugador jugadorInvitado = new BibliotecaClases.Jugador
+            {
+                nombreUsuario = "Invitado" + numeroInvitado,
+                nombre = "Jugador invitado anónimo",
+                apellidos = "Jugador invitado anónimo",
+                correo = "sin correo",
+                contraseña = "sin contraseña",
+                tipo = "Invitado",
+                icono = "Imagenes/PerfilUnicornio.png"
+            };
+
+            if (!jugadoresInvitados.ContainsKey(jugadorInvitado.nombreUsuario))
+            {
+                jugadoresInvitados[jugadorInvitado.nombreUsuario] = jugadorInvitado;
+                numeroJugadorInvitado.Add(numeroInvitado);
+            }
+            else
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("1"));
+            }
+        }
+        
+        public BibliotecaClases.Jugador ObtenerJugadorInvitado(string nombreUsuario)
+        {
+            if (jugadoresInvitados.TryGetValue(nombreUsuario, out var jugador))
+            {
+                return jugador;
+            }
+            throw new KeyNotFoundException("El jugador no fue encontrado.");
+        }
+        
+        public bool EliminarJugadorInvitado(string nombreUsuario)
+        {
+            return jugadoresInvitados.Remove(nombreUsuario);
+        }
+
+        public void LimpiarListaNumeroJugadores()
+        {
+            numeroJugadorInvitado.Clear();
+        }
+        public void LimpiarListaJugadoresInvitados()
+        {
+            jugadoresInvitados.Clear();
         }
     }
 }
