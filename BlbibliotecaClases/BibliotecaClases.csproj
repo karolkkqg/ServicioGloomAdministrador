@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Amistad.cs" />
+    <Compile Include="Carta.cs" />
     <Compile Include="Jugador.cs" />
     <Compile Include="ManejadorExcepciones.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

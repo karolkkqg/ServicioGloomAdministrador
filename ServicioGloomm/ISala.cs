@@ -1,4 +1,5 @@
 ﻿using BibliotecaClases;
+using BlbibliotecaClases;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ServicioGloomm
 {
-    [ServiceContract]
+    [ServiceContract(CallbackContract = typeof(ISalaCallback))]
     public interface ISala
     {
         [OperationContract]
@@ -23,9 +24,38 @@ namespace ServicioGloomm
         [FaultContract(typeof(ManejadorExcepciones))]
         List<BibliotecaClases.Sala> ObtenerDatosHistorial(String nombreUsuario);
 
-
         [OperationContract]
         [FaultContract(typeof(ManejadorExcepciones))]
         List<String> ObtenrParticipantesDeJuego(String identificadorSala);
+
+        [OperationContract]
+        [FaultContract(typeof(ManejadorExcepciones))]
+        Sala BuscarSalaExistente(String idSala, String codigo);
+
+        [OperationContract(IsOneWay = true)]
+        void ConectarConSala(string nombreUsuario);
+        [OperationContract]
+        List<string> ObtenerJugadoresConectados(string nombreUsuario);
+
+        [OperationContract]
+        [FaultContract(typeof(ManejadorExcepciones))]
+        void SeleccionarPersonaje(string nombreUsuario, string nombrePersonaje, int vida);
+
+        [OperationContract]
+        [FaultContract(typeof(ManejadorExcepciones))]
+        void validarPersonajesSeleccionados(int cantidadJugadores);
+        
+        [OperationContract]
+        Dictionary<string, (string nombrePersonaje, int vida)> ObtenerUsuariosYPersonajes();
+
+        [OperationContract]
+        List<Carta> ObtenerCartasSobrantes();
     }
-}
+
+    [ServiceContract]
+    public interface ISalaCallback
+    {
+        [OperationContract(IsOneWay =true)]
+        void EmpezarJuego();
+    }
+    }

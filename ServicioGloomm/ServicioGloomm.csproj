@@ -52,8 +52,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdministradorDeComportamiento.cs" />
     <Compile Include="IAmigos.cs" />
     <Compile Include="ISala.cs" />
+    <Compile Include="IServicioJuegoTablero.cs" />
+    <Compile Include="ServicioCarta.cs" />
+    <Compile Include="ServicioJuegoTablero.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IJugador.cs" />
     <Compile Include="ServicioJugador.cs" />

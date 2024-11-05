@@ -46,7 +46,7 @@ namespace Pruebas.SalaTest
         }
 
         [TestMethod]
-        public void TestObtenerAmigosDelJugadorExitoso()
+        public void TestObtenerParticipantesDelJugadorExitoso()
         {
             var amigos = AccesoSala.ObtenerParticipantesDeSala("Sala0000");
 

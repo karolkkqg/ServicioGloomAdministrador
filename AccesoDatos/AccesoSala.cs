@@ -115,6 +115,29 @@ namespace AccesoDatos
             }
         }
 
+        public static Sala BuscarPartida(String idSala, String codigo)
+        {
+            try
+            {
+                using (var contexto = new EntidadesGloom())
+                {
+                    var sala = contexto.Sala.FirstOrDefault(p => p.IdSala == idSala && p.Codigo == codigo);
+
+                    if (sala == null)
+                    {
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("10"));
+                    }
+
+                    return sala;
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(
+                    new ManejadorExcepciones(ex.Number.ToString()));
+            }
+        }
+
         private static AccesoDatos.Sala ConvertirASala(BibliotecaClases.Sala sala)
         {
             return new AccesoDatos.Sala

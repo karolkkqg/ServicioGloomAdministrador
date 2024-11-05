@@ -114,7 +114,7 @@ namespace ServicioGloomm
         }
 
         public List<BibliotecaClases.Jugador> BuscarJugadoresPorNombreUsuario(string nombreUsuarioParcial)
-        {
+       {
             var jugadores = AccesoJugador.BuscarJugadoresPorNombreUsuario(nombreUsuarioParcial);
 
             var listaJugadores = jugadores.Select(j => new BibliotecaClases.Jugador

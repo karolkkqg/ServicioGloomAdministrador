@@ -41,7 +41,7 @@ namespace Pruebas.SalaTest
         }
 
         [TestMethod]
-        public void TestObtenerAmigosDelJugadorExitoso()
+        public void TestObtenerHistorialDelJugadorExitoso()
         {
             var amigos = AccesoSala.ObtenerHistorialPartidas("Jugador1");
 
