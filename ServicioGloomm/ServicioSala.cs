@@ -208,5 +208,15 @@ namespace ServicioGloomm
         {
             return new Dictionary<string, (string nombrePersonaje, int vida)>(personajesPorUsuario);
         }
+
+        public void LimpiarListaJugadores()
+        {
+            personajesPorUsuario.Clear();
+        }
+
+        public void LimpiarListaPersonajes()
+        {
+            personajesUsados.Clear();
+        }
     }
 }

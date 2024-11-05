@@ -29,7 +29,15 @@ namespace ServicioGloomm
         [FaultContract(typeof(ManejadorExcepciones))]
         List<BibliotecaClases.Jugador> BuscarJugadoresPorNombreUsuario(String nombreUsuarioParcial);
 
-       
+        [OperationContract]
+        [FaultContract(typeof(ManejadorExcepciones))]
+        void AgregarJugadorInvitado();
+
+        [OperationContract]
+        [FaultContract(typeof(ManejadorExcepciones))]
+        bool EliminarJugadorInvitado(string nombreUsuario);
+
+
     }
 
 }
