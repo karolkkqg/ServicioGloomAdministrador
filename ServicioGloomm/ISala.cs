@@ -43,7 +43,7 @@ namespace ServicioGloomm
 
         [OperationContract]
         [FaultContract(typeof(ManejadorExcepciones))]
-        void validarPersonajesSeleccionados(int cantidadJugadores);
+        void ValidarPersonajesSeleccionados(int cantidadJugadores);
         
         [OperationContract]
         Dictionary<string, (string nombrePersonaje, int vida)> ObtenerUsuariosYPersonajes();

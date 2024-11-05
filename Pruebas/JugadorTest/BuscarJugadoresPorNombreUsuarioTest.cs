@@ -19,7 +19,6 @@ namespace Pruebas.JugadorTest
             [TestInitialize]
             public void TestInitialize()
             {
-                // Insertar jugadores de prueba en la base de datos
                 jugador1 = new AccesoDatos.Jugador
                 {
                     NombreUsuario = "TacoDoradoDePato",

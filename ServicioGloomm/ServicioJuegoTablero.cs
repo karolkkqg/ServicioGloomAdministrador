@@ -22,23 +22,23 @@ namespace ServicioGloomm
     public partial class ServicioJuego : IServicioJuegoTablero
     {
         private ServicioCarta servicioCarta;
-        private static readonly Dictionary<string, IJuegoAdministradorCallback> JugadoresConectadosCallback = new Dictionary<string, IJuegoAdministradorCallback>();
-        private static readonly Dictionary<string, string> JugadoresConectados = new Dictionary<string, string>();
+        private static readonly Dictionary<string, IJuegoAdministradorCallback> jugadoresConectadosCallback = new Dictionary<string, IJuegoAdministradorCallback>();
+        private static readonly Dictionary<string, string> jugadoresConectados = new Dictionary<string, string>();
         private static readonly Dictionary<string, List<PosicionesJugador>> direccionJugadorEnJuego = new Dictionary<string, List<PosicionesJugador>>();
         private static readonly Dictionary<string, string> TurnsInGameboard = new Dictionary<string, string>();
-        private static readonly List<Carta> CartasSobrantes = new List<Carta>();
+        private static readonly List<Carta> cartasSobrantes = new List<Carta>();
 
         public void IngresarJugadorAJuego(string nombreUsuario, string numeroSala, int numeroJugadores)
         {
             HostBehaviorManager.ChangeToReentrant();
             var callback = OperationContext.Current.GetCallbackChannel<IJuegoAdministradorCallback>();
-            if (!JugadoresConectadosCallback.ContainsKey(numeroSala))
+            if (!jugadoresConectadosCallback.ContainsKey(numeroSala))
             {
-                JugadoresConectadosCallback.Add(nombreUsuario, callback);
-                JugadoresConectados.Add(nombreUsuario, numeroSala);
+                jugadoresConectadosCallback.Add(nombreUsuario, callback);
+                jugadoresConectados.Add(nombreUsuario, numeroSala);
                 List<Carta> cartasSobrantes = EmpezarJuego(numeroSala, numeroJugadores);
-                CartasSobrantes.Clear();
-                CartasSobrantes.AddRange(cartasSobrantes);
+                ServicioJuego.cartasSobrantes.Clear();
+                ServicioJuego.cartasSobrantes.AddRange(cartasSobrantes);
             }
         }
 
@@ -47,17 +47,17 @@ namespace ServicioGloomm
             VerificarparticipantesConectados(numeroSala, numeroJugadores);
             
                 servicioCarta = new ServicioCarta();
-                asignarTurnos(numeroSala);
+                AsignarTurnos(numeroSala);
                 var cartasSobrantes = servicioCarta.BarajearMazo(numeroSala);
-                asignarPrimerTurno(numeroSala);
+                AsignarPrimerTurno(numeroSala);
                 return cartasSobrantes;
             
         }
 
         private void VerificarparticipantesConectados(string numeroSala, int numeroJugadores)
         {
-            List<string> jugadoresEnSala= obtenerJugadores(numeroSala);
-            int conteoJugadores = jugadoresEnSala.Count(jugador => JugadoresConectados.ContainsKey(jugador));
+            List<string> jugadoresEnSala= ObtenerJugadores(numeroSala);
+            int conteoJugadores = jugadoresEnSala.Count(jugador => jugadoresConectados.ContainsKey(jugador));
 
             if (conteoJugadores != numeroJugadores)
             {
@@ -65,9 +65,9 @@ namespace ServicioGloomm
             }
         }
 
-        private void asignarTurnos(string numeroSala)
+        private void AsignarTurnos(string numeroSala)
         {
-            List<string> jugadorPartida = obtenerJugadores(numeroSala);
+            List<string> jugadorPartida = ObtenerJugadores(numeroSala);
             int cantidadJugadores = jugadorPartida.Count;
 
             List<PosicionesJugador> posicionesJugador = new List<PosicionesJugador>();
@@ -88,12 +88,12 @@ namespace ServicioGloomm
             direccionJugadorEnJuego.Add(numeroSala, posicionesJugador);
         }
 
-        public List<string> obtenerJugadores(string numeroSala)
+        public List<string> ObtenerJugadores(string numeroSala)
         {
-            return JugadoresConectados.Where(gamer => gamer.Value == numeroSala).Select(gamer => gamer.Key).ToList();
+            return jugadoresConectados.Where(gamer => gamer.Value == numeroSala).Select(gamer => gamer.Key).ToList();
         }
 
-        private void asignarPrimerTurno(string numeroSala)
+        private void AsignarPrimerTurno(string numeroSala)
         {
          
             List<PosicionesJugador> turnsList = direccionJugadorEnJuego[numeroSala];
@@ -102,7 +102,7 @@ namespace ServicioGloomm
 
             try
             {
-                JugadoresConectadosCallback[nombreUsuario].RecibirTurno(true);
+                jugadoresConectadosCallback[nombreUsuario].RecibirTurno(true);
             }
             catch (CommunicationException ex)
             {
@@ -117,7 +117,7 @@ namespace ServicioGloomm
 
         public List<Carta> ObtenerCartasSobrantes()
         {
-            return new List<Carta>(CartasSobrantes);
+            return new List<Carta>(cartasSobrantes);
         }
 
         public void RecibirTurno(bool validarTurno)

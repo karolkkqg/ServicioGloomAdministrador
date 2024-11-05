@@ -52,7 +52,7 @@ namespace Pruebas.AmistadTest
         }
 
         [TestMethod]
-        public void TestObtenersolicitudesDelJugadorExitoso()
+        public void TestObtenerSolicitudesDelJugadorExitoso()
         {
             var amigos = AccesoAmigos.ObtenerSolicitudesJugador("UsuarioTest2");
 
