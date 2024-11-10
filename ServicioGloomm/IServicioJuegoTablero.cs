@@ -11,17 +11,21 @@ namespace ServicioGloomm
     [ServiceContract(CallbackContract = typeof(IJuegoAdministradorCallback))]
     public interface IServicioJuegoTablero
     {
+
         [OperationContract]
         void IngresarJugadorAJuego(string nombreUsuario, string numeroSala, int numeroJugadores);
 
         [OperationContract]
         List<Carta> ObtenerCartasSobrantes();
+
+        [OperationContract]
+        void IniciarPartidaPorAdministrador(string nombreAdministrador, string numeroSala, int numeroJugadores);
     }
 
     [ServiceContract]
     public interface IJuegoAdministradorCallback
     {
-        [OperationContract]
-        void RecibirTurno(bool validarTurno);
+        [OperationContract(IsOneWay = true)]
+        void EnviarTurno(string nombreDelUsusarioEnTurno);
     }
 }

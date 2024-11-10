@@ -24,34 +24,6 @@ namespace ServicioGloomm
             return resultado;
         }
 
-        public List<BibliotecaClases.Sala> ObtenerDatosHistorial(string nombreUsuario)
-        {
-            var historial = AccesoSala.ObtenerHistorialPartidas(nombreUsuario);
-
-            var listaSalas = historial.Select(s => new BibliotecaClases.Sala
-            {
-                idSala = s.IdSala,
-                nombreSala = s.NombreSala,
-                tipoSala = s.TipoSala,
-                tipoPartida = s.TipoPartida,
-                noJugadores = s.NoJugadores,
-                codigo = s.Codigo,
-                idAdministrador = s.IdAdministrador,
-                fecha = s.Fecha,
-                ganador = s.Ganador,
-                jugador = nombreUsuario
-            }).ToList();
-
-            return listaSalas;
-        }
-
-        public List<String> ObtenrParticipantesDeJuego(string identificadorSala)
-        {
-            var participantes = AccesoSala.ObtenerParticipantesDeSala(identificadorSala);
-
-            return participantes;
-        }
-
         public int CrearPartida(BibliotecaClases.Sala sala)
         {
 
@@ -158,9 +130,28 @@ namespace ServicioGloomm
 
         public void ConectarConSala(string nombreUsuario)
         {
+            AdministradorDeComportamiento.cambiarModoComportamientoReentrante();
             if (!salaJugadoresCallback.ContainsKey(nombreUsuario))
             {
                 salaJugadoresCallback.Add(nombreUsuario, OperationContext.Current.GetCallbackChannel<ISalaCallback>());
+                foreach (var jugador in salaJugadoresCallback)
+                {
+                    if (salaJugadoresCallback.ContainsKey(jugador.Key))
+                    {
+                        try
+                        {
+                            salaJugadoresCallback[jugador.Key].ActualizarNumeroJugadores();
+                        }
+                        catch (CommunicationException communicationException)
+                        {
+                            //mANEJAR ERROR
+                        }
+                        catch (TimeoutException timeoutException)
+                        {
+                            //mANEJAR ERROR
+                        }
+                    }
+                }
             }
         }
 
@@ -217,6 +208,29 @@ namespace ServicioGloomm
         public void LimpiarListaPersonajes()
         {
             personajesUsados.Clear();
+        }
+
+        public void EmpezarPartida(string idSala)
+        {
+            AdministradorDeComportamiento.cambiarModoComportamientoReentrante();
+            foreach (var jugador in salaJugadoresCallback)
+            {
+                if (salaJugadoresCallback.ContainsKey(jugador.Key))
+                {
+                    try
+                    {
+                        salaJugadoresCallback[jugador.Key].EmpezarJuego();
+                    }
+                    catch (CommunicationException communicationException)
+                    {
+                        //mANEJAR ERROR
+                    }
+                    catch (TimeoutException timeoutException)
+                    {
+                        //mANEJAR ERROR
+                    }
+                }
+            }
         }
     }
 }

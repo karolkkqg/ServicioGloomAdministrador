@@ -132,7 +132,7 @@ namespace ServicioGloomm
             return listaJugadores;
         }
 
-        public void AgregarJugadorInvitado()
+        public BibliotecaClases.Jugador AgregarJugadorInvitado()
         {
             int numeroInvitado = (numeroJugadorInvitado.Count > 0) ? numeroJugadorInvitado.Last() + 1 : 1;
 
@@ -145,17 +145,10 @@ namespace ServicioGloomm
                 contraseña = "sin contraseña",
                 tipo = "Invitado",
                 icono = "Imagenes/PerfilUnicornio.png"
-            };
-
-            if (!jugadoresInvitados.ContainsKey(jugadorInvitado.nombreUsuario))
-            {
+            }; 
                 jugadoresInvitados[jugadorInvitado.nombreUsuario] = jugadorInvitado;
                 numeroJugadorInvitado.Add(numeroInvitado);
-            }
-            else
-            {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("1"));
-            }
+            return jugadorInvitado;
         }
         
         public BibliotecaClases.Jugador ObtenerJugadorInvitado(string nombreUsuario)

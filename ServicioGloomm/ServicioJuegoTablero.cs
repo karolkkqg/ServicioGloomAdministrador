@@ -21,36 +21,47 @@ namespace ServicioGloomm
 
     public partial class ServicioJuego : IServicioJuegoTablero
     {
-        private ServicioCarta servicioCarta;
+        private ServicioJuego servicioCarta;
         private static readonly Dictionary<string, IJuegoAdministradorCallback> JugadoresConectadosCallback = new Dictionary<string, IJuegoAdministradorCallback>();
         private static readonly Dictionary<string, string> JugadoresConectados = new Dictionary<string, string>();
         private static readonly Dictionary<string, List<PosicionesJugador>> direccionJugadorEnJuego = new Dictionary<string, List<PosicionesJugador>>();
         private static readonly Dictionary<string, string> TurnsInGameboard = new Dictionary<string, string>();
         private static readonly List<Carta> CartasSobrantes = new List<Carta>();
+        private static readonly Dictionary<string, int> indiceTurnoActual = new Dictionary<string, int>();
+        private static readonly Dictionary<string, bool> partidaYaIniciada = new Dictionary<string, bool>();
 
         public void IngresarJugadorAJuego(string nombreUsuario, string numeroSala, int numeroJugadores)
         {
-            //HostBehaviorManager.ChangeToReentrant();
+            AdministradorDeComportamiento.cambiarModoComportamientoReentrante();
             var callback = OperationContext.Current.GetCallbackChannel<IJuegoAdministradorCallback>();
             if (!JugadoresConectadosCallback.ContainsKey(numeroSala))
             {
                 JugadoresConectadosCallback.Add(nombreUsuario, callback);
                 JugadoresConectados.Add(nombreUsuario, numeroSala);
-                List<Carta> cartasSobrantes = EmpezarJuego(numeroSala, numeroJugadores);
+
+            }
+        }
+
+        public void IniciarPartidaPorAdministrador(string nombreAdministrador, string numeroSala, int numeroJugadores)
+        {
+            if (!partidaYaIniciada.ContainsKey(numeroSala) || !partidaYaIniciada[numeroSala])
+            {
+                partidaYaIniciada[numeroSala] = true;
+                VerificarparticipantesConectados(numeroSala, numeroJugadores);
+                List<Carta> cartasSobrantes = EmpezarJuego(numeroSala);
                 CartasSobrantes.Clear();
                 CartasSobrantes.AddRange(cartasSobrantes);
             }
         }
 
-        private List<Carta> EmpezarJuego(string numeroSala, int numeroJugadores)
+        private List<Carta> EmpezarJuego(string numeroSala)
         {
-            VerificarparticipantesConectados(numeroSala, numeroJugadores);
-            
-                servicioCarta = new ServicioCarta();
-                asignarTurnos(numeroSala);
-                var cartasSobrantes = servicioCarta.BarajearMazo(numeroSala);
-                asignarPrimerTurno(numeroSala);
-                return cartasSobrantes;
+
+            servicioCarta = new ServicioJuego();
+            asignarTurnos(numeroSala);
+            var cartasSobrantes = servicioCarta.BarajearMazo(numeroSala);
+            asignarPrimerTurno(numeroSala);
+            return cartasSobrantes;
             
         }
 
@@ -67,25 +78,24 @@ namespace ServicioGloomm
 
         private void asignarTurnos(string numeroSala)
         {
-            List<string> jugadorPartida = obtenerJugadores(numeroSala);
-            int cantidadJugadores = jugadorPartida.Count;
 
-            List<PosicionesJugador> posicionesJugador = new List<PosicionesJugador>();
+            List<string> jugadores = obtenerJugadores(numeroSala).OrderBy(j => Guid.NewGuid()).ToList();
+            int totalJugadores = jugadores.Count;
 
-            for (int i = 0; i < cantidadJugadores; i++)
+            List<PosicionesJugador> posiciones = new List<PosicionesJugador>();
+            for (int i = 0; i < totalJugadores; i++)
             {
-                string vecinoIzquierdo = jugadorPartida[(i - 1 + cantidadJugadores) % cantidadJugadores];
-                string vecinoDerecho = jugadorPartida[(i + 1) % cantidadJugadores];
+                string vecinoIzquierdo = jugadores[(i - 1 + totalJugadores) % totalJugadores];
+                string vecinoDerecho = jugadores[(i + 1) % totalJugadores];
 
-                posicionesJugador.Add(new PosicionesJugador
+                posiciones.Add(new PosicionesJugador
                 {
-                    nombreUsuario = jugadorPartida[i],
+                    nombreUsuario = jugadores[i],
                     izquierda = vecinoIzquierdo,
                     derecha = vecinoDerecho
                 });
             }
-
-            direccionJugadorEnJuego.Add(numeroSala, posicionesJugador);
+            direccionJugadorEnJuego[numeroSala] = posiciones;
         }
 
         public List<string> obtenerJugadores(string numeroSala)
@@ -95,24 +105,51 @@ namespace ServicioGloomm
 
         private void asignarPrimerTurno(string numeroSala)
         {
-         
-            List<PosicionesJugador> turnsList = direccionJugadorEnJuego[numeroSala];
-            string nombreUsuario = turnsList[0].nombreUsuario;
-            TurnsInGameboard.Add(numeroSala, nombreUsuario);
 
-            try
-            {
-                JugadoresConectadosCallback[nombreUsuario].RecibirTurno(true);
-            }
-            catch (CommunicationException ex)
-            {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Message));
-            }
-            catch (TimeoutException ex)
-            {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Message));
-            }
+                List<PosicionesJugador> posiciones = direccionJugadorEnJuego[numeroSala];
+                int totalJugadores = posiciones.Count;
 
+            ValidarJugadorIndice(numeroSala, totalJugadores);
+
+                int indiceActual = indiceTurnoActual[numeroSala];
+                string jugadorActual = posiciones[indiceActual].nombreUsuario;
+                TurnsInGameboard[numeroSala] = jugadorActual;
+
+                if (JugadoresConectadosCallback.TryGetValue(jugadorActual, out var callback) && callback != null)
+                {
+                    try
+                    {
+                        callback.EnviarTurno(jugadorActual);
+                        Console.WriteLine($"Turno asignado a {jugadorActual} con éxito.");
+                    }
+                    catch (CommunicationException ex)
+                    {
+                        Console.WriteLine("Excepción de comunicación: " + ex.Message);
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Message));
+                    }
+                    catch (TimeoutException ex)
+                    {
+                        Console.WriteLine("Excepción de tiempo de espera: " + ex.Message);
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Message));
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Excepción inesperada en el callback: " + ex.Message);
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("Error inesperado al enviar el turno: " + ex.Message));
+                    }
+                }
+        }
+
+        private void ValidarJugadorIndice(string numeroSala, int totalJugadores)
+        {
+            if (!indiceTurnoActual.ContainsKey(numeroSala))
+            {
+                indiceTurnoActual[numeroSala] = 0;
+            }
+            else
+            {
+                indiceTurnoActual[numeroSala] = (indiceTurnoActual[numeroSala] + 1) % totalJugadores;
+            }
         }
 
         public List<Carta> ObtenerCartasSobrantes()
@@ -120,10 +157,6 @@ namespace ServicioGloomm
             return new List<Carta>(CartasSobrantes);
         }
 
-        public void RecibirTurno(bool validarTurno)
-        {
-            throw new NotImplementedException();
-        }
         /*
 private void RemoveFromGameboard(string gamertag)
 {

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ServicioGloomm
 {
-    public partial class ServicioCarta
+    public partial class ServicioJuego : IServicioCarta
     {
         private ServicioJuego servicioJuego;
         private static readonly Dictionary<string, List<Carta>> barajaJugadores = new Dictionary<string, List<Carta>>();
@@ -29,7 +29,7 @@ namespace ServicioGloomm
             List<Carta> primerMazo = CrearCartasDeMuerte();
             List<Carta> segundoMazo = CrearCartasModificador();
             servicioJuego = new ServicioJuego();
-            var cartasSobrantes = RepartirCartas(servicioJuego.obtenerJugadores(numeroSala), CombinarCartas((List<Carta>)primerMazo.Concat(segundoMazo)));
+            var cartasSobrantes = RepartirCartas(servicioJuego.obtenerJugadores(numeroSala), CombinarCartas((List<Carta>)primerMazo.Concat(segundoMazo).ToList()));
             return cartasSobrantes;
         }
 
@@ -104,7 +104,15 @@ namespace ServicioGloomm
                     cartasCombinadas.RemoveAt(numeroCarta);
                 }
 
-                barajaJugadores.Add(jugador, mazoDelJugador);
+                // Verificar si el jugador ya existe en el diccionario
+                if (!barajaJugadores.ContainsKey(jugador))
+                {
+                    barajaJugadores.Add(jugador, mazoDelJugador);
+                }
+                else
+                {
+                    barajaJugadores[jugador] = mazoDelJugador; // Actualiza el mazo si ya existe
+                }
             }
             return cartasCombinadas;
         }
@@ -175,6 +183,11 @@ namespace ServicioGloomm
 
             return PrimerMazo;
 
+        }
+
+        public List<Carta> ObtenerMazoJugador(string nombreJugador)
+        {
+            return barajaJugadores.TryGetValue(nombreJugador, out List<Carta> mazo) ? mazo : new List<Carta>();
         }
 
     }
