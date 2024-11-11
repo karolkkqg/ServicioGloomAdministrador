@@ -52,7 +52,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdministradorDeComportamiento.cs" />
     <Compile Include="IAmigos.cs" />
     <Compile Include="ISala.cs" />
     <Compile Include="IServicioJuegoTablero.cs" />
