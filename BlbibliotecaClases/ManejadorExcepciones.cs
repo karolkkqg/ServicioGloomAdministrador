@@ -53,7 +53,7 @@ namespace BibliotecaClases
             return new ManejadorExcepciones(mensaje);
         }
 
-        public static ManejadorExcepciones crearExcpecion(String numeroError)
+        public static ManejadorExcepciones CrearExcpecion(String numeroError)
         {
             return new ManejadorExcepciones(numeroError);
         }

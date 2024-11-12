@@ -29,7 +29,7 @@ namespace ServicioGloomm
 
             try
             {
-                String codigoGenerado = generarCodigo();
+                String codigoGenerado = GenerarCodigo();
                 sala.codigo = codigoGenerado;
                 sala.idSala = codigoGenerado;
 
@@ -60,7 +60,7 @@ namespace ServicioGloomm
             }
         }
 
-        private string generarCodigo()
+        private string GenerarCodigo()
         {
             string codigoGenerado;
 
@@ -73,11 +73,11 @@ namespace ServicioGloomm
                     .Select(selection => selection[random.Next(selection.Length)]).ToArray());
 
 
-            } while (!codigoValido(codigoGenerado));
+            } while (!CodigoValido(codigoGenerado));
             return codigoGenerado;
         }
 
-        private bool codigoValido(String codigo)
+        private bool CodigoValido(String codigo)
         {
             bool valido = false;
             try
@@ -208,7 +208,7 @@ namespace ServicioGloomm
             }
         }
 
-        public void validarPersonajesSeleccionados(int cantidadJugadores)
+        public void ValidarPersonajesSeleccionados(int cantidadJugadores)
         {
             if (cantidadJugadores != personajesUsados.Count())
             {

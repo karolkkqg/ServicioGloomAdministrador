@@ -29,7 +29,11 @@ namespace ServicioGloomm
             List<Carta> primerMazo = CrearCartasDeMuerte();
             List<Carta> segundoMazo = CrearCartasModificador();
             servicioJuego = new ServicioJuego();
+<<<<<<< HEAD
             var cartasSobrantes = RepartirCartas(servicioJuego.obtenerJugadores(numeroSala), CombinarCartas((List<Carta>)primerMazo.Concat(segundoMazo).ToList()));
+=======
+            var cartasSobrantes = RepartirCartas(servicioJuego.ObtenerJugadores(numeroSala), CombinarCartas((List<Carta>)primerMazo.Concat(segundoMazo)));
+>>>>>>> 351c70a0508036a7c93ce7726f275ea9c1dd7cda
             return cartasSobrantes;
         }
 
@@ -57,30 +61,30 @@ namespace ServicioGloomm
             Carta cartaMuerte20 = new Carta { identificador = "DesaparecioEnNiebla.png", valor = 200 };
             Carta cartaMuerte21 = new Carta { identificador = "CayoDesdeAlto.png", valor = 200 };
 
-            List<Carta> PrimerMazo = new List<Carta>();
-            PrimerMazo.Add(cartaMuerte1);
-            PrimerMazo.Add(cartaMuerte2);
-            PrimerMazo.Add(cartaMuerte3);
-            PrimerMazo.Add(cartaMuerte4);
-            PrimerMazo.Add(cartaMuerte5);
-            PrimerMazo.Add(cartaMuerte6);
-            PrimerMazo.Add(cartaMuerte7);
-            PrimerMazo.Add(cartaMuerte8);
-            PrimerMazo.Add(cartaMuerte9);
-            PrimerMazo.Add(cartaMuerte10);
-            PrimerMazo.Add(cartaMuerte11);
-            PrimerMazo.Add(cartaMuerte12);
-            PrimerMazo.Add(cartaMuerte13);
-            PrimerMazo.Add(cartaMuerte14);
-            PrimerMazo.Add(cartaMuerte15);
-            PrimerMazo.Add(cartaMuerte16);
-            PrimerMazo.Add(cartaMuerte17);
-            PrimerMazo.Add(cartaMuerte18);
-            PrimerMazo.Add(cartaMuerte19);
-            PrimerMazo.Add(cartaMuerte20);
-            PrimerMazo.Add(cartaMuerte21);
+            List<Carta> primerMazo = new List<Carta>();
+            primerMazo.Add(cartaMuerte1);
+            primerMazo.Add(cartaMuerte2);
+            primerMazo.Add(cartaMuerte3);
+            primerMazo.Add(cartaMuerte4);
+            primerMazo.Add(cartaMuerte5);
+            primerMazo.Add(cartaMuerte6);
+            primerMazo.Add(cartaMuerte7);
+            primerMazo.Add(cartaMuerte8);
+            primerMazo.Add(cartaMuerte9);
+            primerMazo.Add(cartaMuerte10);
+            primerMazo.Add(cartaMuerte11);
+            primerMazo.Add(cartaMuerte12);
+            primerMazo.Add(cartaMuerte13);
+            primerMazo.Add(cartaMuerte14);
+            primerMazo.Add(cartaMuerte15);
+            primerMazo.Add(cartaMuerte16);
+            primerMazo.Add(cartaMuerte17);
+            primerMazo.Add(cartaMuerte18);
+            primerMazo.Add(cartaMuerte19);
+            primerMazo.Add(cartaMuerte20);
+            primerMazo.Add(cartaMuerte21);
 
-            return PrimerMazo;
+            return primerMazo;
 
         }
 
@@ -156,30 +160,30 @@ namespace ServicioGloomm
             Carta cartaMuerte20 = new Carta { identificador = "DesaparecioEnNiebla.png", valor = 200 };
             Carta cartaMuerte21 = new Carta { identificador = "CayoDesdeAlto.png", valor = 200 };
 
-            List<Carta> PrimerMazo = new List<Carta>();
-            PrimerMazo.Add(cartaMuerte1);
-            PrimerMazo.Add(cartaMuerte2);
-            PrimerMazo.Add(cartaMuerte3);
-            PrimerMazo.Add(cartaMuerte4);
-            PrimerMazo.Add(cartaMuerte5);
-            PrimerMazo.Add(cartaMuerte6);
-            PrimerMazo.Add(cartaMuerte7);
-            PrimerMazo.Add(cartaMuerte8);
-            PrimerMazo.Add(cartaMuerte9);
-            PrimerMazo.Add(cartaMuerte10);
-            PrimerMazo.Add(cartaMuerte11);
-            PrimerMazo.Add(cartaMuerte12);
-            PrimerMazo.Add(cartaMuerte13);
-            PrimerMazo.Add(cartaMuerte14);
-            PrimerMazo.Add(cartaMuerte15);
-            PrimerMazo.Add(cartaMuerte16);
-            PrimerMazo.Add(cartaMuerte17);
-            PrimerMazo.Add(cartaMuerte18);
-            PrimerMazo.Add(cartaMuerte19);
-            PrimerMazo.Add(cartaMuerte20);
-            PrimerMazo.Add(cartaMuerte21);
+            List<Carta> primerMazo = new List<Carta>();
+            primerMazo.Add(cartaMuerte1);
+            primerMazo.Add(cartaMuerte2);
+            primerMazo.Add(cartaMuerte3);
+            primerMazo.Add(cartaMuerte4);
+            primerMazo.Add(cartaMuerte5);
+            primerMazo.Add(cartaMuerte6);
+            primerMazo.Add(cartaMuerte7);
+            primerMazo.Add(cartaMuerte8);
+            primerMazo.Add(cartaMuerte9);
+            primerMazo.Add(cartaMuerte10);
+            primerMazo.Add(cartaMuerte11);
+            primerMazo.Add(cartaMuerte12);
+            primerMazo.Add(cartaMuerte13);
+            primerMazo.Add(cartaMuerte14);
+            primerMazo.Add(cartaMuerte15);
+            primerMazo.Add(cartaMuerte16);
+            primerMazo.Add(cartaMuerte17);
+            primerMazo.Add(cartaMuerte18);
+            primerMazo.Add(cartaMuerte19);
+            primerMazo.Add(cartaMuerte20);
+            primerMazo.Add(cartaMuerte21);
 
-            return PrimerMazo;
+            return primerMazo;
 
         }
 

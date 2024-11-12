@@ -84,7 +84,7 @@
   <ItemGroup>
     <Compile Include="AmistadTest\AgregarSolcitudAmistadTest.cs" />
     <Compile Include="AmistadTest\CambiarEstadoSolicitudTest.cs" />
-    <Compile Include="AmistadTest\ObtenerAmigosDelJugador.cs" />
+    <Compile Include="AmistadTest\ObtenerAmigosDelJugadorTest.cs" />
     <Compile Include="AmistadTest\ObtenerSolicitudesJugadorTest.cs" />
     <Compile Include="JugadorTest\ActualizarJugadorABaseDeDatosTest.cs" />
     <Compile Include="JugadorTest\AgregarJugadorABaseDeDatosTest.cs" />
