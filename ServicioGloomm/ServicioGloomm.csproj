@@ -53,6 +53,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IAmigos.cs" />
+    <Compile Include="IChat.cs" />
+    <Compile Include="IChatCallback.cs" />
     <Compile Include="ISala.cs" />
     <Compile Include="IServicioJuegoTablero.cs" />
     <Compile Include="ServicioCarta.cs" />

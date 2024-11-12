@@ -186,6 +186,7 @@ namespace ServicioGloomm
             Carta cartaModificadora56 = new Carta { identificador = "Ruina7.png", valor = 35 };
 
             List<Carta> primerMazo = new List<Carta>();
+
             primerMazo.Add(cartaModificadora1);
             primerMazo.Add(cartaModificadora2);
             primerMazo.Add(cartaModificadora3);
