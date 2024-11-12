@@ -18,6 +18,6 @@ namespace ServicioGloomm
     public interface IJuegoAdministradorCallback
     {
         [OperationContract]
-        void RecibirTurno(bool validarTurno);
+        void EnviarTurno(bool validarTurno);
     }
 }

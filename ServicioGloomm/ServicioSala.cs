@@ -158,7 +158,7 @@ namespace ServicioGloomm
 
         public void ConectarConSala(string nombreUsuario)
         {
-            AdministradorDeComportamiento.CambiarModoComportamientoReentrante();
+          //  AdministradorDeComportamiento.CambiarModoComportamientoReentrante();
             if (!salaJugadoresCallback.ContainsKey(nombreUsuario))
             {
                 salaJugadoresCallback.Add(nombreUsuario, OperationContext.Current.GetCallbackChannel<ISalaCallback>());
@@ -168,7 +168,7 @@ namespace ServicioGloomm
                     {
                         try
                         {
-                            salaJugadoresCallback[jugador.Key].ActualizarNumeroJugadores();
+                          //  salaJugadoresCallback[jugador.Key].ActualizarNumeroJugadores();
                         }
                         catch (CommunicationException ex)
                         {
@@ -196,7 +196,7 @@ namespace ServicioGloomm
            
             if (personajesPorUsuario.ContainsKey(nombreUsuario))
             {
-                var personajeAnterior = personajesPorUsuario[nombreUsuario].Item1;
+             //   var personajeAnterior = personajesPorUsuario[nombreUsuario].Item1;
                 personajesPorUsuario[nombreUsuario] = (nombrePersonaje, vida);
                 personajesUsados.Remove(personajeAnterior);
             }
@@ -204,14 +204,14 @@ namespace ServicioGloomm
             {
                 personajesPorUsuario.Add(nombreUsuario, (nombrePersonaje, vida));
             }
-            AdministradorDeComportamiento.CambiarModoComportamientoReentrante();
+          //  AdministradorDeComportamiento.CambiarModoComportamientoReentrante();
             foreach (var jugador in salaJugadoresCallback)
             {
                 if (salaJugadoresCallback.ContainsKey(jugador.Key))
                 {
                     try
                     {
-                        salaJugadoresCallback[jugador.Key].ActualizarImagenPersonaje(nombrePersonaje, personajeAnterior);
+                  //      salaJugadoresCallback[jugador.Key].ActualizarImagenPersonaje(nombrePersonaje, personajeAnterior);
                     }
                     catch (CommunicationException ex)
                     {
@@ -261,7 +261,7 @@ namespace ServicioGloomm
 
         public void EmpezarPartida(string idSala)
         {
-            AdministradorDeComportamiento.CambiarModoComportamientoReentrante();
+           // AdministradorDeComportamiento.CambiarModoComportamientoReentrante();
             foreach (var jugador in salaJugadoresCallback)
             {
                 if (salaJugadoresCallback.ContainsKey(jugador.Key))
@@ -291,7 +291,7 @@ namespace ServicioGloomm
 
         public void EliminarJugadorDeSala(string nombreUsuario)
         {
-            AdministradorDeComportamiento.CambiarModoComportamientoReentrante();
+           // AdministradorDeComportamiento.CambiarModoComportamientoReentrante();
 
             salaJugadoresCallback.Remove(nombreUsuario);
             foreach (var jugador in salaJugadoresCallback)
@@ -300,7 +300,7 @@ namespace ServicioGloomm
                 {
                     try
                     {
-                        salaJugadoresCallback[jugador.Key].ActualizarNumeroJugadores();
+                       // salaJugadoresCallback[jugador.Key].ActualizarNumeroJugadores();
                     }
                     catch (CommunicationException ex)
                     {

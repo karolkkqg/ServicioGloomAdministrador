@@ -32,7 +32,7 @@ namespace ServicioGloomm
 
         public void IngresarJugadorAJuego(string nombreUsuario, string numeroSala, int numeroJugadores)
         {
-            AdministradorDeComportamiento.CambiarModoComportamientoReentrante();
+           // AdministradorDeComportamiento.CambiarModoComportamientoReentrante();
             var callback = OperationContext.Current.GetCallbackChannel<IJuegoAdministradorCallback>();
             if (!JugadoresConectadosCallback.ContainsKey(numeroSala))
             {
@@ -118,7 +118,7 @@ namespace ServicioGloomm
                 {
                     try
                     {
-                        callback.EnviarTurno(jugadorActual);
+                       // callback.EnviarTurno(jugadorActual);
                     }
                     catch (CommunicationException ex)
                     {
