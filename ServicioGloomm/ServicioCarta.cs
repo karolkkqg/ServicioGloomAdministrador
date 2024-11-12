@@ -103,15 +103,13 @@ namespace ServicioGloomm
                     mazoDelJugador.Add(cartaSeleciconada);
                     cartasCombinadas.RemoveAt(numeroCarta);
                 }
-
-                // Verificar si el jugador ya existe en el diccionario
                 if (!barajaJugadores.ContainsKey(jugador))
                 {
                     barajaJugadores.Add(jugador, mazoDelJugador);
                 }
                 else
                 {
-                    barajaJugadores[jugador] = mazoDelJugador; // Actualiza el mazo si ya existe
+                    barajaJugadores[jugador] = mazoDelJugador;
                 }
             }
             return cartasCombinadas;

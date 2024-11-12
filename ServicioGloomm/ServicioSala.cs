@@ -14,9 +14,9 @@ namespace ServicioGloomm
     
     public partial class ServicioJuego : ISala
     {
-        private static readonly Dictionary<string, ISalaCallback> salaJugadoresCallback = new Dictionary<string, ISalaCallback>();
-        private static readonly Dictionary<string, (string nombrePersonaje, int vida)> personajesPorUsuario = new Dictionary<string, (string, int)>();
-        private static readonly List<string> personajesUsados = new List<string>();
+        public static readonly Dictionary<string, ISalaCallback> salaJugadoresCallback = new Dictionary<string, ISalaCallback>();
+        public static readonly Dictionary<string, (string nombrePersonaje, int vida)> personajesPorUsuario = new Dictionary<string, (string, int)>();
+        public static readonly List<string> personajesUsados = new List<string>();
 
         public int AgregarParticipantesAPartida(BibliotecaClases.Sala sala)
         {
@@ -142,13 +142,13 @@ namespace ServicioGloomm
                         {
                             salaJugadoresCallback[jugador.Key].ActualizarNumeroJugadores();
                         }
-                        catch (CommunicationException communicationException)
+                        catch (CommunicationException ex)
                         {
-                            //mANEJAR ERROR
+                            throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16"));
                         }
-                        catch (TimeoutException timeoutException)
+                        catch (TimeoutException ex)
                         {
-                            //mANEJAR ERROR
+                            throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18"));
                         }
                     }
                 }
@@ -162,17 +162,38 @@ namespace ServicioGloomm
 
         public void SeleccionarPersonaje(string nombreUsuario, string nombrePersonaje, int vida)
         {
+            string personajeAnterior="sin personaje";
+
             EstaSiendoUtilizado(nombrePersonaje);
            
             if (personajesPorUsuario.ContainsKey(nombreUsuario))
             {
-                var personajeAnterior = personajesPorUsuario[nombreUsuario].Item1;
+                personajeAnterior = personajesPorUsuario[nombreUsuario].Item1;
                 personajesPorUsuario[nombreUsuario] = (nombrePersonaje, vida);
                 personajesUsados.Remove(personajeAnterior);
             }
             else
             {
                 personajesPorUsuario.Add(nombreUsuario, (nombrePersonaje, vida));
+            }
+            AdministradorDeComportamiento.cambiarModoComportamientoReentrante();
+            foreach (var jugador in salaJugadoresCallback)
+            {
+                if (salaJugadoresCallback.ContainsKey(jugador.Key))
+                {
+                    try
+                    {
+                        salaJugadoresCallback[jugador.Key].ActualizarImagenPersonaje(nombrePersonaje, personajeAnterior);
+                    }
+                    catch (CommunicationException ex)
+                    {
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16"));
+                    }
+                    catch (TimeoutException ex)
+                    {
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18"));
+                    }
+                }
             }
         }
         private void EstaSiendoUtilizado(string nombrePersonaje)
@@ -221,16 +242,67 @@ namespace ServicioGloomm
                     {
                         salaJugadoresCallback[jugador.Key].EmpezarJuego();
                     }
-                    catch (CommunicationException communicationException)
+                    catch (CommunicationException ex)
                     {
-                        //mANEJAR ERROR
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16"));
                     }
-                    catch (TimeoutException timeoutException)
+                    catch (TimeoutException ex)
                     {
-                        //mANEJAR ERROR
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18"));
                     }
                 }
             }
         }
+
+        public void SacarDeSala(string nombreUsuario)
+        {
+            EliminarJugadorDeSala(nombreUsuario);
+            string personaje = EliminarJugadorYPersonaje(nombreUsuario);
+            EliminarPersonajeUsado(personaje);
+        }
+
+        public void EliminarJugadorDeSala(string nombreUsuario)
+        {
+            AdministradorDeComportamiento.cambiarModoComportamientoReentrante();
+
+            salaJugadoresCallback.Remove(nombreUsuario);
+            foreach (var jugador in salaJugadoresCallback)
+            {
+                if (salaJugadoresCallback.ContainsKey(jugador.Key))
+                {
+                    try
+                    {
+                        salaJugadoresCallback[jugador.Key].ActualizarNumeroJugadores();
+                    }
+                    catch (CommunicationException ex)
+                    {
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16"));
+                    }
+                    catch (TimeoutException ex)
+                    {
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18"));
+                    }
+                }
+            }
+        }
+
+        private void EliminarPersonajeUsado(string nombrePersonaje)
+        {
+            personajesUsados.Remove(nombrePersonaje);
+        }
+
+        private string EliminarJugadorYPersonaje(string nombreUsuario)
+        {
+            personajesPorUsuario.TryGetValue(nombreUsuario, out var InformacionPersonaje);
+            personajesPorUsuario.Remove(nombreUsuario);
+            personajesUsados.Remove(InformacionPersonaje.nombrePersonaje);
+            return InformacionPersonaje.nombrePersonaje;
+        }
+
+        public List<string> ObtenerPersonajesUsados()
+        {
+            return new List<string>(personajesUsados);
+        }
+
     }
 }

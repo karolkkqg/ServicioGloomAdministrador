@@ -22,13 +22,13 @@ namespace ServicioGloomm
     public partial class ServicioJuego : IServicioJuegoTablero
     {
         private ServicioJuego servicioCarta;
-        private static readonly Dictionary<string, IJuegoAdministradorCallback> JugadoresConectadosCallback = new Dictionary<string, IJuegoAdministradorCallback>();
-        private static readonly Dictionary<string, string> JugadoresConectados = new Dictionary<string, string>();
-        private static readonly Dictionary<string, List<PosicionesJugador>> direccionJugadorEnJuego = new Dictionary<string, List<PosicionesJugador>>();
-        private static readonly Dictionary<string, string> TurnsInGameboard = new Dictionary<string, string>();
-        private static readonly List<Carta> CartasSobrantes = new List<Carta>();
-        private static readonly Dictionary<string, int> indiceTurnoActual = new Dictionary<string, int>();
-        private static readonly Dictionary<string, bool> partidaYaIniciada = new Dictionary<string, bool>();
+        public static readonly Dictionary<string, IJuegoAdministradorCallback> JugadoresConectadosCallback = new Dictionary<string, IJuegoAdministradorCallback>();
+        public static readonly Dictionary<string, string> JugadoresConectados = new Dictionary<string, string>();
+        public static readonly Dictionary<string, List<PosicionesJugador>> direccionJugadorEnJuego = new Dictionary<string, List<PosicionesJugador>>();
+        public static readonly Dictionary<string, string> TurnsInGameboard = new Dictionary<string, string>();
+        public static readonly List<Carta> CartasSobrantes = new List<Carta>();
+        public static readonly Dictionary<string, int> indiceTurnoActual = new Dictionary<string, int>();
+        public static readonly Dictionary<string, bool> partidaYaIniciada = new Dictionary<string, bool>();
 
         public void IngresarJugadorAJuego(string nombreUsuario, string numeroSala, int numeroJugadores)
         {
@@ -120,22 +120,14 @@ namespace ServicioGloomm
                     try
                     {
                         callback.EnviarTurno(jugadorActual);
-                        Console.WriteLine($"Turno asignado a {jugadorActual} con éxito.");
                     }
                     catch (CommunicationException ex)
                     {
-                        Console.WriteLine("Excepción de comunicación: " + ex.Message);
-                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Message));
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16"));
                     }
                     catch (TimeoutException ex)
                     {
-                        Console.WriteLine("Excepción de tiempo de espera: " + ex.Message);
-                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Message));
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine("Excepción inesperada en el callback: " + ex.Message);
-                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("Error inesperado al enviar el turno: " + ex.Message));
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18"));
                     }
                 }
         }
@@ -157,6 +149,12 @@ namespace ServicioGloomm
             return new List<Carta>(CartasSobrantes);
         }
 
+
+        public void EliminarJugadorDeJuego(string nombreUsuario)
+        {
+            JugadoresConectadosCallback.Remove(nombreUsuario);
+            JugadoresConectados.Remove(nombreUsuario);
+        }
         /*
 private void RemoveFromGameboard(string gamertag)
 {

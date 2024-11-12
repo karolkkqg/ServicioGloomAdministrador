@@ -41,7 +41,13 @@ namespace ServicioGloomm
         Dictionary<string, (string nombrePersonaje, int vida)> ObtenerUsuariosYPersonajes();
 
         [OperationContract]
+        void SacarDeSala(string nombreUsuario);
+
+        [OperationContract]
         void EmpezarPartida(string idSala);
+
+        [OperationContract]
+        List<string> ObtenerPersonajesUsados();
 
     }
 
@@ -53,5 +59,8 @@ namespace ServicioGloomm
 
         [OperationContract(IsOneWay = true)]
         void ActualizarNumeroJugadores();
+        [OperationContract(IsOneWay = true)]
+        void ActualizarImagenPersonaje(string personaje, string personajeAnterior);
+
     }
-    }
+}

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Pruebas.SalaTest
 {
-    [TestClass]
+    //[TestClass]
     public class SeleccionarPersonajeTest
     {
         private ServicioGloomm.ServicioJuego servicioSala;

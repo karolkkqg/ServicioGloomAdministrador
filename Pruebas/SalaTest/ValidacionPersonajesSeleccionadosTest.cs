@@ -32,9 +32,9 @@ namespace Pruebas.SalaTest
         public void ValidarPersonajesSeleccionadosExitoso()
         {
             int cantidadJugadores = 3;
-            servicioSala.SeleccionarPersonaje("Usuario1", "Personaje1", 100);
-            servicioSala.SeleccionarPersonaje("Usuario2", "Personaje2", 100);
-            servicioSala.SeleccionarPersonaje("Usuario3", "Personaje3", 100);
+            ServicioGloomm.ServicioJuego.personajesUsados.Add("Personaje1");
+            ServicioGloomm.ServicioJuego.personajesUsados.Add("Personaje2");
+            ServicioGloomm.ServicioJuego.personajesUsados.Add("Personaje3");
 
             try
             {
@@ -50,9 +50,9 @@ namespace Pruebas.SalaTest
         public void ValidarPersonajesSeleccionadosFallaPorCantidadIncorrecta()
         {
             int cantidadJugadores = 2;
-            servicioSala.SeleccionarPersonaje("Usuario1", "Personaje1", 100);
-            servicioSala.SeleccionarPersonaje("Usuario2", "Personaje2", 100);
-            servicioSala.SeleccionarPersonaje("Usuario3", "Personaje3", 100);
+            ServicioGloomm.ServicioJuego.personajesUsados.Add("Personaje1");
+            ServicioGloomm.ServicioJuego.personajesUsados.Add("Personaje2");
+            ServicioGloomm.ServicioJuego.personajesUsados.Add("Personaje3");
             var excepcion = Assert.ThrowsException<FaultException<ManejadorExcepciones>>(() =>
             {
                 servicioSala.validarPersonajesSeleccionados(cantidadJugadores);

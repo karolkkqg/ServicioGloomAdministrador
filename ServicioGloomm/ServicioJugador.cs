@@ -10,11 +10,11 @@ using System.ServiceModel.Channels;
 namespace ServicioGloomm
 {
 
-    //[ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Reentrant)]
     public partial class ServicioJuego : IJugador
     {
         private static readonly Dictionary<string, BibliotecaClases.Jugador> jugadoresInvitados = new Dictionary<string, BibliotecaClases.Jugador>();
         private static readonly List<int> numeroJugadorInvitado = new List<int>();
+
         public int AgregarJugador(BibliotecaClases.Jugador jugador)
         {
             int resultado;

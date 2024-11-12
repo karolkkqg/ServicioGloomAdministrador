@@ -20,6 +20,9 @@ namespace ServicioGloomm
 
         [OperationContract]
         void IniciarPartidaPorAdministrador(string nombreAdministrador, string numeroSala, int numeroJugadores);
+
+        [OperationContract]
+        void EliminarJugadorDeJuego(string nombreUsuario);
     }
 
     [ServiceContract]
