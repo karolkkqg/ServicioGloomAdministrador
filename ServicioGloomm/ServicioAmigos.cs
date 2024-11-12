@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 
 namespace ServicioGloomm
 {
-    //[ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Reentrant)]
     public partial class ServicioJuego : IAmigos
     {
         public int EnviarSolcitudAmistad(Amistad solicitud)

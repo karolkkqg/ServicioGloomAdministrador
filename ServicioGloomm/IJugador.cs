@@ -31,7 +31,7 @@ namespace ServicioGloomm
 
         [OperationContract]
         [FaultContract(typeof(ManejadorExcepciones))]
-        void AgregarJugadorInvitado();
+        Jugador AgregarJugadorInvitado();
 
         [OperationContract]
         [FaultContract(typeof(ManejadorExcepciones))]

@@ -10,11 +10,11 @@ using System.ServiceModel.Channels;
 namespace ServicioGloomm
 {
 
-    //[ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Reentrant)]
     public partial class ServicioJuego : IJugador
     {
         private static readonly Dictionary<string, BibliotecaClases.Jugador> jugadoresInvitados = new Dictionary<string, BibliotecaClases.Jugador>();
         private static readonly List<int> numeroJugadorInvitado = new List<int>();
+
         public int AgregarJugador(BibliotecaClases.Jugador jugador)
         {
             int resultado;
@@ -132,7 +132,7 @@ namespace ServicioGloomm
             return listaJugadores;
         }
 
-        public void AgregarJugadorInvitado()
+        public BibliotecaClases.Jugador AgregarJugadorInvitado()
         {
             int numeroInvitado = (numeroJugadorInvitado.Count > 0) ? numeroJugadorInvitado.Last() + 1 : 1;
 
@@ -145,17 +145,10 @@ namespace ServicioGloomm
                 contraseña = "sin contraseña",
                 tipo = "Invitado",
                 icono = "Imagenes/PerfilUnicornio.png"
-            };
-
-            if (!jugadoresInvitados.ContainsKey(jugadorInvitado.nombreUsuario))
-            {
+            }; 
                 jugadoresInvitados[jugadorInvitado.nombreUsuario] = jugadorInvitado;
                 numeroJugadorInvitado.Add(numeroInvitado);
-            }
-            else
-            {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("1"));
-            }
+            return jugadorInvitado;
         }
         
         public BibliotecaClases.Jugador ObtenerJugadorInvitado(string nombreUsuario)

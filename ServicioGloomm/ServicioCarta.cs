@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ServicioGloomm
 {
-    public partial class ServicioCarta
+    public partial class ServicioJuego : IServicioCarta
     {
         private ServicioJuego servicioJuego;
         private static readonly Dictionary<string, List<Carta>> barajaJugadores = new Dictionary<string, List<Carta>>();
@@ -29,7 +29,11 @@ namespace ServicioGloomm
             List<Carta> primerMazo = CrearCartasDeMuerte();
             List<Carta> segundoMazo = CrearCartasModificador();
             servicioJuego = new ServicioJuego();
+<<<<<<< HEAD
+            var cartasSobrantes = RepartirCartas(servicioJuego.obtenerJugadores(numeroSala), CombinarCartas((List<Carta>)primerMazo.Concat(segundoMazo).ToList()));
+=======
             var cartasSobrantes = RepartirCartas(servicioJuego.ObtenerJugadores(numeroSala), CombinarCartas((List<Carta>)primerMazo.Concat(segundoMazo)));
+>>>>>>> 351c70a0508036a7c93ce7726f275ea9c1dd7cda
             return cartasSobrantes;
         }
 
@@ -103,8 +107,14 @@ namespace ServicioGloomm
                     mazoDelJugador.Add(cartaSeleciconada);
                     cartasCombinadas.RemoveAt(numeroCarta);
                 }
-
-                barajaJugadores.Add(jugador, mazoDelJugador);
+                if (!barajaJugadores.ContainsKey(jugador))
+                {
+                    barajaJugadores.Add(jugador, mazoDelJugador);
+                }
+                else
+                {
+                    barajaJugadores[jugador] = mazoDelJugador;
+                }
             }
             return cartasCombinadas;
         }
@@ -246,6 +256,11 @@ namespace ServicioGloomm
 
             return primerMazo;
 
+        }
+
+        public List<Carta> ObtenerMazoJugador(string nombreJugador)
+        {
+            return barajaJugadores.TryGetValue(nombreJugador, out List<Carta> mazo) ? mazo : new List<Carta>();
         }
 
     }
