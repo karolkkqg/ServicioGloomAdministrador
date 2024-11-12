@@ -22,14 +22,6 @@ namespace ServicioGloomm
 
         [OperationContract]
         [FaultContract(typeof(ManejadorExcepciones))]
-        List<BibliotecaClases.Sala> ObtenerDatosHistorial(String nombreUsuario);
-
-        [OperationContract]
-        [FaultContract(typeof(ManejadorExcepciones))]
-        List<String> ObtenrParticipantesDeJuego(String identificadorSala);
-
-        [OperationContract]
-        [FaultContract(typeof(ManejadorExcepciones))]
         Sala BuscarSalaExistente(String idSala, String codigo);
 
         [OperationContract(IsOneWay = true)]
@@ -43,13 +35,20 @@ namespace ServicioGloomm
 
         [OperationContract]
         [FaultContract(typeof(ManejadorExcepciones))]
-        void validarPersonajesSeleccionados(int cantidadJugadores);
+        void ValidarPersonajesSeleccionados(int cantidadJugadores);
         
         [OperationContract]
         Dictionary<string, (string nombrePersonaje, int vida)> ObtenerUsuariosYPersonajes();
 
         [OperationContract]
-        List<Carta> ObtenerCartasSobrantes();
+        void SacarDeSala(string nombreUsuario);
+
+        [OperationContract]
+        void EmpezarPartida(string idSala);
+
+        [OperationContract]
+        List<string> ObtenerPersonajesUsados();
+
     }
 
     [ServiceContract]
@@ -57,5 +56,11 @@ namespace ServicioGloomm
     {
         [OperationContract(IsOneWay =true)]
         void EmpezarJuego();
+
+        [OperationContract(IsOneWay = true)]
+        void ActualizarNumeroJugadores();
+        [OperationContract(IsOneWay = true)]
+        void ActualizarImagenPersonaje(string personaje, string personajeAnterior);
+
     }
-    }
+}

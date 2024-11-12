@@ -14,9 +14,9 @@ namespace ServicioGloomm
     
     public partial class ServicioJuego : ISala
     {
-        private static readonly Dictionary<string, ISalaCallback> salaJugadoresCallback = new Dictionary<string, ISalaCallback>();
-        private static readonly Dictionary<string, (string nombrePersonaje, int vida)> personajesPorUsuario = new Dictionary<string, (string, int)>();
-        private static readonly List<string> personajesUsados = new List<string>();
+        public static readonly Dictionary<string, ISalaCallback> salaJugadoresCallback = new Dictionary<string, ISalaCallback>();
+        public static readonly Dictionary<string, (string nombrePersonaje, int vida)> personajesPorUsuario = new Dictionary<string, (string, int)>();
+        public static readonly List<string> personajesUsados = new List<string>();
 
         public int AgregarParticipantesAPartida(BibliotecaClases.Sala sala)
         {
@@ -24,40 +24,12 @@ namespace ServicioGloomm
             return resultado;
         }
 
-        public List<BibliotecaClases.Sala> ObtenerDatosHistorial(string nombreUsuario)
-        {
-            var historial = AccesoSala.ObtenerHistorialPartidas(nombreUsuario);
-
-            var listaSalas = historial.Select(s => new BibliotecaClases.Sala
-            {
-                idSala = s.IdSala,
-                nombreSala = s.NombreSala,
-                tipoSala = s.TipoSala,
-                tipoPartida = s.TipoPartida,
-                noJugadores = s.NoJugadores,
-                codigo = s.Codigo,
-                idAdministrador = s.IdAdministrador,
-                fecha = s.Fecha,
-                ganador = s.Ganador,
-                jugador = nombreUsuario
-            }).ToList();
-
-            return listaSalas;
-        }
-
-        public List<String> ObtenrParticipantesDeJuego(string identificadorSala)
-        {
-            var participantes = AccesoSala.ObtenerParticipantesDeSala(identificadorSala);
-
-            return participantes;
-        }
-
         public int CrearPartida(BibliotecaClases.Sala sala)
         {
 
             try
             {
-                String codigoGenerado = generarCodigo();
+                String codigoGenerado = GenerarCodigo();
                 sala.codigo = codigoGenerado;
                 sala.idSala = codigoGenerado;
 
@@ -88,7 +60,7 @@ namespace ServicioGloomm
             }
         }
 
-        private string generarCodigo()
+        private string GenerarCodigo()
         {
             string codigoGenerado;
 
@@ -101,11 +73,11 @@ namespace ServicioGloomm
                     .Select(selection => selection[random.Next(selection.Length)]).ToArray());
 
 
-            } while (!codigoValido(codigoGenerado));
+            } while (!CodigoValido(codigoGenerado));
             return codigoGenerado;
         }
 
-        private bool codigoValido(String codigo)
+        private bool CodigoValido(String codigo)
         {
             bool valido = false;
             try
@@ -158,7 +130,7 @@ namespace ServicioGloomm
 
         public void ConectarConSala(string nombreUsuario)
         {
-          //  AdministradorDeComportamiento.CambiarModoComportamientoReentrante();
+            AdministradorDeComportamiento.cambiarModoComportamientoReentrante();
             if (!salaJugadoresCallback.ContainsKey(nombreUsuario))
             {
                 salaJugadoresCallback.Add(nombreUsuario, OperationContext.Current.GetCallbackChannel<ISalaCallback>());
@@ -168,7 +140,7 @@ namespace ServicioGloomm
                     {
                         try
                         {
-                          //  salaJugadoresCallback[jugador.Key].ActualizarNumeroJugadores();
+                            salaJugadoresCallback[jugador.Key].ActualizarNumeroJugadores();
                         }
                         catch (CommunicationException ex)
                         {
@@ -196,7 +168,7 @@ namespace ServicioGloomm
            
             if (personajesPorUsuario.ContainsKey(nombreUsuario))
             {
-             //   var personajeAnterior = personajesPorUsuario[nombreUsuario].Item1;
+                personajeAnterior = personajesPorUsuario[nombreUsuario].Item1;
                 personajesPorUsuario[nombreUsuario] = (nombrePersonaje, vida);
                 personajesUsados.Remove(personajeAnterior);
             }
@@ -204,14 +176,14 @@ namespace ServicioGloomm
             {
                 personajesPorUsuario.Add(nombreUsuario, (nombrePersonaje, vida));
             }
-          //  AdministradorDeComportamiento.CambiarModoComportamientoReentrante();
+            AdministradorDeComportamiento.cambiarModoComportamientoReentrante();
             foreach (var jugador in salaJugadoresCallback)
             {
                 if (salaJugadoresCallback.ContainsKey(jugador.Key))
                 {
                     try
                     {
-                  //      salaJugadoresCallback[jugador.Key].ActualizarImagenPersonaje(nombrePersonaje, personajeAnterior);
+                        salaJugadoresCallback[jugador.Key].ActualizarImagenPersonaje(nombrePersonaje, personajeAnterior);
                     }
                     catch (CommunicationException ex)
                     {
@@ -236,7 +208,7 @@ namespace ServicioGloomm
             }
         }
 
-        public void validarPersonajesSeleccionados(int cantidadJugadores)
+        public void ValidarPersonajesSeleccionados(int cantidadJugadores)
         {
             if (cantidadJugadores != personajesUsados.Count())
             {
@@ -261,7 +233,7 @@ namespace ServicioGloomm
 
         public void EmpezarPartida(string idSala)
         {
-           // AdministradorDeComportamiento.CambiarModoComportamientoReentrante();
+            AdministradorDeComportamiento.cambiarModoComportamientoReentrante();
             foreach (var jugador in salaJugadoresCallback)
             {
                 if (salaJugadoresCallback.ContainsKey(jugador.Key))
@@ -291,7 +263,7 @@ namespace ServicioGloomm
 
         public void EliminarJugadorDeSala(string nombreUsuario)
         {
-           // AdministradorDeComportamiento.CambiarModoComportamientoReentrante();
+            AdministradorDeComportamiento.cambiarModoComportamientoReentrante();
 
             salaJugadoresCallback.Remove(nombreUsuario);
             foreach (var jugador in salaJugadoresCallback)
@@ -300,7 +272,7 @@ namespace ServicioGloomm
                 {
                     try
                     {
-                       // salaJugadoresCallback[jugador.Key].ActualizarNumeroJugadores();
+                        salaJugadoresCallback[jugador.Key].ActualizarNumeroJugadores();
                     }
                     catch (CommunicationException ex)
                     {

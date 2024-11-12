@@ -52,11 +52,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdministradorDeComportamiento.cs" />
     <Compile Include="IAmigos.cs" />
+    <Compile Include="IChat.cs" />
+    <Compile Include="IChatCallback.cs" />
     <Compile Include="ISala.cs" />
+    <Compile Include="IServicioCarta.cs" />
+    <Compile Include="IServicioHistorialPartida.cs" />
     <Compile Include="IServicioJuegoTablero.cs" />
     <Compile Include="ServicioCarta.cs" />
+    <Compile Include="ServicioChat.cs" />
+    <Compile Include="ServicioHistorialPartida.cs" />
     <Compile Include="ServicioJuegoTablero.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IJugador.cs" />

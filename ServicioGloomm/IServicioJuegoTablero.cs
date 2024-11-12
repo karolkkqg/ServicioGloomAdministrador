@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BlbibliotecaClases;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
@@ -10,14 +11,24 @@ namespace ServicioGloomm
     [ServiceContract(CallbackContract = typeof(IJuegoAdministradorCallback))]
     public interface IServicioJuegoTablero
     {
+
         [OperationContract]
         void IngresarJugadorAJuego(string nombreUsuario, string numeroSala, int numeroJugadores);
+
+        [OperationContract]
+        List<Carta> ObtenerCartasSobrantes();
+
+        [OperationContract]
+        void IniciarPartidaPorAdministrador(string nombreAdministrador, string numeroSala, int numeroJugadores);
+
+        [OperationContract]
+        void EliminarJugadorDeJuego(string nombreUsuario);
     }
 
     [ServiceContract]
     public interface IJuegoAdministradorCallback
     {
-        [OperationContract]
-        void EnviarTurno(bool validarTurno);
+        [OperationContract(IsOneWay = true)]
+        void EnviarTurno(string nombreDelUsusarioEnTurno);
     }
 }
