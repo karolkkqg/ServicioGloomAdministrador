@@ -21,42 +21,54 @@ namespace ServicioGloomm
 
     public partial class ServicioJuego : IServicioJuegoTablero
     {
-        private ServicioCarta servicioCarta;
-        private static readonly Dictionary<string, IJuegoAdministradorCallback> JugadoresConectadosCallback = new Dictionary<string, IJuegoAdministradorCallback>();
-        private static readonly Dictionary<string, string> JugadoresConectados = new Dictionary<string, string>();
-        private static readonly Dictionary<string, List<PosicionesJugador>> direccionJugadorEnJuego = new Dictionary<string, List<PosicionesJugador>>();
-        private static readonly Dictionary<string, string> TurnsInGameboard = new Dictionary<string, string>();
-        private static readonly List<Carta> CartasSobrantes = new List<Carta>();
+        private ServicioJuego servicioCarta;
+        public static readonly Dictionary<string, IJuegoAdministradorCallback> JugadoresConectadosCallback = new Dictionary<string, IJuegoAdministradorCallback>();
+        public static readonly Dictionary<string, string> JugadoresConectados = new Dictionary<string, string>();
+        public static readonly Dictionary<string, List<PosicionesJugador>> direccionJugadorEnJuego = new Dictionary<string, List<PosicionesJugador>>();
+        public static readonly Dictionary<string, string> TurnsInGameboard = new Dictionary<string, string>();
+        public static readonly List<Carta> CartasSobrantes = new List<Carta>();
+        public static readonly Dictionary<string, int> indiceTurnoActual = new Dictionary<string, int>();
+        public static readonly Dictionary<string, bool> partidaYaIniciada = new Dictionary<string, bool>();
 
         public void IngresarJugadorAJuego(string nombreUsuario, string numeroSala, int numeroJugadores)
         {
-            HostBehaviorManager.ChangeToReentrant();
+            AdministradorDeComportamiento.CambiarModoComportamientoReentrante();
             var callback = OperationContext.Current.GetCallbackChannel<IJuegoAdministradorCallback>();
             if (!JugadoresConectadosCallback.ContainsKey(numeroSala))
             {
+
                 JugadoresConectadosCallback.Add(nombreUsuario, callback);
                 JugadoresConectados.Add(nombreUsuario, numeroSala);
-                List<Carta> cartasSobrantes = EmpezarJuego(numeroSala, numeroJugadores);
-                CartasSobrantes.Clear();
-                CartasSobrantes.AddRange(cartasSobrantes);
+
             }
         }
 
-        private List<Carta> EmpezarJuego(string numeroSala, int numeroJugadores)
+        public void IniciarPartidaPorAdministrador(string nombreAdministrador, string numeroSala, int numeroJugadores)
         {
-            VerificarparticipantesConectados(numeroSala, numeroJugadores);
-            
-                servicioCarta = new ServicioCarta();
-                asignarTurnos(numeroSala);
-                var cartasSobrantes = servicioCarta.BarajearMazo(numeroSala);
-                asignarPrimerTurno(numeroSala);
-                return cartasSobrantes;
+            if (!partidaYaIniciada.ContainsKey(numeroSala) || !partidaYaIniciada[numeroSala])
+            {
+                partidaYaIniciada[numeroSala] = true;
+                VerificarparticipantesConectados(numeroSala, numeroJugadores);
+                List<Carta> cartasSobrantes = EmpezarJuego(numeroSala);
+                CartasSobrantes.Clear();
+                CartasSobrantes.AddRange(cartasSobrantes);
+
+            }
+        }
+
+        private List<Carta> EmpezarJuego(string numeroSala)
+        {
+            servicioCarta = new ServicioJuego();
+            AsignarTurnos(numeroSala);
+            var cartasSobrantes = servicioCarta.BarajearMazo(numeroSala);
+            AsignarPrimerTurno(numeroSala);
+            return cartasSobrantes;
             
         }
 
         private void VerificarparticipantesConectados(string numeroSala, int numeroJugadores)
         {
-            List<string> jugadoresEnSala= obtenerJugadores(numeroSala);
+            List<string> jugadoresEnSala= ObtenerJugadores(numeroSala);
             int conteoJugadores = jugadoresEnSala.Count(jugador => JugadoresConectados.ContainsKey(jugador));
 
             if (conteoJugadores != numeroJugadores)
@@ -65,54 +77,70 @@ namespace ServicioGloomm
             }
         }
 
-        private void asignarTurnos(string numeroSala)
+        private void AsignarTurnos(string numeroSala)
         {
-            List<string> jugadorPartida = obtenerJugadores(numeroSala);
-            int cantidadJugadores = jugadorPartida.Count;
+            List<string> jugadores = ObtenerJugadores(numeroSala).OrderBy(j => Guid.NewGuid()).ToList();
+            int totalJugadores = jugadores.Count;
 
-            List<PosicionesJugador> posicionesJugador = new List<PosicionesJugador>();
-
-            for (int i = 0; i < cantidadJugadores; i++)
+            List<PosicionesJugador> posiciones = new List<PosicionesJugador>();
+            for (int i = 0; i < totalJugadores; i++)
             {
-                string vecinoIzquierdo = jugadorPartida[(i - 1 + cantidadJugadores) % cantidadJugadores];
-                string vecinoDerecho = jugadorPartida[(i + 1) % cantidadJugadores];
+                string vecinoIzquierdo = jugadores[(i - 1 + totalJugadores) % totalJugadores];
+                string vecinoDerecho = jugadores[(i + 1) % totalJugadores];
 
-                posicionesJugador.Add(new PosicionesJugador
+                posiciones.Add(new PosicionesJugador
                 {
-                    nombreUsuario = jugadorPartida[i],
+                    nombreUsuario = jugadores[i],
                     izquierda = vecinoIzquierdo,
                     derecha = vecinoDerecho
                 });
             }
-
-            direccionJugadorEnJuego.Add(numeroSala, posicionesJugador);
+            direccionJugadorEnJuego[numeroSala] = posiciones;
         }
 
-        public List<string> obtenerJugadores(string numeroSala)
+        public List<string> ObtenerJugadores(string numeroSala)
         {
             return JugadoresConectados.Where(gamer => gamer.Value == numeroSala).Select(gamer => gamer.Key).ToList();
         }
 
-        private void asignarPrimerTurno(string numeroSala)
+        private void AsignarPrimerTurno(string numeroSala)
         {
-         
-            List<PosicionesJugador> turnsList = direccionJugadorEnJuego[numeroSala];
-            string nombreUsuario = turnsList[0].nombreUsuario;
-            TurnsInGameboard.Add(numeroSala, nombreUsuario);
+            List<PosicionesJugador> posiciones = direccionJugadorEnJuego[numeroSala];
+                int totalJugadores = posiciones.Count;
 
-            try
-            {
-                JugadoresConectadosCallback[nombreUsuario].RecibirTurno(true);
-            }
-            catch (CommunicationException ex)
-            {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Message));
-            }
-            catch (TimeoutException ex)
-            {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Message));
-            }
+            ValidarJugadorIndice(numeroSala, totalJugadores);
 
+                int indiceActual = indiceTurnoActual[numeroSala];
+                string jugadorActual = posiciones[indiceActual].nombreUsuario;
+                TurnsInGameboard[numeroSala] = jugadorActual;
+
+                if (JugadoresConectadosCallback.TryGetValue(jugadorActual, out var callback) && callback != null)
+                {
+                    try
+                    {
+                        callback.EnviarTurno(jugadorActual);
+                    }
+                    catch (CommunicationException ex)
+                    {
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16"));
+                    }
+                    catch (TimeoutException ex)
+                    {
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18"));
+                    }
+                }
+        }
+
+        private void ValidarJugadorIndice(string numeroSala, int totalJugadores)
+        {
+            if (!indiceTurnoActual.ContainsKey(numeroSala))
+            {
+                indiceTurnoActual[numeroSala] = 0;
+            }
+            else
+            {
+                indiceTurnoActual[numeroSala] = (indiceTurnoActual[numeroSala] + 1) % totalJugadores;
+            }
         }
 
         public List<Carta> ObtenerCartasSobrantes()
@@ -120,9 +148,11 @@ namespace ServicioGloomm
             return new List<Carta>(CartasSobrantes);
         }
 
-        public void RecibirTurno(bool validarTurno)
+
+        public void EliminarJugadorDeJuego(string nombreUsuario)
         {
-            throw new NotImplementedException();
+            JugadoresConectadosCallback.Remove(nombreUsuario);
+            JugadoresConectados.Remove(nombreUsuario);
         }
         /*
 private void RemoveFromGameboard(string gamertag)

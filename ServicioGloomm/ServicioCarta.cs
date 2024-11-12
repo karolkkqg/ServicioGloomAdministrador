@@ -104,7 +104,12 @@ namespace ServicioGloomm
                     cartasCombinadas.RemoveAt(numeroCarta);
                 }
 
-                barajaJugadores.Add(jugador, mazoDelJugador);
+                    barajaJugadores.Add(jugador, mazoDelJugador);
+                }
+                else
+                {
+                    barajaJugadores[jugador] = mazoDelJugador;
+                }
             }
             return cartasCombinadas;
         }
@@ -175,6 +180,9 @@ namespace ServicioGloomm
 
             return PrimerMazo;
 
+        public List<Carta> ObtenerMazoJugador(string nombreJugador)
+        {
+            return barajaJugadores.TryGetValue(nombreJugador, out List<Carta> mazo) ? mazo : new List<Carta>();
         }
 
     }

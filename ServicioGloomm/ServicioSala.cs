@@ -158,9 +158,28 @@ namespace ServicioGloomm
 
         public void ConectarConSala(string nombreUsuario)
         {
+            AdministradorDeComportamiento.CambiarModoComportamientoReentrante();
             if (!salaJugadoresCallback.ContainsKey(nombreUsuario))
             {
                 salaJugadoresCallback.Add(nombreUsuario, OperationContext.Current.GetCallbackChannel<ISalaCallback>());
+                foreach (var jugador in salaJugadoresCallback)
+                {
+                    if (salaJugadoresCallback.ContainsKey(jugador.Key))
+                    {
+                        try
+                        {
+                            salaJugadoresCallback[jugador.Key].ActualizarNumeroJugadores();
+                        }
+                        catch (CommunicationException ex)
+                        {
+                            throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16"));
+                        }
+                        catch (TimeoutException ex)
+                        {
+                            throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18"));
+                        }
+                    }
+                }
             }
         }
 
@@ -171,6 +190,8 @@ namespace ServicioGloomm
 
         public void SeleccionarPersonaje(string nombreUsuario, string nombrePersonaje, int vida)
         {
+            string personajeAnterior="sin personaje";
+
             EstaSiendoUtilizado(nombrePersonaje);
            
             if (personajesPorUsuario.ContainsKey(nombreUsuario))
@@ -182,6 +203,25 @@ namespace ServicioGloomm
             else
             {
                 personajesPorUsuario.Add(nombreUsuario, (nombrePersonaje, vida));
+            }
+            AdministradorDeComportamiento.CambiarModoComportamientoReentrante();
+            foreach (var jugador in salaJugadoresCallback)
+            {
+                if (salaJugadoresCallback.ContainsKey(jugador.Key))
+                {
+                    try
+                    {
+                        salaJugadoresCallback[jugador.Key].ActualizarImagenPersonaje(nombrePersonaje, personajeAnterior);
+                    }
+                    catch (CommunicationException ex)
+                    {
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16"));
+                    }
+                    catch (TimeoutException ex)
+                    {
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18"));
+                    }
+                }
             }
         }
         private void EstaSiendoUtilizado(string nombrePersonaje)
@@ -208,5 +248,89 @@ namespace ServicioGloomm
         {
             return new Dictionary<string, (string nombrePersonaje, int vida)>(personajesPorUsuario);
         }
+
+        public void LimpiarListaJugadores()
+        {
+            personajesPorUsuario.Clear();
+        }
+
+        public void LimpiarListaPersonajes()
+        {
+            personajesUsados.Clear();
+        }
+
+        public void EmpezarPartida(string idSala)
+        {
+            AdministradorDeComportamiento.CambiarModoComportamientoReentrante();
+            foreach (var jugador in salaJugadoresCallback)
+            {
+                if (salaJugadoresCallback.ContainsKey(jugador.Key))
+                {
+                    try
+                    {
+                        salaJugadoresCallback[jugador.Key].EmpezarJuego();
+                    }
+                    catch (CommunicationException ex)
+                    {
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16"));
+                    }
+                    catch (TimeoutException ex)
+                    {
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18"));
+                    }
+                }
+            }
+        }
+
+        public void SacarDeSala(string nombreUsuario)
+        {
+            EliminarJugadorDeSala(nombreUsuario);
+            string personaje = EliminarJugadorYPersonaje(nombreUsuario);
+            EliminarPersonajeUsado(personaje);
+        }
+
+        public void EliminarJugadorDeSala(string nombreUsuario)
+        {
+            AdministradorDeComportamiento.CambiarModoComportamientoReentrante();
+
+            salaJugadoresCallback.Remove(nombreUsuario);
+            foreach (var jugador in salaJugadoresCallback)
+            {
+                if (salaJugadoresCallback.ContainsKey(jugador.Key))
+                {
+                    try
+                    {
+                        salaJugadoresCallback[jugador.Key].ActualizarNumeroJugadores();
+                    }
+                    catch (CommunicationException ex)
+                    {
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16"));
+                    }
+                    catch (TimeoutException ex)
+                    {
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18"));
+                    }
+                }
+            }
+        }
+
+        private void EliminarPersonajeUsado(string nombrePersonaje)
+        {
+            personajesUsados.Remove(nombrePersonaje);
+        }
+
+        private string EliminarJugadorYPersonaje(string nombreUsuario)
+        {
+            personajesPorUsuario.TryGetValue(nombreUsuario, out var InformacionPersonaje);
+            personajesPorUsuario.Remove(nombreUsuario);
+            personajesUsados.Remove(InformacionPersonaje.nombrePersonaje);
+            return InformacionPersonaje.nombrePersonaje;
+        }
+
+        public List<string> ObtenerPersonajesUsados()
+        {
+            return new List<string>(personajesUsados);
+        }
+
     }
 }
