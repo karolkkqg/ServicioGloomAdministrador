@@ -104,7 +104,12 @@
     <Compile Include="SalaTest\ObtenerHistorialPartidasTest.cs" />
     <Compile Include="SalaTest\ObtenerParticipantesDeSalaTest.cs" />
     <Compile Include="ServicioCartaTest\ObtenerMazoJugadorTest.cs" />
+    <Compile Include="ServicioChatTest\EnviarMensajeTest.cs" />
+    <Compile Include="ServicioInvitacionTest\EnviarInvitacionTest.cs" />
+    <Compile Include="ServicioJuegoTableroTest\EliminarJugadorDeJuegoTest.cs" />
     <Compile Include="ServicioJuegoTableroTest\IniciarPartidaPorAdministradorTest.cs" />
+    <Compile Include="ServicioJuegoTableroTest\IngresarJugadorAJuegoTest.cs" />
+    <Compile Include="ServicioJuegoTableroTest\ObtenerCartasSobrantesTest.cs" />
     <Compile Include="SpyCallbackCalculatorService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -127,6 +132,7 @@
       <Name>ServicioGloomm</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

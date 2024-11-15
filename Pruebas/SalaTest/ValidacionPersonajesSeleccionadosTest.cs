@@ -1,7 +1,7 @@
 ﻿using AccesoDatos;
 using BibliotecaClases;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,7 +38,7 @@ namespace Pruebas.SalaTest
 
             try
             {
-                servicioSala.validarPersonajesSeleccionados(cantidadJugadores);
+                servicioSala.ValidarPersonajesSeleccionados(cantidadJugadores);
             }
             catch (FaultException<ManejadorExcepciones>)
             {
@@ -55,7 +55,7 @@ namespace Pruebas.SalaTest
             ServicioGloomm.ServicioJuego.personajesUsados.Add("Personaje3");
             var excepcion = Assert.ThrowsException<FaultException<ManejadorExcepciones>>(() =>
             {
-                servicioSala.validarPersonajesSeleccionados(cantidadJugadores);
+                servicioSala.ValidarPersonajesSeleccionados(cantidadJugadores);
             });
             Assert.AreEqual("15", excepcion.Detail.mensaje);
         }

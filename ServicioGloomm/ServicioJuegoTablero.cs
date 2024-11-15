@@ -23,31 +23,29 @@ namespace ServicioGloomm
     {
 
         private ServicioJuego servicioCarta;
-        public static readonly Dictionary<string, IJuegoAdministradorCallback> JugadoresConectadosCallback = new Dictionary<string, IJuegoAdministradorCallback>();
-        public static readonly Dictionary<string, string> JugadoresConectados = new Dictionary<string, string>();
         public static readonly Dictionary<string, List<PosicionesJugador>> direccionJugadorEnJuego = new Dictionary<string, List<PosicionesJugador>>();
         public static readonly Dictionary<string, string> TurnsInGameboard = new Dictionary<string, string>();
         public static readonly List<Carta> CartasSobrantes = new List<Carta>();
         public static readonly Dictionary<string, int> indiceTurnoActual = new Dictionary<string, int>();
         public static readonly Dictionary<string, bool> partidaYaIniciada = new Dictionary<string, bool>();
-
-        private ServicioCarta servicioCarta;
         private static readonly Dictionary<string, IJuegoAdministradorCallback> jugadoresConectadosCallback = new Dictionary<string, IJuegoAdministradorCallback>();
         private static readonly Dictionary<string, string> jugadoresConectados = new Dictionary<string, string>();
-        private static readonly Dictionary<string, List<PosicionesJugador>> direccionJugadorEnJuego = new Dictionary<string, List<PosicionesJugador>>();
-        private static readonly Dictionary<string, string> TurnsInGameboard = new Dictionary<string, string>();
         private static readonly List<Carta> cartasSobrantes = new List<Carta>();
+
+        private static readonly Dictionary<string, string> administradoresDeSala = new Dictionary<string, string>();
+        private static readonly Dictionary<string, List<string>> votosExpulsion = new Dictionary<string, List<string>>();
+
 
 
         public void IngresarJugadorAJuego(string nombreUsuario, string numeroSala, int numeroJugadores)
         {
-            AdministradorDeComportamiento.cambiarModoComportamientoReentrante();
+            AdministradorDeComportamiento.CambiarModoComportamientoReentrante();
             var callback = OperationContext.Current.GetCallbackChannel<IJuegoAdministradorCallback>();
             if (!jugadoresConectadosCallback.ContainsKey(numeroSala))
             {
 
-                JugadoresConectadosCallback.Add(nombreUsuario, callback);
-                JugadoresConectados.Add(nombreUsuario, numeroSala);
+                jugadoresConectadosCallback.Add(nombreUsuario, callback);
+                jugadoresConectados.Add(nombreUsuario, numeroSala);
 
             }
         }
@@ -62,37 +60,21 @@ namespace ServicioGloomm
                 CartasSobrantes.Clear();
                 CartasSobrantes.AddRange(cartasSobrantes);
 
-                jugadoresConectadosCallback.Add(nombreUsuario, callback);
-                jugadoresConectados.Add(nombreUsuario, numeroSala);
-                List<Carta> cartasSobrantes = EmpezarJuego(numeroSala, numeroJugadores);
-                ServicioJuego.cartasSobrantes.Clear();
-                ServicioJuego.cartasSobrantes.AddRange(cartasSobrantes);
-
             }
         }
 
         private List<Carta> EmpezarJuego(string numeroSala)
         {
             servicioCarta = new ServicioJuego();
-            asignarTurnos(numeroSala);
+            AsignarTurnos(numeroSala);
             var cartasSobrantes = servicioCarta.BarajearMazo(numeroSala);
-            asignarPrimerTurno(numeroSala);
+            AsignarPrimerTurno(numeroSala);
             return cartasSobrantes;
-
-            VerificarparticipantesConectados(numeroSala, numeroJugadores);
-            
-                servicioCarta = new ServicioCarta();
-                AsignarTurnos(numeroSala);
-                var cartasSobrantes = servicioCarta.BarajearMazo(numeroSala);
-                AsignarPrimerTurno(numeroSala);
-                return cartasSobrantes;
-
-            
         }
 
         private void VerificarparticipantesConectados(string numeroSala, int numeroJugadores)
         {
-            List<string> jugadoresEnSala= ObtenerJugadores(numeroSala);
+            List<string> jugadoresEnSala = ObtenerJugadores(numeroSala);
             int conteoJugadores = jugadoresEnSala.Count(jugador => jugadoresConectados.ContainsKey(jugador));
 
             if (conteoJugadores != numeroJugadores)
@@ -108,7 +90,7 @@ namespace ServicioGloomm
             int cantidadJugadores = jugadorPartida.Count;
 
 
-            List<string> jugadores = obtenerJugadores(numeroSala).OrderBy(j => Guid.NewGuid()).ToList();
+            List<string> jugadores = ObtenerJugadores(numeroSala).OrderBy(j => Guid.NewGuid()).ToList();
             int totalJugadores = jugadores.Count;
 
             List<PosicionesJugador> posiciones = new List<PosicionesJugador>();
@@ -134,46 +116,28 @@ namespace ServicioGloomm
 
         private void AsignarPrimerTurno(string numeroSala)
         {
-
-
-                List<PosicionesJugador> posiciones = direccionJugadorEnJuego[numeroSala];
-                int totalJugadores = posiciones.Count;
-
-            try
-            {
-                jugadoresConectadosCallback[nombreUsuario].RecibirTurno(true);
-            }
-            catch (CommunicationException ex)
-            {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Message));
-            }
-            catch (TimeoutException ex)
-            {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Message));
-            }
-
-
+            List<PosicionesJugador> posiciones = direccionJugadorEnJuego[numeroSala];
+            int totalJugadores = posiciones.Count;
             ValidarJugadorIndice(numeroSala, totalJugadores);
+            int indiceActual = indiceTurnoActual[numeroSala];
+            string jugadorActual = posiciones[indiceActual].nombreUsuario;
+            TurnsInGameboard[numeroSala] = jugadorActual;
 
-                int indiceActual = indiceTurnoActual[numeroSala];
-                string jugadorActual = posiciones[indiceActual].nombreUsuario;
-                TurnsInGameboard[numeroSala] = jugadorActual;
-
-                if (JugadoresConectadosCallback.TryGetValue(jugadorActual, out var callback) && callback != null)
+            if (jugadoresConectadosCallback.TryGetValue(jugadorActual, out var callback) && callback != null)
+            {
+                try
                 {
-                    try
-                    {
-                        callback.EnviarTurno(jugadorActual);
-                    }
-                    catch (CommunicationException ex)
-                    {
-                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16"));
-                    }
-                    catch (TimeoutException ex)
-                    {
-                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18"));
-                    }
+                    callback.EnviarTurno(jugadorActual);
                 }
+                catch (CommunicationException ex)
+                {
+                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16"));
+                }
+                catch (TimeoutException ex)
+                {
+                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18"));
+                }
+            }
         }
 
         private void ValidarJugadorIndice(string numeroSala, int totalJugadores)
@@ -196,16 +160,108 @@ namespace ServicioGloomm
 
         public void EliminarJugadorDeJuego(string nombreUsuario)
         {
-            JugadoresConectadosCallback.Remove(nombreUsuario);
-            JugadoresConectados.Remove(nombreUsuario);
+            jugadoresConectadosCallback.Remove(nombreUsuario);
+            jugadoresConectados.Remove(nombreUsuario);
         }
-        /*
-private void RemoveFromGameboard(string gamertag)
-{
-   decks.Remove(gamertag);
-   GamersInGameBoard.Remove(gamertag);
-   GamersInGameBoardCallback.Remove(gamertag);
-}
-*/
+
+        public void CambiarTurno(string numeroSala)
+        {
+            List<PosicionesJugador> posiciones = direccionJugadorEnJuego[numeroSala];
+            int totalJugadores = posiciones.Count;
+
+            int indiceActual = indiceTurnoActual[numeroSala];
+            int siguienteIndice = (indiceActual + 1) % totalJugadores;
+            indiceTurnoActual[numeroSala] = siguienteIndice;
+
+            string jugadorSiguiente = posiciones[siguienteIndice].nombreUsuario;
+
+            TurnsInGameboard[numeroSala] = jugadorSiguiente;
+
+            if (jugadoresConectadosCallback.TryGetValue(jugadorSiguiente, out var callback) && callback != null)
+            {
+                try
+                {
+                    callback.EnviarTurno(jugadorSiguiente);
+                }
+                catch (CommunicationException)
+                {
+                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16"));
+                }
+                catch (TimeoutException)
+                {
+                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18"));
+                }
+            }
+        }
+
+        public void SolicitarExpulsion(string solicitante, string jugadorObjetivo, string numeroSala)
+        {
+            if (EsAdministrador(solicitante, numeroSala))
+            {
+                ExpulsarJugador(jugadorObjetivo, numeroSala);
+            }
+            else
+            {
+                IniciarVotacionExpulsion(solicitante, jugadorObjetivo, numeroSala);
+            }
+        }
+
+        private void ExpulsarJugador(string jugadorObjetivo, string numeroSala)
+        {
+            if (jugadoresConectados.ContainsKey(jugadorObjetivo))
+            {
+                jugadoresConectados.Remove(jugadorObjetivo);
+                jugadoresConectadosCallback.Remove(jugadorObjetivo);
+
+                foreach (var jugador in ObtenerJugadores(numeroSala))
+                {
+                    if (jugadoresConectadosCallback.TryGetValue(jugador, out var callback))
+                    {
+                        callback.NotificarExpulsion(jugadorObjetivo);
+                    }
+                }
+            }
+        }
+
+        private void IniciarVotacionExpulsion(string solicitante, string jugadorObjetivo, string numeroSala)
+        {
+            if (!votosExpulsion.ContainsKey(numeroSala))
+            {
+                votosExpulsion[numeroSala] = new List<string>();
+            }
+
+            foreach (var jugador in ObtenerJugadores(numeroSala))
+            {
+                if (jugadoresConectadosCallback.TryGetValue(jugador, out var callback))
+                {
+                    callback.IniciarVotacion(jugadorObjetivo);
+                }
+            }
+        }
+
+        public void VotarExpulsion(string votante, string jugadorObjetivo, string numeroSala)
+        {
+            if (votosExpulsion.ContainsKey(numeroSala) && !votosExpulsion[numeroSala].Contains(votante))
+            {
+                votosExpulsion[numeroSala].Add(votante);
+            }
+
+            if (votosExpulsion[numeroSala].Count >= ObtenerJugadores(numeroSala).Count / 2)
+            {
+                ExpulsarJugador(jugadorObjetivo, numeroSala);
+                votosExpulsion.Remove(numeroSala);
+            }
+        }
+
+
+
+
+
+        private bool EsAdministrador(string nombreUsuario, string numeroSala)
+        {
+            return administradoresDeSala.TryGetValue(numeroSala, out var administrador) && administrador == nombreUsuario;
+        }
+
+
     }
 }

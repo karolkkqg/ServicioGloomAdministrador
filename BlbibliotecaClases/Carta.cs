@@ -10,5 +10,7 @@ namespace BlbibliotecaClases
     {
         public string identificador { get; set; }
         public int valor{ get; set; }
+
+        public string tipo { get; set; }
     }
 }

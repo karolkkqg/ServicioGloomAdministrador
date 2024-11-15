@@ -49,6 +49,22 @@ namespace ServicioGloomm
         [OperationContract]
         List<string> ObtenerPersonajesUsados();
 
+        [OperationContract]
+        List<Sala> ObtenerSalasActivas();
+
+        [OperationContract]
+        [FaultContract(typeof(ManejadorExcepciones))]
+        List<Sala> ObtenerSalasActivasConEstado();
+
+        [OperationContract]
+        void UnirseASalaPublica(string idSala, string idUsuario);
+
+        [OperationContract]
+        void UnirseASalaPrivada(string idUsuario, string idSala, string codigoAcceso);
+
+        [OperationContract]
+        void SalirDeSala(string idSala, string idUsuario);
+
     }
 
     [ServiceContract]
@@ -61,6 +77,12 @@ namespace ServicioGloomm
         void ActualizarNumeroJugadores();
         [OperationContract(IsOneWay = true)]
         void ActualizarImagenPersonaje(string personaje, string personajeAnterior);
+
+        [OperationContract(IsOneWay = true)]
+        void ActualizarSalasActivas(List<Sala> salasActivas);
+
+        [OperationContract(IsOneWay = true)]
+        void ResultadoUnirseASala(string idSala, string codigo, bool esExitoso);
 
     }
 }

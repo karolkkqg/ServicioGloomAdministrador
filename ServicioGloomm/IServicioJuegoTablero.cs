@@ -30,5 +30,11 @@ namespace ServicioGloomm
     {
         [OperationContract(IsOneWay = true)]
         void EnviarTurno(string nombreDelUsusarioEnTurno);
+
+        [OperationContract(IsOneWay = true)]
+        void NotificarExpulsion(string jugadorExpulsado);
+
+        [OperationContract(IsOneWay = true)]
+        void IniciarVotacion(string jugadorObjetivo);
     }
 }

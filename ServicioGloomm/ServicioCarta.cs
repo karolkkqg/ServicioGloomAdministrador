@@ -1,8 +1,10 @@
-﻿using BlbibliotecaClases;
+﻿using BibliotecaClases;
+using BlbibliotecaClases;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
+using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,54 +14,45 @@ namespace ServicioGloomm
     {
         private ServicioJuego servicioJuego;
         private static readonly Dictionary<string, List<Carta>> barajaJugadores = new Dictionary<string, List<Carta>>();
-        /*
-        private List<Carta> CreateCharacterCards()
-        {
-            Carta card1 = new Carta { ID = "DocOchCard.png", Type = "Character" };
-            Carta card2 = new Carta { ID = "ElectroJuanCard.png", Type = "Character" };
-            Carta card3 = new Carta { ID = "MysteRevoCard.png", Type = "Character" };
-            Carta card4 = new Carta { ID = "RhinosidroCard.png", Type = "Character" };
-            Carta card5 = new Carta { ID = "VernomCard.png", Type = "Character" };
-            Carta card6 = new Carta { ID = "XandManCard.png", Type = "Character" };
-        }
-        */
+        public static readonly List<Carta> cartasSobrantesGlobal = new List<Carta>();
 
         public List<Carta> BarajearMazo(string numeroSala)
         {
             List<Carta> primerMazo = CrearCartasDeMuerte();
             List<Carta> segundoMazo = CrearCartasModificador();
             servicioJuego = new ServicioJuego();
-<<<<<<< HEAD
-            var cartasSobrantes = RepartirCartas(servicioJuego.obtenerJugadores(numeroSala), CombinarCartas((List<Carta>)primerMazo.Concat(segundoMazo).ToList()));
-=======
-            var cartasSobrantes = RepartirCartas(servicioJuego.ObtenerJugadores(numeroSala), CombinarCartas((List<Carta>)primerMazo.Concat(segundoMazo)));
->>>>>>> 351c70a0508036a7c93ce7726f275ea9c1dd7cda
-            return cartasSobrantes;
+
+            cartasSobrantesGlobal.AddRange(RepartirCartas(
+            servicioJuego.ObtenerJugadores(numeroSala),
+            CombinarCartas(primerMazo.Concat(segundoMazo).ToList())
+            ));
+
+            return cartasSobrantesGlobal;
         }
 
         private List<Carta> CrearCartasDeMuerte()
         {
-            Carta cartaMuerte1 = new Carta { identificador = "MuerteInoportuna.png", valor = 200 };
-            Carta cartaMuerte2 = new Carta { identificador = "BebeCenteno.png", valor = 200 };
-            Carta cartaMuerte3 = new Carta { identificador = "HorneadoEnTarta.png", valor = 200 };
-            Carta cartaMuerte4 = new Carta { identificador = "AtragantarHueso.png", valor = 200 };
-            Carta cartaMuerte5 = new Carta { identificador = "MuerteViejo.png", valor = 200 };
-            Carta cartaMuerte6 = new Carta { identificador = "MuerteSarampio.png", valor = 200 };
-            Carta cartaMuerte7 = new Carta { identificador = "DevoradoPorComdrejas.png", valor = 200 };
-            Carta cartaMuerte8 = new Carta { identificador = "ConsumidoPorFuego.png", valor = 200 };
-            Carta cartaMuerte9 = new Carta { identificador = "Desmembrado.png", valor = 200 };
-            Carta cartaMuerte10 = new Carta { identificador = "ComidoPorOsos.png", valor = 200 };
-            Carta cartaMuerte11 = new Carta { identificador = "MuerteSinPreocupacion.png", valor = 200 };
-            Carta cartaMuerte12 = new Carta { identificador = "EmpujadoPorLasEscaleras.png", valor = 200 };
-            Carta cartaMuerte13 = new Carta { identificador = "AsesionadoPorHeredero.png", valor = 200 };
-            Carta cartaMuerte14 = new Carta { identificador = "AhogadoEnPantano.png", valor = 200 };
-            Carta cartaMuerte15 = new Carta { identificador = "QurmadoPorTurbia.png", valor = 200 };
-            Carta cartaMuerte16 = new Carta { identificador = "NoRegreso.png", valor = 200 };
-            Carta cartaMuerte17 = new Carta { identificador = "SeveramenteQuemado.png", valor = 200 };
-            Carta cartaMuerte18 = new Carta { identificador = "MuertePorDesesperacion.png", valor = 200 };
-            Carta cartaMuerte19 = new Carta { identificador = "SinAire.png", valor = 200 };
-            Carta cartaMuerte20 = new Carta { identificador = "DesaparecioEnNiebla.png", valor = 200 };
-            Carta cartaMuerte21 = new Carta { identificador = "CayoDesdeAlto.png", valor = 200 };
+            Carta cartaMuerte1 = new Carta { identificador = "MuerteInoportuna.png", valor = 200, tipo = "muerte" };
+            Carta cartaMuerte2 = new Carta { identificador = "BebeCenteno.png", valor = 200, tipo = "muerte" };
+            Carta cartaMuerte3 = new Carta { identificador = "HorneadoEnTarta.png", valor = 200, tipo = "muerte" };
+            Carta cartaMuerte4 = new Carta { identificador = "AtragantarHueso.png", valor = 200, tipo = "muerte" };
+            Carta cartaMuerte5 = new Carta { identificador = "MuerteViejo.png", valor = 200, tipo = "muerte" };
+            Carta cartaMuerte6 = new Carta { identificador = "MuerteSarampio.png", valor = 200, tipo = "muerte" };
+            Carta cartaMuerte7 = new Carta { identificador = "DevoradoPorComdrejas.png", valor = 200, tipo = "muerte" };
+            Carta cartaMuerte8 = new Carta { identificador = "ConsumidoPorFuego.png", valor = 200, tipo = "muerte" };
+            Carta cartaMuerte9 = new Carta { identificador = "Desmembrado.png", valor = 200, tipo = "muerte" };
+            Carta cartaMuerte10 = new Carta { identificador = "ComidoPorOsos.png", valor = 200, tipo = "muerte" };
+            Carta cartaMuerte11 = new Carta { identificador = "MuerteSinPreocupacion.png", valor = 200, tipo = "muerte" };
+            Carta cartaMuerte12 = new Carta { identificador = "EmpujadoPorLasEscaleras.png", valor = 200, tipo = "muerte" };
+            Carta cartaMuerte13 = new Carta { identificador = "AsesionadoPorHeredero.png", valor = 200, tipo = "muerte" };
+            Carta cartaMuerte14 = new Carta { identificador = "AhogadoEnPantano.png", valor = 200, tipo = "muerte" };
+            Carta cartaMuerte15 = new Carta { identificador = "QurmadoPorTurbia.png", valor = 200, tipo = "muerte" };
+            Carta cartaMuerte16 = new Carta { identificador = "NoRegreso.png", valor = 200, tipo = "muerte" };
+            Carta cartaMuerte17 = new Carta { identificador = "SeveramenteQuemado.png", valor = 200, tipo = "muerte" };
+            Carta cartaMuerte18 = new Carta { identificador = "MuertePorDesesperacion.png", valor = 200, tipo = "muerte" };
+            Carta cartaMuerte19 = new Carta { identificador = "SinAire.png", valor = 200, tipo = "muerte" };
+            Carta cartaMuerte20 = new Carta { identificador = "DesaparecioEnNiebla.png", valor = 200, tipo = "muerte" };
+            Carta cartaMuerte21 = new Carta { identificador = "CayoDesdeAlto.png", valor = 200, tipo = "muerte" };
 
             List<Carta> primerMazo = new List<Carta>();
             primerMazo.Add(cartaMuerte1);
@@ -138,123 +131,123 @@ namespace ServicioGloomm
 
         private List<Carta> CrearCartasModificador()
         {
-            Carta cartaModificadora1 = new Carta { identificador = "Accidente1.png", valor = -160 };
-            Carta cartaModificadora2 = new Carta { identificador = "Accidente2.png", valor = -120 };
-            Carta cartaModificadora3 = new Carta { identificador = "Accidente3.png", valor = -100 };
-            Carta cartaModificadora4 = new Carta { identificador = "Accidente4.png", valor = -110 };
-            Carta cartaModificadora5 = new Carta { identificador = "Accidente5.png", valor = 35 };
-            Carta cartaModificadora6 = new Carta { identificador = "Accidente6.png", valor = 45 };
-            Carta cartaModificadora7 = new Carta { identificador = "Accidente7.png", valor = 20 };
-            Carta cartaModificadora8 = new Carta { identificador = "Desamor1.png", valor = -130 };
-            Carta cartaModificadora9 = new Carta { identificador = "Desamor2.png", valor = -125 };
-            Carta cartaModificadora10 = new Carta { identificador = "Desamor3.png", valor = -160 };
-            Carta cartaModificadora11 = new Carta { identificador = "Desamor4.png", valor = -145 };
-            Carta cartaModificadora12 = new Carta { identificador = "Desamor5.png", valor = 35 };
-            Carta cartaModificadora13 = new Carta { identificador = "Desamor6.png", valor = 10 };
-            Carta cartaModificadora14 = new Carta { identificador = "Desamor7.png", valor = 50 };
-            Carta cartaModificadora15 = new Carta { identificador = "Desgracia1.png", valor = -120 };
-            Carta cartaModificadora16 = new Carta { identificador = "Desgracia2.png", valor = -115 };
-            Carta cartaModificadora17 = new Carta { identificador = "Desgracia3.png", valor = -140 };
-            Carta cartaModificadora18 = new Carta { identificador = "Desgracia4.png", valor = -110 };
-            Carta cartaModificadora19 = new Carta { identificador = "Desgracia5.png", valor = 40 };
-            Carta cartaModificadora20 = new Carta { identificador = "Desgracia6.png", valor = 30 };
-            Carta cartaModificadora21 = new Carta { identificador = "Desgracia7.png", valor = 50 };
-            Carta cartaModificadora22 = new Carta { identificador = "Enfermedad1.png", valor = -145 };
-            Carta cartaModificadora23 = new Carta { identificador = "Enfermedad2.png", valor = -180 };
-            Carta cartaModificadora24 = new Carta { identificador = "Enfermedad3.png", valor = -120 };
-            Carta cartaModificadora25 = new Carta { identificador = "Enfermedad4.png", valor = -130 };
-            Carta cartaModificadora26 = new Carta { identificador = "Enfermedad5.png", valor = 40 };
-            Carta cartaModificadora27 = new Carta { identificador = "Enfermedad6.png", valor = 25 };
-            Carta cartaModificadora28 = new Carta { identificador = "Enfermedad7.png", valor = 30 };
-            Carta cartaModificadora29 = new Carta { identificador = "Escándalo1.png", valor = -150 };
-            Carta cartaModificadora30 = new Carta { identificador = "Escándalo2.png", valor = -170 };
-            Carta cartaModificadora31 = new Carta { identificador = "Escándalo3.png", valor = -145 };
-            Carta cartaModificadora32 = new Carta { identificador = "Escándalo4.png", valor = -110 };
-            Carta cartaModificadora33 = new Carta { identificador = "Escándalo5.png", valor = 20 };
-            Carta cartaModificadora34 = new Carta { identificador = "Escándalo6.png", valor = 10 };
-            Carta cartaModificadora35 = new Carta { identificador = "Escándalo7.png", valor = 40 };
-            Carta cartaModificadora36 = new Carta { identificador = "Fraude1.png", valor = -150 };
-            Carta cartaModificadora37 = new Carta { identificador = "Fraude2.png", valor = -160 };
-            Carta cartaModificadora38 = new Carta { identificador = "Fraude3.png", valor = -160 };
-            Carta cartaModificadora39 = new Carta { identificador = "Fraude4.png", valor = -115 };
-            Carta cartaModificadora40 = new Carta { identificador = "Fraude5.png", valor = 40 };
-            Carta cartaModificadora41 = new Carta { identificador = "Fraude6.png", valor = 25 };
-            Carta cartaModificadora42 = new Carta { identificador = "Fraude7.png", valor = 35 };
-            Carta cartaModificadora43 = new Carta { identificador = "Pérdida1.png", valor = -140 };
-            Carta cartaModificadora44 = new Carta { identificador = "Pérdida2.png", valor = -90 };
-            Carta cartaModificadora45 = new Carta { identificador = "Pérdida3.png", valor = -125 };
-            Carta cartaModificadora46 = new Carta { identificador = "Pérdida4.png", valor = -150 };
-            Carta cartaModificadora47 = new Carta { identificador = "Pérdida5.png", valor = 50 };
-            Carta cartaModificadora48 = new Carta { identificador = "Pérdida6.png", valor = 30 };
-            Carta cartaModificadora49 = new Carta { identificador = "Pérdida7.png", valor = 40 };
-            Carta cartaModificadora50 = new Carta { identificador = "Ruina1.png", valor = -100 };
-            Carta cartaModificadora51 = new Carta { identificador = "Ruina2.png", valor = -150 };
-            Carta cartaModificadora52 = new Carta { identificador = "Ruina3.png", valor = -120 };
-            Carta cartaModificadora53 = new Carta { identificador = "Ruina4.png", valor = -135 };
-            Carta cartaModificadora54 = new Carta { identificador = "Ruina5.png", valor = 50 };
-            Carta cartaModificadora55 = new Carta { identificador = "Ruina6.png", valor = 40 };
-            Carta cartaModificadora56 = new Carta { identificador = "Ruina7.png", valor = 35 };
+            Carta cartaModificadora1 = new Carta { identificador = "Accidente1.png", valor = -160, tipo = "modificador" };
+            Carta cartaModificadora2 = new Carta { identificador = "Accidente2.png", valor = -120, tipo = "modificador" };
+            Carta cartaModificadora3 = new Carta { identificador = "Accidente3.png", valor = -100, tipo = "modificador" };
+            Carta cartaModificadora4 = new Carta { identificador = "Accidente4.png", valor = -110, tipo = "modificador" };
+            Carta cartaModificadora5 = new Carta { identificador = "Accidente5.png", valor = 35, tipo = "modificador" };
+            Carta cartaModificadora6 = new Carta { identificador = "Accidente6.png", valor = 45, tipo = "modificador" };
+            Carta cartaModificadora7 = new Carta { identificador = "Accidente7.png", valor = 20, tipo = "modificador" };
+            Carta cartaModificadora8 = new Carta { identificador = "Desamor1.png", valor = -130, tipo = "modificador" };
+            Carta cartaModificadora9 = new Carta { identificador = "Desamor2.png", valor = -125, tipo = "modificador" };
+            Carta cartaModificadora10 = new Carta { identificador = "Desamor3.png", valor = -160, tipo = "modificador" };
+            Carta cartaModificadora11 = new Carta { identificador = "Desamor4.png", valor = -145, tipo = "modificador" };
+            Carta cartaModificadora12 = new Carta { identificador = "Desamor5.png", valor = 35, tipo = "modificador" };
+            Carta cartaModificadora13 = new Carta { identificador = "Desamor6.png", valor = 10, tipo = "modificador" };
+            Carta cartaModificadora14 = new Carta { identificador = "Desamor7.png", valor = 50, tipo = "modificador" };
+            Carta cartaModificadora15 = new Carta { identificador = "Desgracia1.png", valor = -120, tipo = "modificador" };
+            Carta cartaModificadora16 = new Carta { identificador = "Desgracia2.png", valor = -115, tipo = "modificador" };
+            Carta cartaModificadora17 = new Carta { identificador = "Desgracia3.png", valor = -140, tipo = "modificador" };
+            Carta cartaModificadora18 = new Carta { identificador = "Desgracia4.png", valor = -110, tipo = "modificador" };
+            Carta cartaModificadora19 = new Carta { identificador = "Desgracia5.png", valor = 40, tipo = "modificador" };
+            Carta cartaModificadora20 = new Carta { identificador = "Desgracia6.png", valor = 30, tipo = "modificador" };
+            Carta cartaModificadora21 = new Carta { identificador = "Desgracia7.png", valor = 50, tipo = "modificador" };
+            Carta cartaModificadora22 = new Carta { identificador = "Enfermedad1.png", valor = -145, tipo = "modificador" };
+            Carta cartaModificadora23 = new Carta { identificador = "Enfermedad2.png", valor = -180, tipo = "modificador" };
+            Carta cartaModificadora24 = new Carta { identificador = "Enfermedad3.png", valor = -120, tipo = "modificador" };
+            Carta cartaModificadora25 = new Carta { identificador = "Enfermedad4.png", valor = -130, tipo = "modificador" };
+            Carta cartaModificadora26 = new Carta { identificador = "Enfermedad5.png", valor = 40, tipo = "modificador" };
+            Carta cartaModificadora27 = new Carta { identificador = "Enfermedad6.png", valor = 25, tipo = "modificador" };
+            Carta cartaModificadora28 = new Carta { identificador = "Enfermedad7.png", valor = 30, tipo = "modificador" };
+            Carta cartaModificadora29 = new Carta { identificador = "Escándalo1.png", valor = -150, tipo = "modificador" };
+            Carta cartaModificadora30 = new Carta { identificador = "Escándalo2.png", valor = -170, tipo = "modificador" };
+            Carta cartaModificadora31 = new Carta { identificador = "Escándalo3.png", valor = -145, tipo = "modificador" };
+            Carta cartaModificadora32 = new Carta { identificador = "Escándalo4.png", valor = -110, tipo = "modificador" };
+            Carta cartaModificadora33 = new Carta { identificador = "Escándalo5.png", valor = 20, tipo = "modificador" };
+            Carta cartaModificadora34 = new Carta { identificador = "Escándalo6.png", valor = 10, tipo = "modificador" };
+            Carta cartaModificadora35 = new Carta { identificador = "Escándalo7.png", valor = 40, tipo = "modificador" };
+            Carta cartaModificadora36 = new Carta { identificador = "Fraude1.png", valor = -150, tipo = "modificador" };
+            Carta cartaModificadora37 = new Carta { identificador = "Fraude2.png", valor = -160, tipo = "modificador" };
+            Carta cartaModificadora38 = new Carta { identificador = "Fraude3.png", valor = -160, tipo = "modificador" };
+            Carta cartaModificadora39 = new Carta { identificador = "Fraude4.png", valor = -115, tipo = "modificador" };
+            Carta cartaModificadora40 = new Carta { identificador = "Fraude5.png", valor = 40, tipo = "modificador" };
+            Carta cartaModificadora41 = new Carta { identificador = "Fraude6.png", valor = 25, tipo = "modificador" };
+            Carta cartaModificadora42 = new Carta { identificador = "Fraude7.png", valor = 35, tipo = "modificador" };
+            Carta cartaModificadora43 = new Carta { identificador = "Pérdida1.png", valor = -140, tipo = "modificador" };
+            Carta cartaModificadora44 = new Carta { identificador = "Pérdida2.png", valor = -90, tipo = "modificador" };
+            Carta cartaModificadora45 = new Carta { identificador = "Pérdida3.png", valor = -125, tipo = "modificador" };
+            Carta cartaModificadora46 = new Carta { identificador = "Pérdida4.png", valor = -150, tipo = "modificador" };
+            Carta cartaModificadora47 = new Carta { identificador = "Pérdida5.png", valor = 50, tipo = "modificador" };
+            Carta cartaModificadora48 = new Carta { identificador = "Pérdida6.png", valor = 30, tipo = "modificador" };
+            Carta cartaModificadora49 = new Carta { identificador = "Pérdida7.png", valor = 40, tipo = "modificador" };
+            Carta cartaModificadora50 = new Carta { identificador = "Ruina1.png", valor = -100, tipo = "modificador" };
+            Carta cartaModificadora51 = new Carta { identificador = "Ruina2.png", valor = -150, tipo = "modificador" };
+            Carta cartaModificadora52 = new Carta { identificador = "Ruina3.png", valor = -120, tipo = "modificador" };
+            Carta cartaModificadora53 = new Carta { identificador = "Ruina4.png", valor = -135, tipo = "modificador" };
+            Carta cartaModificadora54 = new Carta { identificador = "Ruina5.png", valor = 50, tipo = "modificador" };
+            Carta cartaModificadora55 = new Carta { identificador = "Ruina6.png", valor = 40, tipo = "modificador" };
+            Carta cartaModificadora56 = new Carta { identificador = "Ruina7.png", valor = 35, tipo = "modificador" };
 
-            List<Carta> primerMazo = new List<Carta>();
+            List<Carta> segundoMazo = new List<Carta>();
 
-            primerMazo.Add(cartaModificadora1);
-            primerMazo.Add(cartaModificadora2);
-            primerMazo.Add(cartaModificadora3);
-            primerMazo.Add(cartaModificadora4);
-            primerMazo.Add(cartaModificadora5);
-            primerMazo.Add(cartaModificadora6);
-            primerMazo.Add(cartaModificadora7);
-            primerMazo.Add(cartaModificadora8);
-            primerMazo.Add(cartaModificadora9);
-            primerMazo.Add(cartaModificadora10);
-            primerMazo.Add(cartaModificadora11);
-            primerMazo.Add(cartaModificadora12);
-            primerMazo.Add(cartaModificadora13);
-            primerMazo.Add(cartaModificadora14);
-            primerMazo.Add(cartaModificadora15);
-            primerMazo.Add(cartaModificadora16);
-            primerMazo.Add(cartaModificadora17);
-            primerMazo.Add(cartaModificadora18);
-            primerMazo.Add(cartaModificadora19);
-            primerMazo.Add(cartaModificadora20);
-            primerMazo.Add(cartaModificadora21);
-            primerMazo.Add(cartaModificadora22);
-            primerMazo.Add(cartaModificadora23);
-            primerMazo.Add(cartaModificadora24);
-            primerMazo.Add(cartaModificadora25);
-            primerMazo.Add(cartaModificadora26);
-            primerMazo.Add(cartaModificadora27);
-            primerMazo.Add(cartaModificadora28);
-            primerMazo.Add(cartaModificadora29);
-            primerMazo.Add(cartaModificadora30);
-            primerMazo.Add(cartaModificadora31);
-            primerMazo.Add(cartaModificadora32);
-            primerMazo.Add(cartaModificadora33);
-            primerMazo.Add(cartaModificadora34);
-            primerMazo.Add(cartaModificadora35);
-            primerMazo.Add(cartaModificadora36);
-            primerMazo.Add(cartaModificadora37);
-            primerMazo.Add(cartaModificadora38);
-            primerMazo.Add(cartaModificadora39);
-            primerMazo.Add(cartaModificadora40);
-            primerMazo.Add(cartaModificadora41);
-            primerMazo.Add(cartaModificadora42);
-            primerMazo.Add(cartaModificadora43);
-            primerMazo.Add(cartaModificadora44);
-            primerMazo.Add(cartaModificadora45);
-            primerMazo.Add(cartaModificadora46);
-            primerMazo.Add(cartaModificadora47);
-            primerMazo.Add(cartaModificadora48);
-            primerMazo.Add(cartaModificadora49);
-            primerMazo.Add(cartaModificadora50);
-            primerMazo.Add(cartaModificadora51);
-            primerMazo.Add(cartaModificadora52);
-            primerMazo.Add(cartaModificadora53);
-            primerMazo.Add(cartaModificadora54);
-            primerMazo.Add(cartaModificadora55);
-            primerMazo.Add(cartaModificadora56);
+            segundoMazo.Add(cartaModificadora1);
+            segundoMazo.Add(cartaModificadora2);
+            segundoMazo.Add(cartaModificadora3);
+            segundoMazo.Add(cartaModificadora4);
+            segundoMazo.Add(cartaModificadora5);
+            segundoMazo.Add(cartaModificadora6);
+            segundoMazo.Add(cartaModificadora7);
+            segundoMazo.Add(cartaModificadora8);
+            segundoMazo.Add(cartaModificadora9);
+            segundoMazo.Add(cartaModificadora10);
+            segundoMazo.Add(cartaModificadora11);
+            segundoMazo.Add(cartaModificadora12);
+            segundoMazo.Add(cartaModificadora13);
+            segundoMazo.Add(cartaModificadora14);
+            segundoMazo.Add(cartaModificadora15);
+            segundoMazo.Add(cartaModificadora16);
+            segundoMazo.Add(cartaModificadora17);
+            segundoMazo.Add(cartaModificadora18);
+            segundoMazo.Add(cartaModificadora19);
+            segundoMazo.Add(cartaModificadora20);
+            segundoMazo.Add(cartaModificadora21);
+            segundoMazo.Add(cartaModificadora22);
+            segundoMazo.Add(cartaModificadora23);
+            segundoMazo.Add(cartaModificadora24);
+            segundoMazo.Add(cartaModificadora25);
+            segundoMazo.Add(cartaModificadora26);
+            segundoMazo.Add(cartaModificadora27);
+            segundoMazo.Add(cartaModificadora28);
+            segundoMazo.Add(cartaModificadora29);
+            segundoMazo.Add(cartaModificadora30);
+            segundoMazo.Add(cartaModificadora31);
+            segundoMazo.Add(cartaModificadora32);
+            segundoMazo.Add(cartaModificadora33);
+            segundoMazo.Add(cartaModificadora34);
+            segundoMazo.Add(cartaModificadora35);
+            segundoMazo.Add(cartaModificadora36);
+            segundoMazo.Add(cartaModificadora37);
+            segundoMazo.Add(cartaModificadora38);
+            segundoMazo.Add(cartaModificadora39);
+            segundoMazo.Add(cartaModificadora40);
+            segundoMazo.Add(cartaModificadora41);
+            segundoMazo.Add(cartaModificadora42);
+            segundoMazo.Add(cartaModificadora43);
+            segundoMazo.Add(cartaModificadora44);
+            segundoMazo.Add(cartaModificadora45);
+            segundoMazo.Add(cartaModificadora46);
+            segundoMazo.Add(cartaModificadora47);
+            segundoMazo.Add(cartaModificadora48);
+            segundoMazo.Add(cartaModificadora49);
+            segundoMazo.Add(cartaModificadora50);
+            segundoMazo.Add(cartaModificadora51);
+            segundoMazo.Add(cartaModificadora52);
+            segundoMazo.Add(cartaModificadora53);
+            segundoMazo.Add(cartaModificadora54);
+            segundoMazo.Add(cartaModificadora55);
+            segundoMazo.Add(cartaModificadora56);
 
-            return primerMazo;
+            return segundoMazo;
 
         }
 
@@ -263,5 +256,44 @@ namespace ServicioGloomm
             return barajaJugadores.TryGetValue(nombreJugador, out List<Carta> mazo) ? mazo : new List<Carta>();
         }
 
+        public void AgregarCartaAMazoJugador(string nombreUsuario)
+        {
+            List<Carta> mazoDelJugador = barajaJugadores[nombreUsuario];
+            try
+            {
+                ValidarExistenciaCartasSobrantes();
+                ValidarCantidadDeCartasJugador(nombreUsuario);
+                Carta cartaNueva = cartasSobrantesGlobal[0];
+                mazoDelJugador.Add(cartaNueva);
+                cartasSobrantesGlobal.RemoveAt(0);
+            }
+            catch (FaultException<ManejadorExcepciones> ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.Mensaje));
+            }
+        }
+
+        private void ValidarCantidadDeCartasJugador(string nombreUsuario)
+        {
+            List<Carta> mazoDelJugador = barajaJugadores[nombreUsuario];
+            if (mazoDelJugador.Count >= 7)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("20"));
+            }
+        }
+
+        private void ValidarExistenciaCartasSobrantes()
+        {
+            if (cartasSobrantesGlobal.Count == 0)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("21"));
+            }
+        }
+
+        public void QuitarCartaDeMazoJugador(string nombreUsuario, Carta cartaAEliminar)
+        {
+            var mazoDelJugador = barajaJugadores[nombreUsuario];
+            mazoDelJugador.Remove(cartaAEliminar);
+        }
     }
 }

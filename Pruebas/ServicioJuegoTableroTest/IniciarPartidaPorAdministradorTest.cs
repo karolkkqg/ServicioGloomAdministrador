@@ -21,17 +21,23 @@ namespace Pruebas.ServicioJuegoTableroTest
         {
             servicioJuego = new ServicioJuego();
 
-            ServicioJuego.JugadoresConectadosCallback.Clear();
-            ServicioJuego.JugadoresConectados.Clear();
+            typeof(ServicioJuego).GetField("jugadoresConectadosCallback", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).SetValue(null, new Dictionary<string, IJuegoAdministradorCallback>());
+            
+
             ServicioJuego.direccionJugadorEnJuego.Clear();
             ServicioJuego.TurnsInGameboard.Clear();
             ServicioJuego.CartasSobrantes.Clear();
             ServicioJuego.indiceTurnoActual.Clear();
             ServicioJuego.partidaYaIniciada.Clear();
 
-            ServicioJuego.JugadoresConectados.Add("Jugador1", "Sala1");
-            ServicioJuego.JugadoresConectados.Add("Jugador2", "Sala1");
-            ServicioJuego.JugadoresConectados.Add("Jugador3", "Sala1");
+            var jugadoresConectadosField = typeof(ServicioJuego)
+        .GetField("jugadoresConectados", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+            var jugadoresConectados = (Dictionary<string, string>)jugadoresConectadosField.GetValue(null);
+            jugadoresConectados.Clear();
+
+            jugadoresConectados["Jugador1"] = "Sala1";
+            jugadoresConectados["Jugador2"] = "Sala1";
+            jugadoresConectados["Jugador3"] = "Sala1";
 
             ServicioJuego.partidaYaIniciada.Add("Sala1", false);
         }

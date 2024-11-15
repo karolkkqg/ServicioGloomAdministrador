@@ -6,18 +6,18 @@ using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServicioGlomm
+namespace ServicioGloomm
 {
     [ServiceContract(CallbackContract = typeof(IChatCallback))]
     public interface IChat
     {
         [OperationContract(IsOneWay = true)]
-        void enviarMensaje(string nomberUsuario, string message);
+        void EnviarMensaje(string nombreUsuario, string mensaje);
 
         [OperationContract]
         List<Chat> ObtenerHistorialMensajes();
 
         [OperationContract]
-        void agregarJugador(string nombreUsuario);
+        void AgregarJugador(string nombreUsuario);
     }
 }

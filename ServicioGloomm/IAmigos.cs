@@ -27,6 +27,9 @@ namespace ServicioGloomm
         [FaultContract(typeof(ManejadorExcepciones))]
         List<BibliotecaClases.Amistad> ObtenerListaAmigos(String nombreUsuario);
 
+        [OperationContract]
+        [FaultContract(typeof(ManejadorExcepciones))]
+        string ObtenerCorreoAmigo(string nombreUsuarioAmigo);
 
         [OperationContract]
         [FaultContract(typeof(ManejadorExcepciones))]
