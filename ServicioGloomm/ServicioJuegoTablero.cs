@@ -34,6 +34,12 @@ namespace ServicioGloomm
         }
 
             public void IngresarJugadorAJuego(string nombreUsuario, string numeroSala, int numeroJugadores)
+        private static readonly Dictionary<string, string> administradoresDeSala = new Dictionary<string, string>();
+        private static readonly Dictionary<string, List<string>> votosExpulsion = new Dictionary<string, List<string>>();
+
+
+
+        public void IngresarJugadorAJuego(string nombreUsuario, string numeroSala, int numeroJugadores)
         {
             if (!jugadoresConectadosListos.ContainsKey(numeroSala))
             {
@@ -279,6 +285,57 @@ namespace ServicioGloomm
             {
               
               var personajes = familiasConPersonajes[nombreFamilia];
+        public void SolicitarExpulsion(string solicitante, string jugadorObjetivo, string numeroSala)
+        {
+            if (EsAdministrador(solicitante, numeroSala))
+            {
+                ExpulsarJugador(jugadorObjetivo, numeroSala);
+            }
+            else
+            {
+                IniciarVotacionExpulsion(solicitante, jugadorObjetivo, numeroSala);
+            }
+        }
+
+        private void ExpulsarJugador(string jugadorObjetivo, string numeroSala)
+        {
+            if (jugadoresConectados.ContainsKey(jugadorObjetivo))
+            {
+                jugadoresConectados.Remove(jugadorObjetivo);
+                jugadoresConectadosCallback.Remove(jugadorObjetivo);
+
+                foreach (var jugador in ObtenerJugadores(numeroSala))
+                {
+                    if (jugadoresConectadosCallback.TryGetValue(jugador, out var callback))
+                    {
+                        callback.NotificarExpulsion(jugadorObjetivo);
+                    }
+                }
+            }
+        }
+
+        private void IniciarVotacionExpulsion(string solicitante, string jugadorObjetivo, string numeroSala)
+        {
+            if (!votosExpulsion.ContainsKey(numeroSala))
+            {
+                votosExpulsion[numeroSala] = new List<string>();
+            }
+
+            foreach (var jugador in ObtenerJugadores(numeroSala))
+            {
+                if (jugadoresConectadosCallback.TryGetValue(jugador, out var callback))
+                {
+                    callback.IniciarVotacion(jugadorObjetivo);
+                }
+            }
+        }
+
+        public void VotarExpulsion(string votante, string jugadorObjetivo, string numeroSala)
+        {
+            if (votosExpulsion.ContainsKey(numeroSala) && !votosExpulsion[numeroSala].Contains(votante))
+            {
+                votosExpulsion[numeroSala].Add(votante);
+            }
 
               if (personajes.ContainsKey(nombrePersonaje))
                {
@@ -286,5 +343,22 @@ namespace ServicioGloomm
                }
             }
         }*/
+            if (votosExpulsion[numeroSala].Count >= ObtenerJugadores(numeroSala).Count / 2)
+            {
+                ExpulsarJugador(jugadorObjetivo, numeroSala);
+                votosExpulsion.Remove(numeroSala);
+            }
+        }
+
+
+
+
+
+        private bool EsAdministrador(string nombreUsuario, string numeroSala)
+        {
+            return administradoresDeSala.TryGetValue(numeroSala, out var administrador) && administrador == nombreUsuario;
+        }
+
+
     }
 }

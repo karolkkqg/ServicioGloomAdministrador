@@ -69,5 +69,22 @@ namespace ServicioGloomm
 
             return listaAmistades;
         }
+
+        string IAmigos.ObtenerCorreoAmigo(string nombreUsuarioAmigo)
+        {
+            try
+            {
+                string correoAmigo;
+
+                correoAmigo = AccesoAmigos.BuscarCorreoAmigo(nombreUsuarioAmigo);
+
+                return correoAmigo.Trim();
+            }
+            catch (FaultException<ManejadorExcepciones> ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.mensaje));
+            }
+
+        }
     }
 }

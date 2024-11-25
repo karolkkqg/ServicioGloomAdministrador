@@ -1,5 +1,4 @@
-﻿using BlbibliotecaClases;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
@@ -9,9 +8,10 @@ using System.Threading.Tasks;
 namespace ServicioGloomm
 {
     [ServiceContract]
-    public interface IChatCallback
+    public interface IInvitacion
     {
-        [OperationContract(IsOneWay = true)]
-        void EnviarMensajeCliente(Chat mensajesChat);
+        [OperationContract]
+        bool EnviarInvitacion(String correo, string codigo, string administrador);
     }
+
 }

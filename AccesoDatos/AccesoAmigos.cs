@@ -190,6 +190,33 @@ namespace AccesoDatos
                 Estado = solicitud.estado,
             };
         }
+
+        public static string BuscarCorreoAmigo(string nombreUsurioAmigo)
+        {
+            using (var contexto = new EntidadesGloom())
+            {
+                /*var existeAmigo = contexto.Amigos.Any(a => a.NombreUsuario == nombreUsurioAmigo);
+                if (!existeAmigo)
+                {
+                    return "El amigo no existe en la tabla Amigos.";
+                }*/
+
+                var correoJugadorAmigo = contexto.Amigos
+            .Where(a => a.JugadorAmigo == nombreUsurioAmigo)
+            .Join(contexto.Jugador,
+                  a => a.JugadorAmigo,
+                  j => j.NombreUsuario,
+                  (a, j) => j.Correo)
+            .FirstOrDefault();
+
+                if (correoJugadorAmigo == null)
+                {
+                    return "Correo del jugador amigo no encontrado";
+                }
+
+                return correoJugadorAmigo;
+            }
+        }
     }
   
 

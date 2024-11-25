@@ -19,6 +19,10 @@ namespace ServicioGloomm
         public static readonly Dictionary<string, List<string>> salaJugadores = new Dictionary<string, List<string>>();
         public static readonly Dictionary<string, Dictionary<string, (string nombrePersonaje, int vida)>> personajesPorSala = new Dictionary<string, Dictionary<string, (string, int)>>();
         public static readonly Dictionary<string, List<string>> personajesUsadosPorSala = new Dictionary<string, List<string>>();
+        private static readonly Dictionary<string, HashSet<string>> jugadoresEnSala = new Dictionary<string, HashSet<string>>();
+        private static readonly Dictionary<string, ISalaCallback> usuariosSalaCallback = new Dictionary<string, ISalaCallback>();
+        private static readonly Dictionary<string, BibliotecaClases.Sala> salasActivasEnMemoria = new Dictionary<string, BibliotecaClases.Sala>();
+
 
         public int AgregarParticipantesAPartida(BibliotecaClases.Sala sala)
         {
@@ -482,6 +486,109 @@ namespace ServicioGloomm
 
                         // Opcional: Eliminar el callback del jugador problemático
                         salaJugadoresPorSala[sala].Remove(jugador);
+        public List<string> ObtenerPersonajesUsados()
+        {
+            return new List<string>(personajesUsados);
+        }
+
+        public List<BibliotecaClases.Sala> ObtenerSalasActivas()
+        {
+            AdministradorDeComportamiento.CambiarModoComportamientoReentrante();
+            return salasActivasEnMemoria.Values.ToList();
+        }
+
+        public List<BibliotecaClases.Sala> ObtenerSalasActivasConEstado()
+        {
+            AdministradorDeComportamiento.CambiarModoComportamientoReentrante();
+            var listaSalasActivas = new List<BibliotecaClases.Sala>();
+
+            foreach (var sala in salasActivasEnMemoria.Values)
+            {
+                if (jugadoresEnSala.ContainsKey(sala.idSala))
+                {
+                    sala.noJugadores = jugadoresEnSala[sala.idSala].Count;
+                }
+                listaSalasActivas.Add(sala);
+            }
+
+            return listaSalasActivas;
+        }
+
+        public void UnirseASalaPublica(string idSala, string idUsuario)
+        {
+            AdministradorDeComportamiento.CambiarModoComportamientoReentrante();
+            if (!salasActivasEnMemoria.TryGetValue(idSala, out var sala) || sala.tipoPartida != "Publica")
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("23"));
+            }
+
+            if (!jugadoresEnSala.ContainsKey(idSala))
+            {
+                jugadoresEnSala[idSala] = new HashSet<string>();
+            }
+            jugadoresEnSala[idSala].Add(idUsuario);
+            usuariosSalaCallback[idUsuario] = OperationContext.Current.GetCallbackChannel<ISalaCallback>();
+            ActualizarSalasParaTodos();
+
+            NotificarResultadoUnirseASala(idUsuario, idSala, true);
+        }
+
+        public void UnirseASalaPrivada(string idUsuario, string idSala, string codigoAcceso)
+        {
+            AdministradorDeComportamiento.CambiarModoComportamientoReentrante();
+            if (!salasActivasEnMemoria.TryGetValue(idSala, out var sala) || sala.codigo != codigoAcceso)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("24"));
+            }
+            if (sala.codigo == codigoAcceso)
+            {
+                if (!jugadoresEnSala.ContainsKey(idSala))
+                {
+                    jugadoresEnSala[idSala] = new HashSet<string>();
+                }
+                jugadoresEnSala[idSala].Add(idUsuario);
+                usuariosSalaCallback[idUsuario] = OperationContext.Current.GetCallbackChannel<ISalaCallback>();
+                ActualizarSalasParaTodos();
+                NotificarResultadoUnirseASala(idUsuario, idSala, true);
+            }
+            else 
+            {
+                NotificarResultadoUnirseASala(idUsuario, idSala, false);
+            }
+            
+        }
+
+        public void SalirDeSala(string idSala, string idUsuario)
+        {
+            AdministradorDeComportamiento.CambiarModoComportamientoReentrante();
+            if (jugadoresEnSala.ContainsKey(idSala) && jugadoresEnSala[idSala].Remove(idUsuario))
+            {
+                if (jugadoresEnSala[idSala].Count == 0)
+                {
+                    jugadoresEnSala.Remove(idSala);
+                    salasActivasEnMemoria.Remove(idSala);
+                }
+                ActualizarSalasParaTodos();
+            }
+        }
+
+        private void ActualizarSalasParaTodos()
+        {
+            AdministradorDeComportamiento.CambiarModoComportamientoReentrante();
+            var listaActualizada = ObtenerSalasActivasConEstado();
+            foreach (var callback in usuariosSalaCallback.Values)
+            {
+                callback.ActualizarSalasActivas(listaActualizada);
+            }
+        }
+
+        private void NotificarResultadoUnirseASala(string idUsuario, string idSala, bool esExitoso)
+        {
+            if (usuariosSalaCallback.TryGetValue(idUsuario, out var callback))
+            {
+                callback.ResultadoUnirseASala(idSala, salasActivasEnMemoria[idSala].codigo, esExitoso);
+            }
+        }
 
                         throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18"));
                     }

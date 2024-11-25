@@ -19,6 +19,10 @@ namespace Pruebas.ServicioJuegoTableroTest
         public void SetUp()
         {
             servicioJuego = new ServicioJuego();
+
+            var cartasSobrantesField = typeof(ServicioJuego).GetField("cartasSobrantes", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+            var cartasSobrantes = (List<Carta>)cartasSobrantesField.GetValue(null);
+            cartasSobrantes.Clear();
         }
 
         [TestMethod]
@@ -31,6 +35,8 @@ namespace Pruebas.ServicioJuegoTableroTest
                 new Carta { identificador = "Carta2.png", valor = 20 }
             });
 
+            cartasSobrantes.Add(new Carta { identificador = "Carta1", valor = 10 });
+            cartasSobrantes.Add(new Carta { identificador = "Carta2", valor = 20 });
 
             List<Carta> resultado = servicioJuego.ObtenerCartasSobrantes();
 

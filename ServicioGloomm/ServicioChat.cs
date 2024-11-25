@@ -1,4 +1,5 @@
-﻿using BlbibliotecaClases;
+﻿using BibliotecaClases;
+using BlbibliotecaClases;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 namespace ServicioGloomm
 {
     [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Reentrant)]
-    public partial class ServicioJuego:IChat
+    public partial class ServicioJuego : IChat
     {
 
         private Queue<Chat> mensajes = new Queue<Chat>();
@@ -24,7 +25,7 @@ namespace ServicioGloomm
         }
 
 
-        public void agregarJugador(string nombreUsuario)
+        public void AgregarJugador(string nombreUsuario)
         {
             var callback = OperationContext.Current.GetCallbackChannel<IChatCallback>();
             if (!jugadoresPartida.ContainsKey(nombreUsuario))
@@ -36,7 +37,7 @@ namespace ServicioGloomm
 
 
 
-        public void enviarMensaje(string nomberUsuario, string message)
+        public void EnviarMensaje(string nomberUsuario, string message)
 
         {
 
@@ -51,28 +52,32 @@ namespace ServicioGloomm
             Chat mensajeChat = new Chat(nomberUsuario, message);
 
 
-            agregarMensaje(mensajeChat);
-            mandarMensajeAJugadores(mensajeChat);
-            Console.WriteLine($"{nomberUsuario} : {message}");
+            AgregarMensaje(mensajeChat);
+            MandarMensajeAJugadores(mensajeChat);
+            
 
 
         }
-        private void agregarMensaje(Chat mensajesChat)
+        private void AgregarMensaje(Chat mensajesChat)
         {
             mensajes?.Enqueue(mensajesChat);
         }
 
-        private void mandarMensajeAJugadores(Chat mensajesChat)
+        private void MandarMensajeAJugadores(Chat mensajesChat)
         {
             foreach (var jugador in jugadoresPartida.Values)
             {
                 try
                 {
-                    jugador.enviarMensajeCliente(mensajesChat);
+                    jugador.EnviarMensajeCliente(mensajesChat);
                 }
-                catch (Exception ex)
+                catch (CommunicationException ex)
                 {
-                    Console.WriteLine("Error al enviar mensaje a cliente: " + ex.Message);
+                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("29"));
+                }
+                catch (TimeoutException ex)
+                {
+                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("29"));
                 }
             }
 

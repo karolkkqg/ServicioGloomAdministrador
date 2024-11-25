@@ -12,6 +12,8 @@ namespace Pruebas.ServicioJuegoTableroTest
     [TestClass]
     public class EliminarJugadorDeJuegoTest
     {
+        private ServicioJuego servicioJuego;
+
         [TestInitialize]
         public void SetUp()
         {

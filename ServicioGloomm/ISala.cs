@@ -46,6 +46,24 @@ namespace ServicioGloomm
         void IngresarJugadorAJuego(string nombreUsuario, string numeroSala, int numeroJugadores);
         [OperationContract(IsOneWay = true)]
         void SacarATodosLosJugadoresDeSala(string numeroSala);
+        List<string> ObtenerPersonajesUsados();
+
+        [OperationContract]
+        List<Sala> ObtenerSalasActivas();
+
+        [OperationContract]
+        [FaultContract(typeof(ManejadorExcepciones))]
+        List<Sala> ObtenerSalasActivasConEstado();
+
+        [OperationContract]
+        void UnirseASalaPublica(string idSala, string idUsuario);
+
+        [OperationContract]
+        void UnirseASalaPrivada(string idUsuario, string idSala, string codigoAcceso);
+
+        [OperationContract]
+        void SalirDeSala(string idSala, string idUsuario);
+
     }
 
     [ServiceContract]
@@ -62,6 +80,12 @@ namespace ServicioGloomm
         [OperationContract(IsOneWay = true)]
         void SacarDeSalaATodosJugadores();
         
+
+        [OperationContract(IsOneWay = true)]
+        void ActualizarSalasActivas(List<Sala> salasActivas);
+
+        [OperationContract(IsOneWay = true)]
+        void ResultadoUnirseASala(string idSala, string codigo, bool esExitoso);
 
     }
 }

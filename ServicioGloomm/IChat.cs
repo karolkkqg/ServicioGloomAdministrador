@@ -12,12 +12,12 @@ namespace ServicioGloomm
     public interface IChat
     {
         [OperationContract(IsOneWay = true)]
-        void enviarMensaje(string nomberUsuario, string message);
+        void EnviarMensaje(string nombreUsuario, string mensaje);
 
         [OperationContract]
         List<Chat> ObtenerHistorialMensajes();
 
         [OperationContract]
-        void agregarJugador(string nombreUsuario);
+        void AgregarJugador(string nombreUsuario);
     }
 }
