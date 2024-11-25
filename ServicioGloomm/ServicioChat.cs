@@ -6,10 +6,10 @@ using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServicioGlomm
+namespace ServicioGloomm
 {
     [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Reentrant)]
-    public class ServicioChat:IChat
+    public partial class ServicioJuego:IChat
     {
 
         private Queue<Chat> mensajes = new Queue<Chat>();

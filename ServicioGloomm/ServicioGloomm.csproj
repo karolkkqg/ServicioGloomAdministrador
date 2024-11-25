@@ -40,10 +40,15 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="log4net, Version=3.0.3.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.3.0.3\lib\net462\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -52,15 +57,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdministradorDeComportamiento.cs" />
+    <Compile Include="AdministradorLogger.cs" />
     <Compile Include="IAmigos.cs" />
     <Compile Include="IChat.cs" />
     <Compile Include="IChatCallback.cs" />
+    <Compile Include="ICreacionPartida.cs" />
     <Compile Include="ISala.cs" />
     <Compile Include="IServicioCarta.cs" />
     <Compile Include="IServicioHistorialPartida.cs" />
     <Compile Include="IServicioJuegoTablero.cs" />
     <Compile Include="ServicioCarta.cs" />
     <Compile Include="ServicioChat.cs" />
+    <Compile Include="ServicioCreacionPartida.cs" />
     <Compile Include="ServicioHistorialPartida.cs" />
     <Compile Include="ServicioJuegoTablero.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

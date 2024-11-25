@@ -1,5 +1,7 @@
 ﻿using AccesoDatos;
 using BibliotecaClases;
+using log4net.Core;
+using ServicioGlomm;
 using ServicioGloomm;
 using System;
 using System.Collections.Generic;
@@ -14,6 +16,7 @@ namespace ServicioGloomm
     {
         public int EnviarSolcitudAmistad(Amistad solicitud)
         {
+            AdministradorLogger administradorLogger= new AdministradorLogger(this.GetType());
             try
             {
 
@@ -23,6 +26,7 @@ namespace ServicioGloomm
             }
             catch (FaultException<ManejadorExcepciones> ex)
             {
+                administradorLogger.RegistroError(ex);
                 throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.mensaje));
             }
         }

@@ -28,19 +28,19 @@ namespace Pruebas.SalaTest
         [TestMethod]
         public void SeleccionarPersonajeExitosoPersonajeNoUsado()
         {
-            servicioSala.SeleccionarPersonaje("Usuario1", "Personaje1", 100);
+            servicioSala.SeleccionarPersonaje("Usuario1", "Personaje1", "Sala1");
 
-            var personajes = servicioSala.ObtenerUsuariosYPersonajes();
+            var personajes = servicioSala.ObtenerUsuariosYPersonajes("Sala1");
             Assert.AreEqual(1, personajes.Count);
         }
 
         [TestMethod]
         public void SeleccionarPersonajeCambioDePersonaje()
         {
-            servicioSala.SeleccionarPersonaje("Usuario1", "Personaje1", 100);
-            servicioSala.SeleccionarPersonaje("Usuario1", "Personaje2", 80);
+            servicioSala.SeleccionarPersonaje("Usuario1", "Personaje1", "Sala1");
+            servicioSala.SeleccionarPersonaje("Usuario1", "Personaje2", "Sala1");
 
-            var personajes = servicioSala.ObtenerUsuariosYPersonajes();
+            var personajes = servicioSala.ObtenerUsuariosYPersonajes("Sala1");
             Assert.AreEqual(1, personajes.Count);
         }
 
@@ -49,8 +49,8 @@ namespace Pruebas.SalaTest
         {
             var excepcion = Assert.ThrowsException<FaultException<ManejadorExcepciones>>(() =>
             {
-                servicioSala.SeleccionarPersonaje("Usuario1", "Personaje1", 100);
-                servicioSala.SeleccionarPersonaje("Usuario2", "Personaje1", 90);
+                servicioSala.SeleccionarPersonaje("Usuario1", "Personaje1", "Sala1");
+                servicioSala.SeleccionarPersonaje("Usuario2", "Personaje1", "Sala1");
             });
             Assert.AreEqual("14", excepcion.Detail.mensaje);
 
