@@ -38,7 +38,7 @@ namespace ServicioGloomm
         void ValidarPersonajesSeleccionados(int cantidadJugadores);
         
         [OperationContract]
-        Dictionary<string, (string nombrePersonaje, int vida)> ObtenerUsuariosYPersonajes();
+        Dictionary<string, (string nombrePersonaje, int vida)> ObtenerUsuariosYPersonajesSala();
 
         [OperationContract]
         void SacarDeSala(string nombreUsuario);
@@ -57,13 +57,38 @@ namespace ServicioGloomm
         List<Sala> ObtenerSalasActivasConEstado();
 
         [OperationContract]
-        void UnirseASalaPublica(string idSala, string idUsuario);
+        void UnirseASalaPublicaNormal(string idSala, string idUsuario);
 
         [OperationContract]
-        void UnirseASalaPrivada(string idUsuario, string idSala, string codigoAcceso);
+        void UnirseASalaPrivadaNormal(string idUsuario, string idSala, string codigoAcceso);
+
+        [OperationContract]
+        void UnirseASalaPrivadaMiniHistoria(string idUsuario, string idSala, string codigoAcceso);
 
         [OperationContract]
         void SalirDeSala(string idSala, string idUsuario);
+
+        [OperationContract]
+        string ObtenerCodigoSala(string idAdminsitrador, string nombreSala);
+
+        [OperationContract]
+        List<string> ObtenerFamiliaSeleccionada(string idSala);
+
+        [OperationContract]
+        void SeleccionarFamilia(string nombreUsuario, string nombreFamilia, string salaId);
+
+        [OperationContract]
+        void ValidarFamiliaSeleccionada(int cantidadJugadores, string idSala);
+
+        [OperationContract]
+        Dictionary<string, HashSet<string>> ObtenerFamiliasSeleccionadasPorSala();
+
+        [OperationContract]
+        Dictionary<string, string> ObtenerFamiliaPorJugador();
+
+        [OperationContract]
+        Dictionary<string, List<(string nombrePersonaje, int vida)>> ObtenerFamiliasYPersonajes();
+
 
     }
 
@@ -83,6 +108,9 @@ namespace ServicioGloomm
 
         [OperationContract(IsOneWay = true)]
         void ResultadoUnirseASala(string idSala, string codigo, bool esExitoso);
+
+        [OperationContract(IsOneWay = true)]
+        void ActualizarSeleccionFamilia(string nombreUsuario, string nombreFamilia);
 
     }
 }

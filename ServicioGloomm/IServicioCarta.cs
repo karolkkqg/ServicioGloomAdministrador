@@ -13,5 +13,11 @@ namespace ServicioGloomm
     {
         [OperationContract]
         List<Carta> ObtenerMazoJugador(string nombreJugador);
+
+        [OperationContract]
+        void AgregarCartaAMazoJugador(string nombreUsuario);
+
+        [OperationContract]
+        void QuitarCartaDeMazoJugador(string nombreUsuario, Carta cartaAEliminar);
     }
 }

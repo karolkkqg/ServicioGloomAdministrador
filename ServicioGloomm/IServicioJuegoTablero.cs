@@ -11,6 +11,8 @@ namespace ServicioGloomm
     [ServiceContract(CallbackContract = typeof(IJuegoAdministradorCallback))]
     public interface IServicioJuegoTablero
     {
+        [OperationContract]
+        Dictionary<string, (string nombrePersonaje, int vida)> ObtenerUsuariosYPersonajes();
 
         [OperationContract]
         void IngresarJugadorAJuego(string nombreUsuario, string numeroSala, int numeroJugadores);
@@ -23,18 +25,56 @@ namespace ServicioGloomm
 
         [OperationContract]
         void EliminarJugadorDeJuego(string nombreUsuario);
+
+        [OperationContract]
+        void CambiarTurno(string numeroSala);
+
+        [OperationContract]
+        string AsignarPrimerTurno(string numeroSala);
+
+        [OperationContract]
+        string ObtenerJugadorActual(string numeroSala);
+
+        [OperationContract(IsOneWay = true)]
+        void ConectarConTablero(string nombreUsuario, string numeroSala);
+
+        [OperationContract(IsOneWay = true)]
+        void SumarVidaPersonaje(string nombreUsuario, int cantidadVida);
+
+        [OperationContract(IsOneWay = true)]
+        void AgregarCastigo(string nombreJugador);
+
+        [OperationContract(IsOneWay = true)]
+        void TerminarPartidaMiniJuego();
+
+        
     }
 
     [ServiceContract]
     public interface IJuegoAdministradorCallback
     {
         [OperationContract(IsOneWay = true)]
-        void EnviarTurno(string nombreDelUsusarioEnTurno);
+        void EnviarTurno(string nombreDelUsuarioEnTurno);
 
         [OperationContract(IsOneWay = true)]
-        void NotificarExpulsion(string jugadorExpulsado);
+        void ActualizarTurno(string nombreDelUsuarioEnTurno);
 
         [OperationContract(IsOneWay = true)]
-        void IniciarVotacion(string jugadorObjetivo);
+        void ActualizarImagenMazoCartaSobrante();
+
+        [OperationContract(IsOneWay = true)]
+        void ActualizarImagenMazoCartaBonus();
+
+        [OperationContract(IsOneWay = true)]
+        void ActualizarMazoJugador();
+
+        [OperationContract(IsOneWay = true)]
+        void EnviarGanador(string jugador);
+
+        [OperationContract(IsOneWay = true)]
+        void NotificarVotacionExpulsion(string jugadorPropuesto);
+
+        [OperationContract(IsOneWay = true)]
+        void NotificarResultadoExpulsion(string jugadorExpulsado, bool expulsado);
     }
 }

@@ -30,7 +30,7 @@ namespace Pruebas.SalaTest
         {
             servicioSala.SeleccionarPersonaje("Usuario1", "Personaje1", 100);
 
-            var personajes = servicioSala.ObtenerUsuariosYPersonajes();
+            var personajes = servicioSala.ObtenerUsuariosYPersonajesSala();
             Assert.AreEqual(1, personajes.Count);
         }
 
@@ -40,7 +40,7 @@ namespace Pruebas.SalaTest
             servicioSala.SeleccionarPersonaje("Usuario1", "Personaje1", 100);
             servicioSala.SeleccionarPersonaje("Usuario1", "Personaje2", 80);
 
-            var personajes = servicioSala.ObtenerUsuariosYPersonajes();
+            var personajes = servicioSala.ObtenerUsuariosYPersonajesSala();
             Assert.AreEqual(1, personajes.Count);
         }
 

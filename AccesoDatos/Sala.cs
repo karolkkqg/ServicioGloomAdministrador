@@ -14,7 +14,12 @@ namespace AccesoDatos
     
     public partial class Sala
     {
-        public string IdSala { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Sala()
+        {
+            this.Participantes = new HashSet<Participantes>();
+        }
+    
         public string NombreSala { get; set; }
         public string TipoSala { get; set; }
         public string TipoPartida { get; set; }
@@ -23,5 +28,9 @@ namespace AccesoDatos
         public string IdAdministrador { get; set; }
         public string Fecha { get; set; }
         public string Ganador { get; set; }
+        public string IdSala { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Participantes> Participantes { get; set; }
     }
 }

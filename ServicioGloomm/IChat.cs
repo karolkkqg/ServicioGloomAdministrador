@@ -18,6 +18,6 @@ namespace ServicioGloomm
         List<Chat> ObtenerHistorialMensajes();
 
         [OperationContract]
-        void AgregarJugador(string nombreUsuario);
+        void AgregarJugadorAChat(string nombreUsuario);
     }
 }
