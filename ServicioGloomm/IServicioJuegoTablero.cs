@@ -12,12 +12,6 @@ namespace ServicioGloomm
     public interface IServicioJuegoTablero
     {
         [OperationContract]
-        Dictionary<string, (string nombrePersonaje, int vida)> ObtenerUsuariosYPersonajes();
-
-        [OperationContract]
-        void IngresarJugadorAJuego(string nombreUsuario, string numeroSala, int numeroJugadores);
-
-        [OperationContract]
         List<Carta> ObtenerCartasSobrantes();
 
         [OperationContract]
@@ -39,15 +33,13 @@ namespace ServicioGloomm
         void ConectarConTablero(string nombreUsuario, string numeroSala);
 
         [OperationContract(IsOneWay = true)]
-        void SumarVidaPersonaje(string nombreUsuario, int cantidadVida);
+        void SumarVidaPersonaje(string numeroSala, string nombreUsuario, int cantidadVida);
 
         [OperationContract(IsOneWay = true)]
         void AgregarCastigo(string nombreJugador);
 
         [OperationContract(IsOneWay = true)]
-        void TerminarPartidaMiniJuego();
-
-        
+        void TerminarPartidaMiniJuego(string numeroSala);
     }
 
     [ServiceContract]

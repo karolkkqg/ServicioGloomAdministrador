@@ -21,18 +21,20 @@ namespace Pruebas.SalaTest
         }
 
         [TestMethod]
-        public void ObtenerUsuariosYPersonajes_DiccionarioVacioSinPersonajesSeleccionados()
+        public void ObtenerUsuariosYPersonajesContieneUsuariosYPersonajesCorrectos()
         {
-            var personajes = servicioSala.ObtenerUsuariosYPersonajesSala();
-            Assert.AreEqual(0, personajes.Count, "El diccionario debería estar vacío al inicio.");
-        }
+            ServicioGloomm.ServicioJuego.personajesPorSala["Sala1"] = new Dictionary<string, (string nombrePersonaje, int vida)>
+    {
+        { "Usuario1", ("Personaje1", 100) },
+        { "Usuario2", ("Personaje2", 80) }
+    };
 
         [TestMethod]
         public void ObtenerUsuariosYPersonajes_ContieneUsuariosYPersonajesCorrectos()
         {
             ServicioGloomm.ServicioJuego.personajesPorUsuario.Add("Usuario1", ("Personaje1", 100));
             ServicioGloomm.ServicioJuego.personajesPorUsuario.Add("Usuario2", ("Personaje2", 80));
-            var personajes = servicioSala.ObtenerUsuariosYPersonajesSala();
+            var personajes = servicioSala.ObtenerUsuariosYPersonajes();
 
             Assert.AreEqual(2, personajes.Count, "El diccionario debería contener dos entradas.");
         }

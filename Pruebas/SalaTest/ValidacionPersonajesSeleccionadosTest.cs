@@ -32,17 +32,22 @@ namespace Pruebas.SalaTest
         public void ValidarPersonajesSeleccionadosExitoso()
         {
             int cantidadJugadores = 3;
-            ServicioGloomm.ServicioJuego.personajesUsados.Add("Personaje1");
-            ServicioGloomm.ServicioJuego.personajesUsados.Add("Personaje2");
-            ServicioGloomm.ServicioJuego.personajesUsados.Add("Personaje3");
+            if (!ServicioGloomm.ServicioJuego.personajesUsadosPorSala.ContainsKey("Sala1"))
+            {
+                ServicioGloomm.ServicioJuego.personajesUsadosPorSala["Sala1"] = new List<string>();
+            }
+
+            ServicioGloomm.ServicioJuego.personajesUsadosPorSala["Sala1"].Add("Personaje1");
+            ServicioGloomm.ServicioJuego.personajesUsadosPorSala["Sala1"].Add("Personaje2");
+            ServicioGloomm.ServicioJuego.personajesUsadosPorSala["Sala1"].Add("Personaje3");
 
             try
             {
-                servicioSala.ValidarPersonajesSeleccionados(cantidadJugadores);
+                servicioSala.ValidarPersonajesSeleccionados("Sala1", cantidadJugadores);
             }
-            catch (FaultException<ManejadorExcepciones>)
+            catch (FaultException<ManejadorExcepciones> ex)
             {
-                Assert.Fail("Se lanzó una excepción inesperada.");
+                Assert.Fail(ex.Detail.mensaje);
             }
         }
 
@@ -50,12 +55,17 @@ namespace Pruebas.SalaTest
         public void ValidarPersonajesSeleccionadosFallaPorCantidadIncorrecta()
         {
             int cantidadJugadores = 2;
-            ServicioGloomm.ServicioJuego.personajesUsados.Add("Personaje1");
-            ServicioGloomm.ServicioJuego.personajesUsados.Add("Personaje2");
-            ServicioGloomm.ServicioJuego.personajesUsados.Add("Personaje3");
+            if (!ServicioGloomm.ServicioJuego.personajesUsadosPorSala.ContainsKey("Sala1"))
+            {
+                ServicioGloomm.ServicioJuego.personajesUsadosPorSala["Sala1"] = new List<string>();
+            }
+
+            ServicioGloomm.ServicioJuego.personajesUsadosPorSala["Sala1"].Add("Personaje1");
+            ServicioGloomm.ServicioJuego.personajesUsadosPorSala["Sala1"].Add("Personaje2");
+            ServicioGloomm.ServicioJuego.personajesUsadosPorSala["Sala1"].Add("Personaje3");
             var excepcion = Assert.ThrowsException<FaultException<ManejadorExcepciones>>(() =>
             {
-                servicioSala.ValidarPersonajesSeleccionados(cantidadJugadores);
+                servicioSala.ValidarPersonajesSeleccionados("Sala1", cantidadJugadores);
             });
             Assert.AreEqual("15", excepcion.Detail.mensaje);
         }

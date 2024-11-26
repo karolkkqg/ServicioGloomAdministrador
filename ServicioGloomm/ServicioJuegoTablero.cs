@@ -1,6 +1,7 @@
 ﻿using AccesoDatos;
 using BibliotecaClases;
 using BlbibliotecaClases;
+using ServicioGlomm;
 using ServicioGloomm;
 using System;
 using System.Collections.Generic;
@@ -27,8 +28,12 @@ namespace ServicioGloomm
         public static readonly Dictionary<string, string> jugadoresConectadosTablero = new Dictionary<string, string>();
         public static readonly Dictionary<string, int> jugadoresConCastigos = new Dictionary<string, int>();
 
-        //EXPULSIÓN NO SE TE VAYA A OLVIDAR QUE EXISTE OTRA VEZ TT
+        public List<string> ObtenerJugadoresConectados(string numeroSala)
+        {
+            return salaJugadoresPorSala[numeroSala].Keys.ToList();
+        }
 
+            public void IngresarJugadorAJuego(string nombreUsuario, string numeroSala, int numeroJugadores)
         private static readonly Dictionary<string, string> administradoresDeSala = new Dictionary<string, string>();
         private static readonly Dictionary<string, List<string>> votosExpulsion = new Dictionary<string, List<string>>();
 
@@ -211,17 +216,17 @@ namespace ServicioGloomm
             }
         }
 
-        public void TerminarPartidaMiniJuego()
+        public void TerminarPartidaMiniJuego(string numeroSala)
         {
             AdministradorLogger administradorLogger = new AdministradorLogger(this.GetType());
-            //string jugadorGanador = ValidaGanador();
-            foreach (var jugador in salaJugadoresCallback)
+            string jugadorGanador = ObtenerGanador(numeroSala);
+            foreach (var jugador in jugadoresConectadosTableroCallback)
             {
                 if (jugadoresConectadosTableroCallback.ContainsKey(jugador.Key))
                 {
                     try
                     {
-                        //jugadoresConectadosTableroCallback[jugador.Key].EnviarGanador(jugadorGanador);
+                        jugadoresConectadosTableroCallback[jugador.Key].EnviarGanador(jugadorGanador);
                     }
                     catch (CommunicationException ex)
                     {
@@ -235,11 +240,6 @@ namespace ServicioGloomm
                     }
                 }
             }
-        }
-
-        Dictionary<string, (string nombrePersonaje, int vida)> IServicioJuegoTablero.ObtenerUsuariosYPersonajes()
-        {
-            throw new NotImplementedException();
         }
 
         Dictionary<string, Dictionary<string, int>> familiasConPersonajes = new Dictionary<string, Dictionary<string, int>>
@@ -281,7 +281,14 @@ namespace ServicioGloomm
                 }
             }
         };
-
+            
+        /*
+        public void SumarVidaPersonajeJuegoNormal(string nombreJugador, string nombrePersonaje, int cantidadVida)
+        {          
+            if (jugadoresConFamilias.TryGetValue(nombreJugador, out string nombreFamilia))
+            {
+              
+              var personajes = familiasConPersonajes[nombreFamilia];
         public void SolicitarExpulsion(string solicitante, string jugadorObjetivo, string numeroSala)
         {
             if (EsAdministrador(solicitante, numeroSala))
@@ -353,8 +360,13 @@ namespace ServicioGloomm
                 votosExpulsion[numeroSala].Add(jugadorQueVota);
             }
 
-            List<string> jugadoresSala = ObtenerJugadores(numeroSala);
-            if (votosExpulsion[numeroSala].Count >= jugadoresSala.Count / 2)
+              if (personajes.ContainsKey(nombrePersonaje))
+               {
+                 personajes[nombrePersonaje] += cantidadVida;
+               }
+            }
+        }*/
+            if (votosExpulsion[numeroSala].Count >= ObtenerJugadores(numeroSala).Count / 2)
             {
                 string jugadorObjetivo = votosExpulsion[numeroSala][0];
                 ExpulsarJugador(jugadorObjetivo, numeroSala);

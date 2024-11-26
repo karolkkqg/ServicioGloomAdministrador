@@ -20,12 +20,17 @@ namespace Pruebas.SalaTest
         }
 
         [TestMethod]
-        public void ObtenerPersonajesUsados_ContienePersonajesCorrectos()
+        public void ObtenerPersonajesUsadosContienePersonajesCorrectos()
         {
-            ServicioGloomm.ServicioJuego.personajesUsados.Add("Personaje1");
-            ServicioGloomm.ServicioJuego.personajesUsados.Add("Personaje2");
+            if (!ServicioJuego.personajesUsadosPorSala.ContainsKey("Sala1"))
+            {
+                ServicioJuego.personajesUsadosPorSala["Sala1"] = new List<string>();
+            }
 
-            var personajes = servicioSala.ObtenerPersonajesUsados();
+            ServicioJuego.personajesUsadosPorSala["Sala1"].Add("Personaje1");
+            ServicioJuego.personajesUsadosPorSala["Sala1"].Add("Personaje2");
+
+            var personajes = servicioSala.ObtenerPersonajesUsados("Sala1");
 
             Assert.AreEqual(2, personajes.Count, "La lista debería contener dos personajes.");
             Assert.IsTrue(personajes.Contains("Personaje1"), "La lista debería contener 'Personaje1'.");

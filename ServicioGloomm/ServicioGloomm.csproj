@@ -62,6 +62,7 @@
     <Compile Include="IAmigos.cs" />
     <Compile Include="IChat.cs" />
     <Compile Include="IChatCallback.cs" />
+    <Compile Include="ICreacionPartida.cs" />
     <Compile Include="IInvitacion.cs" />
     <Compile Include="ISala.cs" />
     <Compile Include="IServicioCarta.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="IServicioJuegoTablero.cs" />
     <Compile Include="ServicioCarta.cs" />
     <Compile Include="ServicioChat.cs" />
+    <Compile Include="ServicioCreacionPartida.cs" />
     <Compile Include="ServicioHistorialPartida.cs" />
     <Compile Include="ServicioInvitacion.cs" />
     <Compile Include="ServicioJuegoTablero.cs" />

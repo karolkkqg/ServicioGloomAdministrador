@@ -1,5 +1,6 @@
 ﻿using AccesoDatos;
 using BibliotecaClases;
+using ServicioGlomm;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,9 +16,10 @@ namespace ServicioGloomm
 
     public partial class ServicioJuego : ISala
     {
-        public static readonly Dictionary<string, ISalaCallback> salaJugadoresCallback = new Dictionary<string, ISalaCallback>();
-        public static readonly Dictionary<string, (string nombrePersonaje, int vida)> personajesPorUsuario = new Dictionary<string, (string, int)>();
-        public static readonly List<string> personajesUsados = new List<string>();
+        public static readonly Dictionary<string, Dictionary<string, ISalaCallback>> salaJugadoresPorSala = new Dictionary<string, Dictionary<string, ISalaCallback>>();
+        public static readonly Dictionary<string, List<string>> salaJugadores = new Dictionary<string, List<string>>();
+        public static readonly Dictionary<string, Dictionary<string, (string nombrePersonaje, int vida)>> personajesPorSala = new Dictionary<string, Dictionary<string, (string, int)>>();
+        public static readonly Dictionary<string, List<string>> personajesUsadosPorSala = new Dictionary<string, List<string>>();
         private static readonly Dictionary<string, HashSet<string>> jugadoresEnSala = new Dictionary<string, HashSet<string>>();
         private static readonly Dictionary<string, ISalaCallback> usuariosSalaCallback = new Dictionary<string, ISalaCallback>();
         private static readonly Dictionary<string, BibliotecaClases.Sala> salasActivasEnMemoria = new Dictionary<string, BibliotecaClases.Sala>();
@@ -37,7 +39,7 @@ namespace ServicioGloomm
 
         /*public int CrearPartida(BibliotecaClases.Sala sala)
         {
-
+            AdministradorLogger administradorLogger = new AdministradorLogger(this.GetType());
             try
             {
                 String codigoGenerado = GenerarCodigo();
@@ -73,6 +75,7 @@ namespace ServicioGloomm
 
             catch (FaultException<ManejadorExcepciones> ex)
             {
+                administradorLogger.RegistroError(ex);
                 throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.mensaje));
             }
         }*/
@@ -152,6 +155,7 @@ namespace ServicioGloomm
 
         private bool CodigoValido(String codigo)
         {
+            AdministradorLogger administradorLogger = new AdministradorLogger(this.GetType());
             bool valido = false;
             try
             {
@@ -167,6 +171,7 @@ namespace ServicioGloomm
             catch (SqlException ex)
             {
                 valido = false;
+                administradorLogger.RegistroError(ex);
                 throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("9"));
 
             }
@@ -174,206 +179,382 @@ namespace ServicioGloomm
             return valido;
         }
 
-
-
-        public BibliotecaClases.Sala BuscarSalaExistente(String idSala, String codigo)
+        public void ConectarConSala(string numeroSala, string nombreUsuario)
         {
-            try
+            AdministradorLogger administradorLogger = new AdministradorLogger(this.GetType());
+            if (!salaJugadoresPorSala.ContainsKey(numeroSala))
             {
-                AccesoDatos.Sala SalaDb;
-                BibliotecaClases.Sala SalaBiblioteca = new BibliotecaClases.Sala();
-
-                SalaDb = AccesoSala.BuscarPartida(idSala, codigo);
-                SalaBiblioteca.fecha = SalaDb.Fecha;
-                SalaBiblioteca.idSala = idSala;
-                SalaBiblioteca.tipoSala = SalaDb.TipoSala;
-                SalaBiblioteca.tipoPartida = SalaDb.TipoPartida;
-                SalaBiblioteca.ganador = SalaDb.Ganador;
-                SalaBiblioteca.codigo = codigo;
-                SalaBiblioteca.nombreSala = SalaDb.NombreSala;
-                SalaBiblioteca.noJugadores = SalaDb.NoJugadores;
-                SalaBiblioteca.idAdministrador = SalaDb.IdAdministrador;
-
-                return SalaBiblioteca;
+                salaJugadoresPorSala[numeroSala] = new Dictionary<string, ISalaCallback>();
             }
-            catch (FaultException<ManejadorExcepciones> ex)
+            if (!salaJugadoresPorSala[numeroSala].ContainsKey(nombreUsuario))
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.mensaje));
-            }
+                ISalaCallback callback = OperationContext.Current.GetCallbackChannel<ISalaCallback>();
+                salaJugadoresPorSala[numeroSala].Add(nombreUsuario, callback);
 
-        }
-
-        public void ConectarConSala(string nombreUsuario)
-        {
-            //AdministradorDeComportamiento.CambiarModoComportamientoReentrante();
-            if (!salaJugadoresCallback.ContainsKey(nombreUsuario))
-            {
-                salaJugadoresCallback.Add(nombreUsuario, OperationContext.Current.GetCallbackChannel<ISalaCallback>());
-                foreach (var jugador in salaJugadoresCallback)
-                {
-                    if (salaJugadoresCallback.ContainsKey(jugador.Key))
-                    {
-                        try
-                        {
-                            salaJugadoresCallback[jugador.Key].ActualizarNumeroJugadores();
-                        }
-                        catch (CommunicationException ex)
-                        {
-                            throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16"));
-                        }
-                        catch (TimeoutException ex)
-                        {
-                            throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18"));
-                        }
-                    }
-                }
-            }
-        }
-
-        /*public List<string> ObtenerJugadoresConectados(String nombreUsuario)
-        {
-            return salaJugadoresCallback.Keys.ToList();
-        }*/
-
-        public void SeleccionarPersonaje(string nombreUsuario, string nombrePersonaje, int vida)
-        {
-            string personajeAnterior = "sin personaje";
-
-            EstaSiendoUtilizado(nombrePersonaje);
-
-            if (personajesPorUsuario.ContainsKey(nombreUsuario))
-            {
-                personajeAnterior = personajesPorUsuario[nombreUsuario].Item1;
-                personajesPorUsuario[nombreUsuario] = (nombrePersonaje, vida);
-                personajesUsados.Remove(personajeAnterior);
-            }
-            else
-            {
-                personajesPorUsuario.Add(nombreUsuario, (nombrePersonaje, vida));
-            }
-            //AdministradorDeComportamiento.CambiarModoComportamientoReentrante();
-            foreach (var jugador in salaJugadoresCallback)
-            {
-                if (salaJugadoresCallback.ContainsKey(jugador.Key))
+                foreach (var jugador in salaJugadoresPorSala[numeroSala])
                 {
                     try
                     {
-                        salaJugadoresCallback[jugador.Key].ActualizarImagenPersonaje(nombrePersonaje, personajeAnterior);
+                        jugador.Value.ActualizarNumeroJugadores();
                     }
                     catch (CommunicationException ex)
                     {
+                        administradorLogger.RegistroError(ex);
+                        salaJugadoresPorSala[numeroSala].Remove(jugador.Key);
                         throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16"));
                     }
                     catch (TimeoutException ex)
                     {
+                        administradorLogger.RegistroError(ex);
                         throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18"));
                     }
                 }
             }
         }
-        private void EstaSiendoUtilizado(string nombrePersonaje)
+
+        public void SeleccionarPersonaje(string nombreUsuario, string nombrePersonaje, string numeroSala)
         {
-            if (personajesUsados.Contains(nombrePersonaje))
+            AdministradorLogger administradorLogger = new AdministradorLogger(this.GetType());
+            EstaSiendoUtilizado(numeroSala, nombrePersonaje);
+
+            // Asignar el nuevo personaje al usuario
+            string personajeAnterior = AgregarJugadorYPersonaje(nombreUsuario, nombrePersonaje, numeroSala);
+
+            // Validar que el jugador no esté listo
+            ValidarJugadorNoListo(nombreUsuario);
+
+            // Notificar a todos los jugadores de la sala sobre el cambio de personaje
+            if (salaJugadoresPorSala.ContainsKey(numeroSala))
+            {
+                foreach (var jugador in salaJugadoresPorSala[numeroSala])
+                {
+                    try
+                    {
+                        jugador.Value.ActualizarImagenPersonaje(nombrePersonaje, personajeAnterior);
+                    }
+                    catch (CommunicationException ex)
+                    {
+                        administradorLogger.RegistroError(ex);
+
+                        // Eliminar el jugador problemático para evitar inconsistencias
+                        salaJugadoresPorSala[numeroSala].Remove(jugador.Key);
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16"));
+                    }
+                    catch (TimeoutException ex)
+                    {
+                        administradorLogger.RegistroError(ex);
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18"));
+                    }
+                }
+            }
+        }
+
+        private string AgregarJugadorYPersonaje(string nombreUsuario, string nombrePersonaje, string numeroSala)
+        {
+            string personajeAnterior = "sin personaje";
+
+            // Verificar si la sala existe, si no, inicializarla
+            if (!personajesPorSala.ContainsKey(numeroSala))
+            {
+                personajesPorSala[numeroSala] = new Dictionary<string, (string nombrePersonaje, int vida)>();
+            }
+
+            if (!personajesUsadosPorSala.ContainsKey(numeroSala))
+            {
+                personajesUsadosPorSala[numeroSala] = new List<string>();
+            }
+
+            // Obtener la lista de personajes en la sala
+            var personajesEnSala = personajesPorSala[numeroSala];
+
+            if (personajesEnSala.ContainsKey(nombreUsuario))
+            {
+                // Guardar el personaje anterior
+                personajeAnterior = personajesEnSala[nombreUsuario].nombrePersonaje;
+
+                // Actualizar el personaje del usuario
+                personajesEnSala[nombreUsuario] = (nombrePersonaje, 0);
+
+                // Eliminar el personaje anterior de los personajes usados si existe
+                if (personajesUsadosPorSala[numeroSala].Contains(personajeAnterior))
+                {
+                    personajesUsadosPorSala[numeroSala].Remove(personajeAnterior);
+                }
+            }
+            else
+            {
+                // Agregar el nuevo usuario con su personaje
+                personajesEnSala[nombreUsuario] = (nombrePersonaje, 0);
+            }
+
+            // Agregar el nuevo personaje a la lista de personajes usados si no está ya en ella
+            if (!personajesUsadosPorSala[numeroSala].Contains(nombrePersonaje))
+            {
+                personajesUsadosPorSala[numeroSala].Add(nombrePersonaje);
+            }
+            return personajeAnterior;
+        }
+
+        private void ValidarJugadorNoListo(string nombreUsuario)
+        {
+            if (jugadoresConectadosListos.ContainsKey(nombreUsuario))
+            {
+                jugadoresConectadosListos.Remove(nombreUsuario);
+            }
+
+        }
+
+        private void EstaSiendoUtilizado(string numeroSala, string nombrePersonaje)
+        {
+            if (personajesUsadosPorSala[numeroSala].Contains(nombrePersonaje))
             {
                 throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("14"));
             }
             else
             {
-                personajesUsados.Add(nombrePersonaje);
+                personajesUsadosPorSala[numeroSala].Add(nombrePersonaje);
             }
         }
 
-        public void ValidarPersonajesSeleccionados(int cantidadJugadores)
+        public void ValidarPersonajesSeleccionados(string numeroSala, int cantidadJugadores)
         {
-            if (cantidadJugadores != personajesUsados.Count())
+            if (cantidadJugadores != personajesUsadosPorSala[numeroSala].Count())
             {
                 throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("15"));
             }
         }
 
-        public Dictionary<string, (string nombrePersonaje, int vida)> ObtenerUsuariosYPersonajesSala()
+        public Dictionary<string, (string nombrePersonaje, int vida)> ObtenerUsuariosYPersonajes(string numeroSala)
         {
-            return new Dictionary<string, (string nombrePersonaje, int vida)>(personajesPorUsuario);
+            return new Dictionary<string, (string nombrePersonaje, int vida)>(personajesPorSala[numeroSala]);
         }
 
         public void LimpiarListaJugadores()
         {
-            personajesPorUsuario.Clear();
+            foreach (var sala in personajesPorSala)
+            {
+                sala.Value.Clear();
+            }
         }
 
         public void LimpiarListaPersonajes()
         {
-            personajesUsados.Clear();
+            personajesUsadosPorSala.Clear();
         }
 
         public void EmpezarPartida(string idSala)
         {
-            //AdministradorDeComportamiento.CambiarModoComportamientoReentrante();
-            foreach (var jugador in salaJugadoresCallback)
+            AdministradorLogger administradorLogger = new AdministradorLogger(this.GetType());
+            if (salaJugadoresPorSala.ContainsKey(idSala))
             {
-                if (salaJugadoresCallback.ContainsKey(jugador.Key))
+                // Iterar sobre los jugadores de la sala específica
+                foreach (var jugador in salaJugadoresPorSala[idSala])
                 {
                     try
                     {
-                        salaJugadoresCallback[jugador.Key].EmpezarJuego();
+                        jugador.Value.EmpezarJuego(); // Notificar al jugador que empieza la partida
                     }
                     catch (CommunicationException ex)
                     {
+                        administradorLogger.RegistroError(ex);
+
+                        // Eliminar el jugador problemático para mantener consistencia
+                        salaJugadoresPorSala[idSala].Remove(jugador.Key);
                         throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16"));
                     }
                     catch (TimeoutException ex)
                     {
+                        administradorLogger.RegistroError(ex);
+
+                        // Manejar el error y eliminar el jugador problemático
+                        salaJugadoresPorSala[idSala].Remove(jugador.Key);
                         throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18"));
                     }
                 }
             }
         }
 
-        public void SacarDeSala(string nombreUsuario)
+        public void SacarDeSala(string numeroSala, string nombreUsuario)
         {
-            EliminarJugadorDeSala(nombreUsuario);
-            string personaje = EliminarJugadorYPersonaje(nombreUsuario);
-            EliminarPersonajeUsado(personaje);
+            if (salaJugadores.ContainsKey(numeroSala) && salaJugadores[numeroSala].Contains(nombreUsuario))
+            {
+                salaJugadores[numeroSala].Remove(nombreUsuario);
+
+                if (salaJugadores[numeroSala].Count == 0)
+                {
+                    salaJugadores.Remove(numeroSala);
+                }
+            }
+            EliminarJugadorDeSala(numeroSala, nombreUsuario);
+
+            EliminarJugadorYActualizarPersonaje(numeroSala, nombreUsuario);
         }
 
-        public void EliminarJugadorDeSala(string nombreUsuario)
+        private void EliminarJugadorYActualizarPersonaje(string numeroSala, string nombreUsuario)
         {
-            //AdministradorDeComportamiento.CambiarModoComportamientoReentrante();
-
-            salaJugadoresCallback.Remove(nombreUsuario);
-            foreach (var jugador in salaJugadoresCallback)
+            if (personajesUsadosPorSala.ContainsKey(numeroSala))
             {
-                if (salaJugadoresCallback.ContainsKey(jugador.Key))
+                if (personajesUsadosPorSala[numeroSala].Contains(nombreUsuario))
                 {
-                    try
+                    var personajeSeleccionado = personajesPorSala[numeroSala][nombreUsuario].nombrePersonaje;
+                    if (!string.IsNullOrEmpty(personajeSeleccionado))
                     {
-                        salaJugadoresCallback[jugador.Key].ActualizarNumeroJugadores();
-                    }
-                    catch (CommunicationException ex)
-                    {
-                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16"));
-                    }
-                    catch (TimeoutException ex)
-                    {
-                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18"));
+                        string personaje = EliminarJugadorYPersonaje(numeroSala, nombreUsuario);
+                        EliminarPersonajeUsado(numeroSala, personaje);
                     }
                 }
             }
         }
 
-        private void EliminarPersonajeUsado(string nombrePersonaje)
+        public void EliminarJugadorDeSala(string idSala, string nombreUsuario)
         {
-            personajesUsados.Remove(nombrePersonaje);
+            AdministradorLogger administradorLogger = new AdministradorLogger(this.GetType());
+            if (salaJugadoresPorSala.ContainsKey(idSala))
+            {
+                // Eliminar el jugador de la sala
+                if (salaJugadoresPorSala[idSala].Remove(nombreUsuario))
+                {
+                    // Notificar a los jugadores restantes en la sala
+                    foreach (var jugador in salaJugadoresPorSala[idSala])
+                    {
+                        try
+                        {
+                            jugador.Value.ActualizarNumeroJugadores();
+                        }
+                        catch (CommunicationException ex)
+                        {
+                            administradorLogger.RegistroError(ex);
+
+                            // Eliminar el jugador problemático para mantener consistencia
+                            salaJugadoresPorSala[idSala].Remove(jugador.Key);
+                            throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16"));
+                        }
+                        catch (TimeoutException ex)
+                        {
+                            administradorLogger.RegistroError(ex);
+
+                            // Manejar el error y eliminar el jugador problemático
+                            salaJugadoresPorSala[idSala].Remove(jugador.Key);
+                            throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18"));
+                        }
+                    }
+
+                    // Si la sala queda vacía, eliminarla
+                    if (salaJugadoresPorSala[idSala].Count == 0)
+                    {
+                        salaJugadoresPorSala.Remove(idSala);
+                    }
+                }
+
+            }
         }
 
-        private string EliminarJugadorYPersonaje(string nombreUsuario)
+        private void EliminarPersonajeUsado(string numeroSala, string nombrePersonaje)
         {
-            personajesPorUsuario.TryGetValue(nombreUsuario, out var InformacionPersonaje);
-            personajesPorUsuario.Remove(nombreUsuario);
-            personajesUsados.Remove(InformacionPersonaje.nombrePersonaje);
-            return InformacionPersonaje.nombrePersonaje;
+            if (personajesUsadosPorSala.ContainsKey(numeroSala) &&
+        personajesUsadosPorSala[numeroSala].Contains(nombrePersonaje))
+            {
+                personajesUsadosPorSala[numeroSala].Remove(nombrePersonaje);
+            }
         }
 
+        private string EliminarJugadorYPersonaje(string numeroSala, string nombreUsuario)
+        {
+            (string nombrePersonaje, int vida) personaje = personajesPorSala[numeroSala][nombreUsuario];
+
+
+            personajesPorSala[numeroSala].Remove(nombreUsuario);
+
+            if (personajesPorSala[numeroSala].Count == 0)
+            {
+                personajesPorSala.Remove(numeroSala);
+            }
+
+            return personaje.nombrePersonaje;
+        }
+
+
+        public List<string> ObtenerPersonajesUsados(string numeroSala)
+        {
+            return new List<string>(personajesUsadosPorSala[numeroSala]);
+        }
+
+        public void SumarVidaPersonaje(string numeroSala, string nombreUsuario, int cantidadVida)
+        {
+            if (personajesPorSala.TryGetValue(numeroSala, out var personajesEnSala) && personajesEnSala.ContainsKey(nombreUsuario))
+            {
+                var (nombrePersonaje, vidaActual) = personajesEnSala[nombreUsuario];
+                int nuevaVida = vidaActual + cantidadVida;
+                personajesEnSala[nombreUsuario] = (nombrePersonaje, nuevaVida);
+            }
+        }
+
+        private string ObtenerGanador(string numeroSala)
+        {
+            var personajesEnSala = personajesPorSala[numeroSala];
+            var personajeConMenorVida = personajesEnSala.OrderBy(p => p.Value.vida).First();
+
+            return personajeConMenorVida.Key;
+        }
+
+        public void SacarATodosLosJugadoresDeSala(string numeroSala)
+        {
+            var jugadores = salaJugadoresPorSala[numeroSala].Keys.ToList();
+
+            // Sacar a cada jugador de la sala
+            foreach (var jugador in jugadores)
+            {
+                SacarJugadorDeSala(numeroSala, jugador);
+            }
+        }
+
+        private void SacarJugadorDeSala(string numeroSala, string jugador)
+        {
+            if (salaJugadoresPorSala.ContainsKey(numeroSala))
+            {
+                if (salaJugadoresPorSala[numeroSala].ContainsKey(jugador))
+                {
+                    EliminarJugadorYActualizarPersonaje(numeroSala, jugador);
+
+                    RedirigirJugador(numeroSala, jugador);
+
+                    salaJugadoresPorSala[numeroSala].Remove(jugador);
+
+                    if (salaJugadoresPorSala[numeroSala].Count == 0)
+                    {
+                        salaJugadoresPorSala.Remove(numeroSala);
+                    }
+                }
+            }
+        }
+        private void RedirigirJugador(string sala, string jugador)
+        {
+            AdministradorLogger administradorLogger = new AdministradorLogger(this.GetType());
+            if (salaJugadoresPorSala.ContainsKey(sala))
+            {
+                // Validar si el jugador existe en la sala
+                if (salaJugadoresPorSala[sala].ContainsKey(jugador))
+                {
+                    try
+                    {
+                        // Enviar el callback para redirigir al jugador
+                        salaJugadoresPorSala[sala][jugador].SacarDeSalaATodosJugadores();
+                    }
+                    catch (CommunicationException ex)
+                    {
+                        administradorLogger.RegistroError(ex);
+
+                        // Opcional: Eliminar el callback del jugador problemático
+                        salaJugadoresPorSala[sala].Remove(jugador);
+
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16"));
+                    }
+                    catch (TimeoutException ex)
+                    {
+                        administradorLogger.RegistroError(ex);
+
+                        // Opcional: Eliminar el callback del jugador problemático
+                        salaJugadoresPorSala[sala].Remove(jugador);
         public List<string> ObtenerPersonajesUsados()
         {
             return new List<string>(personajesUsados);
@@ -496,217 +677,10 @@ namespace ServicioGloomm
             }
         }
 
-        string ISala.ObtenerCodigoSala(string idAdminsitrador, string nombreSala)
-        {
-            try
-            {
-                string codigoSala;
-
-                codigoSala = AccesoSala.BuscarCodigoSala(idAdminsitrador, nombreSala);
-
-                return codigoSala.Trim();
-            }
-            catch (FaultException<ManejadorExcepciones> ex)
-            {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.mensaje));
-            }
-        }
-
-        public List<string> ObtenerFamiliaSeleccionada(string idSala)
-        {
-            if (familiasSeleccionadasPorSala.ContainsKey(idSala))
-            {
-                return familiasSeleccionadasPorSala[idSala].ToList();
-            }
-
-            throw new KeyNotFoundException($"No hay familias seleccionadas para la sala con ID '{idSala}'.");
-        }
-
-
-        public Dictionary<string, List<(string nombrePersonaje, int vida)>> familias = new Dictionary<string, List<(string, int)>>
-        {
-            {"Ores", new List<(string, int)> { ("Didorian", 0), ("Zael", 0), ("Pablian", 0), ("Lorenzeo", 0) }},
-            {"Corbat", new List<(string, int)> { ("Gaia", 0), ("Arialyn", 0), ("Aris", 0), ("Abelith", 0) }},
-            {"Garlo", new List<(string, int)> { ("Tucani", 0), ("Lusiel", 0), ("Angelus", 0), ("Luan", 0) }},
-            {"Ramfez", new List<(string, int)> { ("Seti", 0), ("Merit", 0), ("Neferu", 0), ("Sobek", 0) }},
-        };
-
-
-
-        public void SeleccionarFamilia(string nombreUsuario, string nombreFamilia, string idSala)
-        {
-            ValidarFamiliaExiste(nombreFamilia);
-            LiberarFamiliaAnterior(nombreUsuario, idSala);
-            ValidarFamiliaNoUsada(nombreFamilia, idSala);
-            AsignarFamilia(nombreUsuario, nombreFamilia, idSala);
-            NotificarSeleccionFamilia(nombreUsuario, nombreFamilia);
-        }
-
-
-        private void ValidarFamiliaExiste(string nombreFamilia)
-        {
-            if (!familias.ContainsKey(nombreFamilia))
-            {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("Familia no encontrada"));
-            }
-        }
-
-        private void ValidarFamiliaNoUsada(string nombreFamilia, string salaId)
-        {
-            if (familiasSeleccionadasPorSala.ContainsKey(salaId) && familiasSeleccionadasPorSala[salaId].Contains(nombreFamilia))
-            {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("Familia ya seleccionada"));
-            }
-        }
-
-        //Pedillos pra volver a seleccionar una familia ya seleccionada
-        /*private void LiberarFamiliaAnterior(string nombreUsuario)
-        {
-            if (personajesFamiliaDeUsuario.ContainsKey(nombreUsuario))
-            {
-                var familiaAnterior = personajesFamiliaDeUsuario[nombreUsuario];
-                var nombreFamiliaAnterior = familias.FirstOrDefault(kv => kv.Value == familiaAnterior).Key;
-
-                Console.WriteLine($"Liberando familia anterior para usuario: {nombreUsuario}, Familia: {nombreFamiliaAnterior}");
-
-                if (!string.IsNullOrEmpty(nombreFamiliaAnterior))
-                {
-                    familiaSeleccionada.Remove(nombreFamiliaAnterior);
-                    Console.WriteLine($"Familia '{nombreFamiliaAnterior}' eliminada de la lista seleccionada.");
-                }
-
-                personajesFamiliaDeUsuario.Remove(nombreUsuario);
-                Console.WriteLine($"Usuario '{nombreUsuario}' eliminado del diccionario de personajes por usuario.");
-            }
-        }*/
-
-        private void LiberarFamiliaAnterior(string nombreUsuario, string salaId)
-        {
-            if (personajesFamiliaDeUsuario.ContainsKey(nombreUsuario))
-            {
-                var familiaAnterior = personajesFamiliaDeUsuario[nombreUsuario];
-                var nombreFamiliaAnterior = familias.FirstOrDefault(kv => kv.Value == familiaAnterior).Key;
-
-                if (!string.IsNullOrEmpty(nombreFamiliaAnterior) && familiasSeleccionadasPorSala[salaId].Contains(nombreFamiliaAnterior))
-                {
-                    // Quitar la familia de la lista seleccionada
-
-                    familiasSeleccionadasPorSala[salaId].Remove(nombreFamiliaAnterior);
-
-                }
-
-                // Eliminar la asociación del usuario con la familia anterior
-                personajesFamiliaDeUsuario.Remove(nombreUsuario);
-            }
-        }
-
-
-
-        private void AsignarFamilia(string nombreUsuario, string nombreFamilia, string salaId)
-        {
-            if (!familiasSeleccionadasPorSala.ContainsKey(salaId))
-            {
-                familiasSeleccionadasPorSala[salaId] = new HashSet<string>();
-            }
-
-            familiasSeleccionadasPorSala[salaId].Add(nombreFamilia);
-            personajesFamiliaDeUsuario[nombreUsuario] = familias[nombreFamilia];
-        }
-
-
-        private void NotificarSeleccionFamilia(string nombreUsuario, string nombreFamilia)
-        {
-            foreach (var jugador in salaJugadoresCallback)
-            {
-                if (salaJugadoresCallback.ContainsKey(jugador.Key))
-                {
-                    try
-                    {
-                        salaJugadoresCallback[jugador.Key].ActualizarSeleccionFamilia(nombreUsuario, nombreFamilia);
-                    }
-                    catch (CommunicationException)
-                    {
-                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16"));
-                    }
-                    catch (TimeoutException)
-                    {
                         throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18"));
                     }
                 }
             }
-        }
-
-        /*void ISala.ValidarFamiliaSeleccionada(int cantidadJugadores, string idSala)
-        {
-            /*if (!familiasSeleccionadasPorSala.ContainsKey(idSala) || cantidadJugadores != familiasSeleccionadasPorSala.Count())
-            {
-                Console.WriteLine($"Validación fallida: cantidadJugadores={cantidadJugadores}, familiasSeleccionadas={(familiasSeleccionadasPorSala.ContainsKey(idSala) ? familiasSeleccionadasPorSala[idSala].Count : 0)}");
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("15"));
-            }
-
-            if (familiasSeleccionadasPorSala.ContainsKey(idSala))
-            {
-                int cantidadFamiliasSeleccionadas = familiasSeleccionadasPorSala[idSala].Count;
-
-                if (cantidadFamiliasSeleccionadas != cantidadJugadores)
-                {
-                    Console.WriteLine($"Validación fallida: cantidadJugadores={cantidadJugadores}, familiasSeleccionadas={cantidadFamiliasSeleccionadas}");
-                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("15"));
-                }
-            }
-            else
-            {
-                Console.WriteLine($"No hay familias seleccionadas para la sala {idSala}.");
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("15"));
-            }
-        }*/
-
-        void ISala.ValidarFamiliaSeleccionada(int cantidadJugadores, string idSala)
-        {
-            try
-            {
-                if (familiasSeleccionadasPorSala.ContainsKey(idSala))
-                {
-                    int cantidadFamiliasSeleccionadas = familiasSeleccionadasPorSala[idSala].Count;
-
-                    if (cantidadFamiliasSeleccionadas != cantidadJugadores)
-                    {
-                        Console.WriteLine($"Validación fallida: cantidadJugadores={cantidadJugadores}, familiasSeleccionadas={cantidadFamiliasSeleccionadas}");
-                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("No se han seleccionado todas las familias. Faltan jugadores por seleccionar una familia."));
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($"No hay familias seleccionadas para la sala {idSala}.");
-                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("No hay familias seleccionadas para esta sala."));
-                }
-            }
-            catch (FaultException<ManejadorExcepciones> ex)
-            {
-                Console.WriteLine($"Error en la validación de familias: {ex.Detail.mensaje}");
-                throw;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error inesperado en la validación de familias: {ex.Message}");
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("Error inesperado en la validación de familias."));
-            }
-        }
-
-        public Dictionary<string, HashSet<string>> ObtenerFamiliasSeleccionadasPorSala()
-        {
-            return familiasSeleccionadasPorSala;
-        }
-
-
-        Dictionary<string, string> ISala.ObtenerFamiliaPorJugador()
-        {
-            throw new NotImplementedException();
-        }
-
-        Dictionary<string, List<(string nombrePersonaje, int vida)>> ISala.ObtenerFamiliasYPersonajes()
-        {
-            throw new NotImplementedException();
         }
     }
 }

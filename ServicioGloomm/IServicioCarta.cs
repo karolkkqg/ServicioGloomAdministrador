@@ -14,10 +14,17 @@ namespace ServicioGloomm
         [OperationContract]
         List<Carta> ObtenerMazoJugador(string nombreJugador);
 
-        [OperationContract]
+        [OperationContract(IsOneWay =true)]
         void AgregarCartaAMazoJugador(string nombreUsuario);
 
-        [OperationContract]
+        [OperationContract(IsOneWay = true)]
         void QuitarCartaDeMazoJugador(string nombreUsuario, Carta cartaAEliminar);
+
+        [OperationContract]
+        Carta ObtenerCartasBonus();
+
+        [OperationContract(IsOneWay = true)]
+        void QuitarCartaDeMazoJugadorExterno(string nombreUsuario);
     }
+
 }

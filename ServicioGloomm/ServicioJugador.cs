@@ -1,5 +1,6 @@
 ﻿using AccesoDatos;
 using BibliotecaClases;
+using ServicioGlomm;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -17,6 +18,7 @@ namespace ServicioGloomm
 
         public int AgregarJugador(BibliotecaClases.Jugador jugador)
         {
+            AdministradorLogger administradorLogger = new AdministradorLogger(this.GetType());
             int resultado;
             try
             {
@@ -38,6 +40,7 @@ namespace ServicioGloomm
             }
             catch (FaultException<ManejadorExcepciones> ex)
             {
+                administradorLogger.RegistroError(ex);
                 throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.mensaje));
             }
             
@@ -45,6 +48,7 @@ namespace ServicioGloomm
 
         public int ActualizarJugador(BibliotecaClases.Jugador jugador)
         {
+            AdministradorLogger administradorLogger = new AdministradorLogger(this.GetType());
             try
             {
                 var nuevoJugador = new AccesoDatos.Jugador
@@ -65,12 +69,14 @@ namespace ServicioGloomm
             }
             catch (FaultException<ManejadorExcepciones> ex)
             {
+                administradorLogger.RegistroError(ex);
                 throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.mensaje));
             }
         }
 
         public int AutenticarJugador(BibliotecaClases.Jugador jugador)
         {
+            AdministradorLogger administradorLogger = new AdministradorLogger(this.GetType());
             try
             {
                 var nuevoJugador = new AccesoDatos.Jugador
@@ -87,12 +93,14 @@ namespace ServicioGloomm
             }
             catch (FaultException<ManejadorExcepciones> ex)
             {
+                administradorLogger.RegistroError(ex);
                 throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.mensaje));
             }
         }
 
         public BibliotecaClases.Jugador ObtenerJugador(string nombreUsuario)
         {
+            AdministradorLogger administradorLogger = new AdministradorLogger(this.GetType());
             try
             {
                 AccesoDatos.Jugador jugadorDb;
@@ -111,6 +119,7 @@ namespace ServicioGloomm
             }
             catch (FaultException<ManejadorExcepciones> ex)
             {
+                administradorLogger.RegistroError(ex);
                 throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.mensaje));
             }
         }

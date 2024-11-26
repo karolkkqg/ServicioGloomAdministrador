@@ -20,33 +20,32 @@ namespace ServicioGloomm
         [FaultContract(typeof(ManejadorExcepciones))]
         int CrearPartida(Sala sala);
 
-        [OperationContract]
-        [FaultContract(typeof(ManejadorExcepciones))]
-        Sala BuscarSalaExistente(String idSala, String codigo);
-
         [OperationContract(IsOneWay = true)]
-        void ConectarConSala(string nombreUsuario);
+        void ConectarConSala(string numeroSala, string nombreUsuario);
         [OperationContract]
         List<string> ObtenerJugadoresConectados(string nombreUsuario);
 
         [OperationContract]
         [FaultContract(typeof(ManejadorExcepciones))]
-        void SeleccionarPersonaje(string nombreUsuario, string nombrePersonaje, int vida);
+        void SeleccionarPersonaje(string nombreUsuario, string nombrePersonaje, string numeroSala);
 
         [OperationContract]
         [FaultContract(typeof(ManejadorExcepciones))]
-        void ValidarPersonajesSeleccionados(int cantidadJugadores);
-        
-        [OperationContract]
-        Dictionary<string, (string nombrePersonaje, int vida)> ObtenerUsuariosYPersonajesSala();
+        void ValidarPersonajesSeleccionados(string numeroSala, int cantidadJugadores);
 
         [OperationContract]
-        void SacarDeSala(string nombreUsuario);
+        void SacarDeSala(string numeroSala, string nombreUsuario);
 
         [OperationContract]
         void EmpezarPartida(string idSala);
 
         [OperationContract]
+        List<string> ObtenerPersonajesUsados(string numeroSala);
+
+        [OperationContract]
+        void IngresarJugadorAJuego(string nombreUsuario, string numeroSala, int numeroJugadores);
+        [OperationContract(IsOneWay = true)]
+        void SacarATodosLosJugadoresDeSala(string numeroSala);
         List<string> ObtenerPersonajesUsados();
 
         [OperationContract]
@@ -102,6 +101,10 @@ namespace ServicioGloomm
         void ActualizarNumeroJugadores();
         [OperationContract(IsOneWay = true)]
         void ActualizarImagenPersonaje(string personaje, string personajeAnterior);
+
+        [OperationContract(IsOneWay = true)]
+        void SacarDeSalaATodosJugadores();
+        
 
         [OperationContract(IsOneWay = true)]
         void ActualizarSalasActivas(List<Sala> salasActivas);
