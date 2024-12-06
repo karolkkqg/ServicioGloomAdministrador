@@ -75,6 +75,11 @@ namespace Pruebas.SalaTest
                 throw new NotImplementedException();
             }
 
+            public void ActualizarSeleccionFamilia(string nombreFamilia, string nombreFamiliaAnterior)
+            {
+                throw new NotImplementedException();
+            }
+
             public void EmpezarJuego()
             {
                 throw new NotImplementedException();

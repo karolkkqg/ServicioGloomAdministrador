@@ -33,15 +33,10 @@ namespace Pruebas.JugadorTest
         public void TestAutenticarUsuarioExitoso()
         {
 
-            jugador = new AccesoDatos.Jugador
+            jugadorValido = new AccesoDatos.Jugador
             {
                 NombreUsuario = "TacoDoradoDePato",
-                Nombre = "Hector",
-                Apellidos = "Juarez Castillo",
-                Correo = "hectJuarPato@gmail.com",
-                Contraseña = "123456",
-                Tipo = "Registrado",
-                Icono = "Icono1",
+                Contraseña = "123456"
             };
             int jugadorEncontrado = AccesoJugador.ValidarJugadorParaAutenticacion(jugadorValido);
             Assert.AreEqual(1, jugadorEncontrado);
@@ -50,7 +45,12 @@ namespace Pruebas.JugadorTest
         [TestMethod()]
         public void TestAutenticarUsuarioUsuarioNoEncontradoFallido()
         {
-            jugador.NombreUsuario = "TacoDePapa";
+            jugador = new AccesoDatos.Jugador
+            {
+                NombreUsuario = "TacoDePapa",
+                Contraseña = "123456"
+            };
+
             var exception = Assert.ThrowsException<FaultException<ManejadorExcepciones>>(() =>
             {
                 AccesoJugador.ValidarJugadorParaAutenticacion(jugador);

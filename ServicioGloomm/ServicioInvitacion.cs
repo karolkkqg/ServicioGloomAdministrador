@@ -35,11 +35,6 @@ namespace ServicioGloomm
             {
                 throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("26"));
             }
-            catch (Exception ex)
-            {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Message));
-
-            }
 
                 return resultado;
         }

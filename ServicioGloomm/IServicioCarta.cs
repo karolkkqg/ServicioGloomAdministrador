@@ -25,6 +25,10 @@ namespace ServicioGloomm
 
         [OperationContract(IsOneWay = true)]
         void QuitarCartaDeMazoJugadorExterno(string nombreUsuario);
+
+        [OperationContract]
+        List<Carta> ObtenerMazoRestante();
+
     }
 
 }

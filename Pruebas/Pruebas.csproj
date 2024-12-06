@@ -99,6 +99,7 @@
     <Compile Include="SalaTest\ActualizarGanadorTest.cs" />
     <Compile Include="SalaTest\AgregarParticipanteTest.cs" />
     <Compile Include="SalaTest\AgregarPartidaABaseDeDatosTest.cs" />
+    <Compile Include="SalaTest\BuscarCodigoSalaTest.cs" />
     <Compile Include="SalaTest\BuscarPartidaTest.cs" />
     <Compile Include="SalaTest\ConectarConSala.cs" />
     <Compile Include="SalaTest\CrearPartidaTest.cs" />
@@ -109,9 +110,20 @@
     <Compile Include="SalaTest\SacarATodosLosJugadoresDeSalaTest.cs" />
     <Compile Include="SalaTest\SacarDeSalaTest.cs" />
     <Compile Include="SalaTest\SeleccionarPersonajeTest.cs" />
+    <Compile Include="SalaTest\ObtenerSalasActivasConEstadoTest.cs" />
+    <Compile Include="SalaTest\UnirseASalaPublicaNormalTest.cs" />
+    <Compile Include="SalaTest\ObtenerCodigoSalaTest.cs" />
+    <Compile Include="SalaTest\SalirDeSalaTest.cs" />
+    <Compile Include="SalaTest\ObtenerFamiliaSeleccionadaTest.cs" />
+    <Compile Include="SalaTest\UnitTest1.cs" />
+    <Compile Include="SalaTest\ValidarFamiliaSeleccionadaTest.cs" />
     <Compile Include="ServicioCartaTest\AgregarCartaAMazoJugadorTest.cs" />
     <Compile Include="ServicioCartaTest\ObtenerCartasBonusTest.cs" />
     <Compile Include="ServicioCartaTest\QuitarCartaDeMazoJugadorExternoTest.cs" />
+    <Compile Include="ServicioCartaTest\ObtenerMazoRestanteTest.cs" />
+    <Compile Include="ServicioCreacionPartidaTest\ObtenerFamiliasYPersonajesPorUsuarioTest.cs" />
+    <Compile Include="ServicioCreacionPartidaTest\ObtenerFamiliaPorJugadorTest.cs" />
+    <Compile Include="ServicioCreacionPartidaTest\ObtenerFamiliasYPersonajesTest.cs" />
     <Compile Include="ServicioCreacionPartidaTest\ValidarCantidadJugadoresEnSalaTest.cs" />
     <Compile Include="ServicioCreacionPartidaTest\ValidarPartidaNoIniciadaTest.cs" />
     <Compile Include="ServicioJuegoTableroTest\AgregarCastigoTest.cs" />
@@ -120,6 +132,7 @@
     <Compile Include="SalaTest\ValidacionPersonajesSeleccionadosTest.cs" />
     <Compile Include="SalaTest\ObtenerHistorialPartidasTest.cs" />
     <Compile Include="SalaTest\ObtenerParticipantesDeSalaTest.cs" />
+    <Compile Include="SeleccionarFamilia.cs" />
     <Compile Include="ServicioCartaTest\ObtenerMazoJugadorTest.cs" />
     <Compile Include="ServicioCartaTest\QuitarCartaDeMazoJugadorTest.cs" />
     <Compile Include="ServicioJuegoTableroTest\AsignarPrimerTurnoTest.cs" />
@@ -131,6 +144,7 @@
     <Compile Include="ServicioJuegoTableroTest\ObtenerCartasSobrantesTest.cs" />
     <Compile Include="ServicioJuegoTableroTest\ObtenerJugadorActualTest.cs" />
     <Compile Include="ServicioJuegoTableroTest\TerminarPartidaMinijuegoTest.cs" />
+    <Compile Include="ServicioJuegoTableroTest\SolicitarExpulsionTest.cs" />
     <Compile Include="SpyCallbackCalculatorService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -141,7 +155,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AccesoDatos\AccesoDatos.csproj">
-      <Project>{E9275BE6-8502-4B31-955F-300DA6C47708}</Project>
+      <Project>{e9275be6-8502-4b31-955f-300da6c47708}</Project>
       <Name>AccesoDatos</Name>
     </ProjectReference>
     <ProjectReference Include="..\BlbibliotecaClases\BibliotecaClases.csproj">

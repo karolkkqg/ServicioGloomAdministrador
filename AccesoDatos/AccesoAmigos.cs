@@ -21,7 +21,7 @@ namespace AccesoDatos
             {
                 ValidarSiEsMismoJugadorSolcitud(solicitud.nombreUsuario.nombreUsuario, solicitud.jugadorAmigo.nombreUsuario);
                 ValidarSiSonAmigos(solicitud.nombreUsuario.nombreUsuario, solicitud.jugadorAmigo.nombreUsuario);
-                ValidarSiSonExisteSolcitud(solicitud.nombreUsuario.nombreUsuario, solicitud.jugadorAmigo.nombreUsuario);
+                ValidarSiExisteSolcitud(solicitud.nombreUsuario.nombreUsuario, solicitud.jugadorAmigo.nombreUsuario);
 
                 int filasAfectadas = EjecutarSolictudAmistad(solicitud);
                 return filasAfectadas;
@@ -83,7 +83,7 @@ namespace AccesoDatos
             
         }
 
-        public static void ValidarSiSonExisteSolcitud(string nombreUsuario1, string nombreUsuario2)
+        public static void ValidarSiExisteSolcitud(string nombreUsuario1, string nombreUsuario2)
         {
             try
             {

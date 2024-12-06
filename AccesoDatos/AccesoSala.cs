@@ -217,5 +217,20 @@ namespace AccesoDatos
                 throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Message));
             }
         }
+
+        public static string BuscarCodigoSala(string administrador, string nombreSala)
+        {
+            using (var contexto = new EntidadesGloom())
+            {
+                var codigoSala = contexto.Sala.Where(c => c.IdAdministrador == administrador && c.NombreSala == nombreSala).Select(c => c.Codigo).FirstOrDefault();
+                if (codigoSala == null)
+                {
+                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("Código no encontrado"));
+                }
+
+                return codigoSala;
+
+            }
+        }
     }
 }

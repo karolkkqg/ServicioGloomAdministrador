@@ -34,5 +34,8 @@ namespace BibliotecaClases
 
         [DataMember]
         public string jugador { get; set; }
+
+        [DataMember]
+        public int noJugadoresActuales { get; set; }
     }
 }

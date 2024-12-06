@@ -26,5 +26,17 @@ namespace ServicioGloomm
         [FaultContract(typeof(ManejadorExcepciones))]
         void ValidarPartidaNoIniciada(string numeroSala);
 
+        [OperationContract]
+        [FaultContract(typeof(ManejadorExcepciones))]
+        Dictionary<string, string> ObtenerFamiliaPorJugador(string numeroSala);
+
+        [OperationContract]
+        [FaultContract(typeof(ManejadorExcepciones))]
+        Dictionary<string, (string familia, List<(string nombrePersonaje, int vida)> personajes)> ObtenerFamiliaYPersonajesPorUsuario(string numeroSala);
+
+        [OperationContract]
+        [FaultContract(typeof(ManejadorExcepciones))]
+        Dictionary<string, List<(string nombrePersonaje, int vida)>> ObtenerFamiliasYPersonajes(string numeroSala);
+
     }
 }

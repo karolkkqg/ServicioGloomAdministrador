@@ -1,0 +1,90 @@
+﻿using BibliotecaClases;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ServicioGloomm;
+using System;
+using System.Collections.Generic;
+using System.ServiceModel;
+using System.Linq;
+
+namespace Pruebas.ServicioCreacionPartidaTest
+{
+    [TestClass]
+    public class ObtenerFamiliasYPersonajesTest
+    {
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            // Limpiar y reinicializar los diccionarios estáticos antes de cada prueba
+            ServicioJuego.jugadoresEnSala.Clear();
+            ServicioJuego.familiasSeleccionadasPorSala.Clear();
+            ServicioJuego.personajesFamiliaDeUsuario.Clear();
+            ServicioJuego.familias = new Dictionary<string, List<(string nombrePersonaje, int vida)>>
+            {
+                { "Familia1", new List<(string, int)> { ("Personaje1", 100), ("Personaje2", 100), ("Personaje3", 100), ("Personaje4", 100) } },
+                { "Familia2", new List<(string, int)> { ("PersonajeA", 90), ("PersonajeB", 90), ("PersonajeC", 90), ("PersonajeD", 90) } }
+            };
+        }
+
+        [TestMethod]
+        public void ObtenerFamiliasYPersonajes_SalaConFamiliasValidas_RetornaDatos()
+        {
+            // Arrange
+            string numeroSala = "1";
+            ServicioJuego.jugadoresEnSala[numeroSala] = new HashSet<string> { "Jugador1", "Jugador2" };
+            ServicioJuego.familiasSeleccionadasPorSala[numeroSala] = new HashSet<string> { "Familia1", "Familia2" };
+            ServicioJuego.personajesFamiliaDeUsuario["Jugador1"] = ServicioJuego.familias["Familia1"];
+            ServicioJuego.personajesFamiliaDeUsuario["Jugador2"] = ServicioJuego.familias["Familia2"];
+
+            // Act
+            var resultado = new ServicioJuego().ObtenerFamiliaYPersonajesPorUsuario(numeroSala);
+
+            // Assert
+            Assert.IsNotNull(resultado, "El resultado no debería ser nulo.");
+            Assert.AreEqual(2, resultado.Count, "El resultado debería contener datos de 2 usuarios.");
+            Assert.IsTrue(resultado.ContainsKey("Jugador1"), "El resultado debería incluir 'Jugador1'.");
+            Assert.IsTrue(resultado.ContainsKey("Jugador2"), "El resultado debería incluir 'Jugador2'.");
+            CollectionAssert.AreEqual(
+                ServicioJuego.familias["Familia1"],
+                resultado["Jugador1"].personajes,
+                "Los personajes de 'Jugador1' no coinciden con los esperados."
+            );
+            CollectionAssert.AreEqual(
+                ServicioJuego.familias["Familia2"],
+                resultado["Jugador2"].personajes,
+                "Los personajes de 'Jugador2' no coinciden con los esperados."
+            );
+        }
+
+        [TestMethod]
+        public void ObtenerFamiliasYPersonajes_SalaSinFamilias_RetornaVacio()
+        {
+            // Arrange
+            string numeroSala = "1";
+            ServicioJuego.jugadoresEnSala[numeroSala] = new HashSet<string> { "Jugador1" };
+            ServicioJuego.familiasSeleccionadasPorSala[numeroSala] = new HashSet<string>(); // Sin familias seleccionadas
+
+            // Act
+            var resultado = new ServicioJuego().ObtenerFamiliaYPersonajesPorUsuario(numeroSala);
+
+            // Assert
+            Assert.IsNotNull(resultado, "El resultado no debería ser nulo.");
+            Assert.AreEqual(0, resultado.Count, "El resultado debería estar vacío si no hay familias seleccionadas.");
+        }
+
+        [TestMethod]
+        public void ObtenerFamiliasYPersonajes_FamiliasNoCoinciden_RetornaVacio()
+        {
+            // Arrange
+            string numeroSala = "1";
+            ServicioJuego.jugadoresEnSala[numeroSala] = new HashSet<string> { "Jugador1" };
+            ServicioJuego.familiasSeleccionadasPorSala[numeroSala] = new HashSet<string> { "FamiliaInvalida" };
+
+            // Act
+            var resultado = new ServicioJuego().ObtenerFamiliaYPersonajesPorUsuario(numeroSala);
+
+            // Assert
+            Assert.IsNotNull(resultado, "El resultado no debería ser nulo.");
+            Assert.AreEqual(0, resultado.Count, "El resultado debería estar vacío si las familias seleccionadas no son válidas.");
+        }
+    }
+}

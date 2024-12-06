@@ -79,6 +79,12 @@ namespace Pruebas.ServicioCartaTest
             }
 
             public void ActualizarImagenPersonaje(string personaje, string personajeAnterior) => throw new NotImplementedException();
+
+            public void ActualizarInterfazExpulsion(string jugadorExpulsado)
+            {
+                throw new NotImplementedException();
+            }
+
             public void ActualizarJugadorMuerto(string jugadorMuerto) => throw new NotImplementedException();
             public void ActualizarMazoJugador() => throw new NotImplementedException();
             public void ActualizarNumeroJugadores() => throw new NotImplementedException();
@@ -89,6 +95,17 @@ namespace Pruebas.ServicioCartaTest
             public void EnviarTurno(string nombreDelUsuarioEnTurno) => throw new NotImplementedException();
             public void IniciarVotacion(string jugadorObjetivo) => throw new NotImplementedException();
             public void NotificarExpulsion(string jugadorExpulsado) => throw new NotImplementedException();
+
+            public void NotificarVotacionExpulsion(string jugadorPropuesto)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void RecibirExpulsion(string jugadorObjetivo)
+            {
+                throw new NotImplementedException();
+            }
+
             public void ResultadoUnirseASala(string idSala, string codigo, bool esExitoso) => throw new NotImplementedException();
             public void SacarDeSalaATodosJugadores() => throw new NotImplementedException();
         }

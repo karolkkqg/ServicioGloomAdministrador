@@ -277,6 +277,11 @@ namespace ServicioGloomm
             }  
         }
 
+        public List<Carta> ObtenerMazoRestante()
+        {
+            return cartasSobrantesGlobal.ToList();
+        }
+
         private void ValidarCantidadDeCartasJugador(string nombreUsuario)
         {
             List<Carta> mazoDelJugador = barajaJugadores[nombreUsuario];
@@ -398,8 +403,6 @@ namespace ServicioGloomm
             AdministradorLogger administradorLogger = new AdministradorLogger(this.GetType());
             try
             {
-                
-
                 Carta carta = cartasBonus[0];
                 cartasBonus.RemoveAt(0);
                 ValidarExistenciaCartasSobrantesBonus();

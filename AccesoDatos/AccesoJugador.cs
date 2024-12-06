@@ -179,21 +179,20 @@ namespace AccesoDatos
             {
                 using (var contexto = new EntidadesGloom())
                 {
-                    /*
-                        var jugadorEncontrado = contexto.Jugador.FirstOrDefault(j => j.NombreUsuario == jugador.NombreUsuario && j.Contraseña == jugador.Contraseña);
-                        if (jugadorEncontrado == null)
+                  
+                        var jugadorEncontrado = contexto.Jugador.FirstOrDefault(j => j.NombreUsuario == jugador.NombreUsuario);
+                   
+                    if (jugadorEncontrado == null)
                         {
                             throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("3"));
                         }
-                        */
-                        var jugadorEncontrado = contexto.Jugador.FirstOrDefault(j => j.NombreUsuario == jugador.NombreUsuario);
                     jugadorEncontrado.Contraseña = jugadorEncontrado.Contraseña.Trim();
                     contrasenaValida = BCrypt.Net.BCrypt.Verify(jugador.Contraseña, jugadorEncontrado.Contraseña);
-                    if (jugadorEncontrado == null || !contrasenaValida)
-                        {
-                            throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("3"));
-                        }
-                        return 1;
+                    if (!contrasenaValida)
+                    {
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("3"));
+                    }
+                    return 1;
                 }
             }
             catch (EntityException ex)

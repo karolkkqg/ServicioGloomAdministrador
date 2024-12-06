@@ -55,13 +55,31 @@ namespace ServicioGloomm
         List<Sala> ObtenerSalasActivasConEstado();
 
         [OperationContract]
-        void UnirseASalaPublica(string idSala, string idUsuario);
-
-        [OperationContract]
-        void UnirseASalaPrivada(string idUsuario, string idSala, string codigoAcceso);
-
-        [OperationContract]
         void SalirDeSala(string idSala, string idUsuario);
+
+        [OperationContract]
+        void UnirseASalaPublicaNormal(string idSala, string idUsuario);
+
+        [OperationContract]
+        void UnirseASalaPrivadaNormal(string idUsuario, string idSala, string codigoAcceso);
+
+        [OperationContract]
+        void UnirseASalaPrivadaMiniHistoria(string idUsuario, string idSala, string codigoAcceso);
+
+        [OperationContract]
+        string ObtenerCodigoSala(string idAdminsitrador, string nombreSala);
+
+        [OperationContract]
+        List<string> ObtenerFamiliaSeleccionada(string idSala);
+
+        [OperationContract]
+        void SeleccionarFamilia(string nombreUsuario, string nombreFamilia, string salaId);
+
+        [OperationContract]
+        void ValidarFamiliaSeleccionada(int cantidadJugadores, string idSala);
+
+        [OperationContract]
+        Dictionary<string, HashSet<string>> ObtenerFamiliasSeleccionadasPorSala();
 
     }
 
@@ -86,5 +104,7 @@ namespace ServicioGloomm
         [OperationContract(IsOneWay = true)]
         void ResultadoUnirseASala(string idSala, string codigo, bool esExitoso);
 
+        [OperationContract(IsOneWay = true)]
+        void ActualizarSeleccionFamilia(string nombreFamilia, string nombreFamiliaAnterior);
     }
 }
