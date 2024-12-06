@@ -1,5 +1,7 @@
-﻿using System;
+﻿using ServicioGlomm;
+using System;
 using System.ServiceModel;
+using log4net;
 
 namespace Host
 {
@@ -7,12 +9,34 @@ namespace Host
     {
         static void Main(string[] args)
         {
-            using (ServiceHost host = new ServiceHost(typeof(ServicioGloomm.ServicioJuego)))
+            AdministradorLogger administradorLogger = new AdministradorLogger(typeof(Program));
+            log4net.Config.XmlConfigurator.Configure();
+            try
             {
-                host.Open();
-                Console.WriteLine("Server is running");
+                using (ServiceHost host = new ServiceHost(typeof(ServicioGloomm.ServicioJuego)))
+                {
+                    host.Open();
+                    Console.WriteLine("Server is running");
+                    Console.ReadLine();
+                }
+            }
+            catch (AddressAccessDeniedException ex)
+            {
+                administradorLogger.RegistroError(ex);
                 Console.ReadLine();
             }
+            catch (CommunicationException ex)
+            {
+                administradorLogger.RegistroError(ex);
+                Console.ReadLine();
+            }
+            catch (Exception ex) 
+            {
+                administradorLogger.RegistroError(ex);
+                Console.ReadLine();
+            }
+
+            
         }
 
     }

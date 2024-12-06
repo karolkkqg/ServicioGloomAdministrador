@@ -148,13 +148,10 @@ namespace ServicioGloomm
             AdministradorLogger administradorLogger = new AdministradorLogger(this.GetType());
             EstaSiendoUtilizado(numeroSala, nombrePersonaje);
 
-            // Asignar el nuevo personaje al usuario
             string personajeAnterior = AgregarJugadorYPersonaje(nombreUsuario, nombrePersonaje, numeroSala);
 
-            // Validar que el jugador no esté listo
             ValidarJugadorNoListo(nombreUsuario);
 
-            // Notificar a todos los jugadores de la sala sobre el cambio de personaje
             if (salaJugadoresPorSala.ContainsKey(numeroSala))
             {
                 foreach (var jugador in salaJugadoresPorSala[numeroSala])
@@ -167,7 +164,6 @@ namespace ServicioGloomm
                     {
                         administradorLogger.RegistroError(ex);
 
-                        // Eliminar el jugador problemático para evitar inconsistencias
                         salaJugadoresPorSala[numeroSala].Remove(jugador.Key);
                         throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16"));
                     }
@@ -182,9 +178,24 @@ namespace ServicioGloomm
 
         private string AgregarJugadorYPersonaje(string nombreUsuario, string nombrePersonaje, string numeroSala)
         {
-            string personajeAnterior = "sin personaje";
+            InicializarSalaSiNoExiste(numeroSala);
 
-            // Verificar si la sala existe, si no, inicializarla
+            string personajeAnterior = ActualizarPersonajeAnterior(nombreUsuario, nombrePersonaje, numeroSala);
+            AgregarPersonajeUsado(nombrePersonaje, personajesUsadosPorSala[numeroSala]);
+
+            return personajeAnterior;
+        }
+
+        private void AgregarPersonajeUsado(string nombrePersonaje, List<string> personajesUsados)
+        {
+            if (!personajesUsados.Contains(nombrePersonaje))
+            {
+                personajesUsados.Add(nombrePersonaje);
+            }
+        }
+
+        private void InicializarSalaSiNoExiste(string numeroSala)
+        {
             if (!personajesPorSala.ContainsKey(numeroSala))
             {
                 personajesPorSala[numeroSala] = new Dictionary<string, (string nombrePersonaje, int vida)>();
@@ -194,35 +205,30 @@ namespace ServicioGloomm
             {
                 personajesUsadosPorSala[numeroSala] = new List<string>();
             }
+        }
 
-            // Obtener la lista de personajes en la sala
+        private string ActualizarPersonajeAnterior(string nombreUsuario, string nombrePersonaje, string numeroSala)
+        {
             var personajesEnSala = personajesPorSala[numeroSala];
+            var personajesUsados = personajesUsadosPorSala[numeroSala];
+
+            string personajeAnterior = "sin personaje";
 
             if (personajesEnSala.ContainsKey(nombreUsuario))
             {
-                // Guardar el personaje anterior
                 personajeAnterior = personajesEnSala[nombreUsuario].nombrePersonaje;
-
-                // Actualizar el personaje del usuario
                 personajesEnSala[nombreUsuario] = (nombrePersonaje, 0);
 
-                // Eliminar el personaje anterior de los personajes usados si existe
-                if (personajesUsadosPorSala[numeroSala].Contains(personajeAnterior))
+                if (personajesUsados.Contains(personajeAnterior))
                 {
-                    personajesUsadosPorSala[numeroSala].Remove(personajeAnterior);
+                    personajesUsados.Remove(personajeAnterior);
                 }
             }
             else
             {
-                // Agregar el nuevo usuario con su personaje
                 personajesEnSala[nombreUsuario] = (nombrePersonaje, 0);
             }
 
-            // Agregar el nuevo personaje a la lista de personajes usados si no está ya en ella
-            if (!personajesUsadosPorSala[numeroSala].Contains(nombrePersonaje))
-            {
-                personajesUsadosPorSala[numeroSala].Add(nombrePersonaje);
-            }
             return personajeAnterior;
         }
 
@@ -278,18 +284,16 @@ namespace ServicioGloomm
             AdministradorLogger administradorLogger = new AdministradorLogger(this.GetType());
             if (salaJugadoresPorSala.ContainsKey(idSala))
             {
-                // Iterar sobre los jugadores de la sala específica
                 foreach (var jugador in salaJugadoresPorSala[idSala])
                 {
                     try
                     {
-                        jugador.Value.EmpezarJuego(); // Notificar al jugador que empieza la partida
+                        jugador.Value.EmpezarJuego();
                     }
                     catch (CommunicationException ex)
                     {
                         administradorLogger.RegistroError(ex);
 
-                        // Eliminar el jugador problemático para mantener consistencia
                         salaJugadoresPorSala[idSala].Remove(jugador.Key);
                         throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16"));
                     }
@@ -297,7 +301,6 @@ namespace ServicioGloomm
                     {
                         administradorLogger.RegistroError(ex);
 
-                        // Manejar el error y eliminar el jugador problemático
                         salaJugadoresPorSala[idSala].Remove(jugador.Key);
                         throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18"));
                     }
@@ -323,16 +326,13 @@ namespace ServicioGloomm
 
         private void EliminarJugadorYActualizarPersonaje(string numeroSala, string nombreUsuario)
         {
-            if (personajesUsadosPorSala.ContainsKey(numeroSala))
+            if (personajesPorSala.ContainsKey(numeroSala) && personajesPorSala[numeroSala].ContainsKey(nombreUsuario))
             {
-                if (personajesUsadosPorSala[numeroSala].Contains(nombreUsuario))
+                var personajeSeleccionado = personajesPorSala[numeroSala][nombreUsuario].nombrePersonaje;
+                if (!string.IsNullOrEmpty(personajeSeleccionado))
                 {
-                    var personajeSeleccionado = personajesPorSala[numeroSala][nombreUsuario].nombrePersonaje;
-                    if (!string.IsNullOrEmpty(personajeSeleccionado))
-                    {
-                        string personaje = EliminarJugadorYPersonaje(numeroSala, nombreUsuario);
-                        EliminarPersonajeUsado(numeroSala, personaje);
-                    }
+                    string personaje = EliminarJugadorYPersonaje(numeroSala, nombreUsuario);
+                    EliminarPersonajeUsado(numeroSala, personaje);
                 }
             }
         }
@@ -342,10 +342,8 @@ namespace ServicioGloomm
             AdministradorLogger administradorLogger = new AdministradorLogger(this.GetType());
             if (salaJugadoresPorSala.ContainsKey(idSala))
             {
-                // Eliminar el jugador de la sala
                 if (salaJugadoresPorSala[idSala].Remove(nombreUsuario))
                 {
-                    // Notificar a los jugadores restantes en la sala
                     foreach (var jugador in salaJugadoresPorSala[idSala])
                     {
                         try
@@ -356,7 +354,6 @@ namespace ServicioGloomm
                         {
                             administradorLogger.RegistroError(ex);
 
-                            // Eliminar el jugador problemático para mantener consistencia
                             salaJugadoresPorSala[idSala].Remove(jugador.Key);
                             throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16"));
                         }
@@ -364,13 +361,11 @@ namespace ServicioGloomm
                         {
                             administradorLogger.RegistroError(ex);
 
-                            // Manejar el error y eliminar el jugador problemático
                             salaJugadoresPorSala[idSala].Remove(jugador.Key);
                             throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18"));
                         }
                     }
 
-                    // Si la sala queda vacía, eliminarla
                     if (salaJugadoresPorSala[idSala].Count == 0)
                     {
                         salaJugadoresPorSala.Remove(idSala);
@@ -382,10 +377,17 @@ namespace ServicioGloomm
 
         private void EliminarPersonajeUsado(string numeroSala, string nombrePersonaje)
         {
-            if (personajesUsadosPorSala.ContainsKey(numeroSala) &&
-        personajesUsadosPorSala[numeroSala].Contains(nombrePersonaje))
+            if (personajesUsadosPorSala.ContainsKey(numeroSala))
             {
-                personajesUsadosPorSala[numeroSala].Remove(nombrePersonaje);
+                if (personajesUsadosPorSala[numeroSala].Contains(nombrePersonaje))
+                {
+                    personajesUsadosPorSala[numeroSala].Remove(nombrePersonaje);
+                }
+
+                if (personajesUsadosPorSala[numeroSala].Count == 0)
+                {
+                    personajesUsadosPorSala.Remove(numeroSala);
+                }
             }
         }
 
@@ -432,10 +434,37 @@ namespace ServicioGloomm
         {
             var jugadores = salaJugadoresPorSala[numeroSala].Keys.ToList();
 
-            // Sacar a cada jugador de la sala
             foreach (var jugador in jugadores)
             {
                 SacarJugadorDeSala(numeroSala, jugador);
+            }
+        }
+
+        private void SacarJugadoresFinalPartidaMini(string numeroSala)
+        {
+            var jugadores = salaJugadoresPorSala[numeroSala].Keys.ToList();
+
+            foreach (var jugador in jugadores)
+            {
+                EliminarEstructurasSala(numeroSala, jugador);
+            }
+        }
+
+        private void EliminarEstructurasSala(string numeroSala, string jugador)
+        {
+            if (salaJugadoresPorSala.ContainsKey(numeroSala))
+            {
+                if (salaJugadoresPorSala[numeroSala].ContainsKey(jugador))
+                {
+                    EliminarJugadorYActualizarPersonaje(numeroSala, jugador);
+
+                    salaJugadoresPorSala[numeroSala].Remove(jugador);
+
+                    if (salaJugadoresPorSala[numeroSala].Count == 0)
+                    {
+                        salaJugadoresPorSala.Remove(numeroSala);
+                    }
+                }
             }
         }
 
@@ -463,19 +492,16 @@ namespace ServicioGloomm
             AdministradorLogger administradorLogger = new AdministradorLogger(this.GetType());
             if (salaJugadoresPorSala.ContainsKey(sala))
             {
-                // Validar si el jugador existe en la sala
                 if (salaJugadoresPorSala[sala].ContainsKey(jugador))
                 {
                     try
                     {
-                        // Enviar el callback para redirigir al jugador
                         salaJugadoresPorSala[sala][jugador].SacarDeSalaATodosJugadores();
                     }
                     catch (CommunicationException ex)
                     {
                         administradorLogger.RegistroError(ex);
 
-                        // Opcional: Eliminar el callback del jugador problemático
                         salaJugadoresPorSala[sala].Remove(jugador);
 
                         throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16"));
@@ -484,11 +510,12 @@ namespace ServicioGloomm
                     {
                         administradorLogger.RegistroError(ex);
 
-                        // Opcional: Eliminar el callback del jugador problemático
                         salaJugadoresPorSala[sala].Remove(jugador);
-        public List<string> ObtenerPersonajesUsados()
-        {
-            return new List<string>(personajesUsados);
+
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18"));
+                    }
+                }
+            }
         }
 
         public List<BibliotecaClases.Sala> ObtenerSalasActivas()
@@ -540,6 +567,7 @@ namespace ServicioGloomm
             {
                 throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("24"));
             }
+
             if (sala.codigo == codigoAcceso)
             {
                 if (!jugadoresEnSala.ContainsKey(idSala))
@@ -551,11 +579,10 @@ namespace ServicioGloomm
                 ActualizarSalasParaTodos();
                 NotificarResultadoUnirseASala(idUsuario, idSala, true);
             }
-            else 
+            else
             {
                 NotificarResultadoUnirseASala(idUsuario, idSala, false);
             }
-            
         }
 
         public void SalirDeSala(string idSala, string idUsuario)
@@ -587,12 +614,6 @@ namespace ServicioGloomm
             if (usuariosSalaCallback.TryGetValue(idUsuario, out var callback))
             {
                 callback.ResultadoUnirseASala(idSala, salasActivasEnMemoria[idSala].codigo, esExitoso);
-            }
-        }
-
-                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18"));
-                    }
-                }
             }
         }
     }

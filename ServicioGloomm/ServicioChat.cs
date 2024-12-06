@@ -25,7 +25,7 @@ namespace ServicioGloomm
         }
 
 
-        public void AgregarJugador(string nombreUsuario)
+        public void AgregarJugadorAChat(string nombreUsuario)
         {
             var callback = OperationContext.Current.GetCallbackChannel<IChatCallback>();
             if (!jugadoresPartida.ContainsKey(nombreUsuario))

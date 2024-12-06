@@ -18,7 +18,6 @@ namespace AccesoDatos
         public Jugador()
         {
             this.Amigos = new HashSet<Amigos>();
-            this.Mensaje = new HashSet<Mensaje>();
         }
     
         public string NombreUsuario { get; set; }
@@ -31,7 +30,5 @@ namespace AccesoDatos
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Amigos> Amigos { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Mensaje> Mensaje { get; set; }
     }
 }

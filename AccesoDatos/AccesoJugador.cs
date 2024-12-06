@@ -1,7 +1,9 @@
 ﻿using BibliotecaClases;
+using BCrypt.Net;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Core;
 using System.Data.SqlClient;
 using System.Linq;
 using System.ServiceModel;
@@ -20,7 +22,7 @@ namespace AccesoDatos
                 Nombre = jugador.Nombre,
                 Apellidos = jugador.Apellidos,
                 Correo = jugador.Correo,
-                Contraseña = jugador.Contraseña,
+                Contraseña = BCrypt.Net.BCrypt.HashPassword(jugador.Contraseña),
                 Tipo = jugador.Tipo,
                 Icono = jugador.Icono,
             };
@@ -38,11 +40,15 @@ namespace AccesoDatos
             catch (SqlException ex)
             {
                 throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString()));
+            }catch (EntityException ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41"));
             }
         }
 
         public static int EjecutarAgregarJugadorABaseDeDatos(Jugador jugador)
         {
+            
             try
             {
                 using (var contexto = new EntidadesGloom())
@@ -57,6 +63,10 @@ namespace AccesoDatos
             {
                 throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString()));
             }
+            catch (EntityException ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41"));
+            }
         }
         public static int ActualizarJugadorABaseDeDatos(Jugador jugador)
         {
@@ -69,6 +79,10 @@ namespace AccesoDatos
             catch (SqlException ex)
             {
                 throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString()));
+            }
+            catch (EntityException ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41"));
             }
         }
 
@@ -89,87 +103,147 @@ namespace AccesoDatos
             {
                 throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString()));
             }
+            catch (EntityException ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41"));
+            }
         }
         private static Jugador ValidarCorreoActualizacionJugador(Jugador jugador)
         {
-            using (var contexto = new EntidadesGloom())
+            try
             {
-                var jugadorConCorreo = contexto.Jugador
-                    .FirstOrDefault(j => j.Correo == jugador.Correo && j.NombreUsuario != jugador.NombreUsuario);
-
-                if (jugadorConCorreo != null)
+                using (var contexto = new EntidadesGloom())
                 {
-                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("2"));
-                }
+                    var jugadorConCorreo = contexto.Jugador
+                        .FirstOrDefault(j => j.Correo == jugador.Correo && j.NombreUsuario != jugador.NombreUsuario);
 
-                return jugador;
+                    if (jugadorConCorreo != null)
+                    {
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("2"));
+                    }
+
+                    return jugador;
+                }
             }
+            catch (EntityException ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41"));
+            }
+            
         }
 
         private static Jugador ValidarCorreoJugador(Jugador jugador)
         {
-            using (var contexto = new EntidadesGloom())
+            try
             {
-                var jugadorConCorreo = contexto.Jugador.FirstOrDefault(j => j.Correo == jugador.Correo);
-                if (jugadorConCorreo != null)
+                using (var contexto = new EntidadesGloom())
                 {
-                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("2"));
+                    var jugadorConCorreo = contexto.Jugador.FirstOrDefault(j => j.Correo == jugador.Correo);
+                    if (jugadorConCorreo != null)
+                    {
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("2"));
+                    }
+                    return jugador;
                 }
-                return jugador;
             }
+            catch (EntityException ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41"));
+            }
+          
         }
         private static Jugador ValidarUsuarioJugador(Jugador jugador)
         {
-            using (var contexto = new EntidadesGloom())
+            try
             {
-                var jugadorConNombreUsuario = contexto.Jugador.FirstOrDefault(j => j.NombreUsuario == jugador.NombreUsuario);
-                if (jugadorConNombreUsuario != null)
+                using (var contexto = new EntidadesGloom())
                 {
-                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("1"));
+                    var jugadorConNombreUsuario = contexto.Jugador.FirstOrDefault(j => j.NombreUsuario == jugador.NombreUsuario);
+                    if (jugadorConNombreUsuario != null)
+                    {
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("1"));
+                    }
+                    return jugador;
                 }
-                return jugador;
+            }
+            catch (EntityException ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41"));
             }
         }
         public static int ValidarJugadorParaAutenticacion(Jugador jugador)
         {
-            using (var contexto = new EntidadesGloom())
+            jugador.Contraseña = jugador.Contraseña.Trim();
+            bool contrasenaValida = false;
+            try
             {
-                var jugadorEncontrado = contexto.Jugador.FirstOrDefault(j => j.NombreUsuario == jugador.NombreUsuario && j.Contraseña == jugador.Contraseña);
-                if (jugadorEncontrado == null)
+                using (var contexto = new EntidadesGloom())
                 {
-                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("3"));
+                    /*
+                        var jugadorEncontrado = contexto.Jugador.FirstOrDefault(j => j.NombreUsuario == jugador.NombreUsuario && j.Contraseña == jugador.Contraseña);
+                        if (jugadorEncontrado == null)
+                        {
+                            throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("3"));
+                        }
+                        */
+                        var jugadorEncontrado = contexto.Jugador.FirstOrDefault(j => j.NombreUsuario == jugador.NombreUsuario);
+                    jugadorEncontrado.Contraseña = jugadorEncontrado.Contraseña.Trim();
+                    contrasenaValida = BCrypt.Net.BCrypt.Verify(jugador.Contraseña, jugadorEncontrado.Contraseña);
+                    if (jugadorEncontrado == null || !contrasenaValida)
+                        {
+                            throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("3"));
+                        }
+                        return 1;
                 }
-                return 1;
             }
+            catch (EntityException ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41"));
+            }
+            
         }
 
         public static Jugador BuscarJugadorPorNombreUsuario(string nombreUsuario)
         {
-            using (var contexto = new EntidadesGloom())
+            try
             {
-                var jugadorConNombreUsuario = contexto.Jugador.FirstOrDefault(j => j.NombreUsuario == nombreUsuario);
-                if (jugadorConNombreUsuario == null)
+                using (var contexto = new EntidadesGloom())
                 {
-                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("Jugador no encontrado"));
+                    var jugadorConNombreUsuario = contexto.Jugador.FirstOrDefault(j => j.NombreUsuario == nombreUsuario);
+                    if (jugadorConNombreUsuario == null)
+                    {
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("Jugador no encontrado"));
+                    }
+                    BibliotecaClases.Jugador jugadorBiblioteca = ConvertirAClasesBiblioteca(jugadorConNombreUsuario);
+                    return jugadorConNombreUsuario;
                 }
-                BibliotecaClases.Jugador jugadorBiblioteca = ConvertirAClasesBiblioteca(jugadorConNombreUsuario);
-                return jugadorConNombreUsuario;
+            }
+            catch (EntityException ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41"));
             }
         }
 
         public static List<BibliotecaClases.Jugador> BuscarJugadoresPorNombreUsuario(string nombreParcial)
         {
-            using (var contexto = new EntidadesGloom())
+            try
             {
-                var jugadoresConCoincidencia = contexto.Jugador
-                    .Where(j => j.NombreUsuario.Contains(nombreParcial))
-                    .ToList();
+                using (var contexto = new EntidadesGloom())
+                {
+                    var jugadoresConCoincidencia = contexto.Jugador
+                        .Where(j => j.NombreUsuario.Contains(nombreParcial))
+                        .ToList();
 
-                var jugadoresBiblioteca = jugadoresConCoincidencia
-                    .Select(j => ConvertirAClasesBiblioteca(j))
-                    .ToList();
+                    var jugadoresBiblioteca = jugadoresConCoincidencia
+                        .Select(j => ConvertirAClasesBiblioteca(j))
+                        .ToList();
 
-                return jugadoresBiblioteca;
+                    return jugadoresBiblioteca;
+                }
+            }
+            catch (EntityException ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41"));
             }
         }
 

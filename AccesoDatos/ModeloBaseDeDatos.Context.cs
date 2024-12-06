@@ -16,7 +16,7 @@ namespace AccesoDatos
     public partial class EntidadesGloom : DbContext
     {
         public EntidadesGloom()
-            : base("name=EntidadesGloom")
+            : base(Environment.GetEnvironmentVariable("CONECCION_BASEDEDATOS"))
         {
         }
     
@@ -26,14 +26,9 @@ namespace AccesoDatos
         }
     
         public virtual DbSet<Amigos> Amigos { get; set; }
-        public virtual DbSet<CartaEvento> CartaEvento { get; set; }
-        public virtual DbSet<CartaFamiliar> CartaFamiliar { get; set; }
         public virtual DbSet<Jugador> Jugador { get; set; }
-        public virtual DbSet<Modificador> Modificador { get; set; }
-        public virtual DbSet<Muerte> Muerte { get; set; }
         public virtual DbSet<Participantes> Participantes { get; set; }
         public virtual DbSet<Sala> Sala { get; set; }
         public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
-        public virtual DbSet<Mensaje> Mensaje { get; set; }
     }
 }

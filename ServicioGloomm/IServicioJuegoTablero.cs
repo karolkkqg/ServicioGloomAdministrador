@@ -39,7 +39,7 @@ namespace ServicioGloomm
         void AgregarCastigo(string nombreJugador);
 
         [OperationContract(IsOneWay = true)]
-        void TerminarPartidaMiniJuego(string numeroSala);
+        void MatarJugador(string numeroSala, string jugadorAMatar, string jugadorPropietario);
     }
 
     [ServiceContract]
@@ -68,5 +68,8 @@ namespace ServicioGloomm
 
         [OperationContract(IsOneWay = true)]
         void IniciarVotacion(string jugadorObjetivo);
+
+        [OperationContract(IsOneWay = true)]
+        void ActualizarJugadorMuerto(string jugadorMuerto);
     }
 }

@@ -16,7 +16,7 @@ namespace ServicioGloomm
         private ServicioJuego servicioJuego;
         public static readonly Dictionary<string, List<Carta>> barajaJugadores = new Dictionary<string, List<Carta>>();
         public static readonly List<Carta> cartasSobrantesGlobal = new List<Carta>();
-        public static readonly List<Carta> cartasbonus = new List<Carta>();
+        public static readonly List<Carta> cartasBonus = new List<Carta>();
 
         public List<Carta> BarajearMazo(string numeroSala)
         {
@@ -366,7 +366,6 @@ namespace ServicioGloomm
 
         private void ValidarExistenciaDeCartasJugador(string nombreUsuario)
         {
-
             if (barajaJugadores[nombreUsuario].Count == 0)
             {
                 throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("38"));
@@ -381,16 +380,16 @@ namespace ServicioGloomm
             Carta cartaBonus4 = new Carta { identificador = "QuitarCarta.png", valor = 0, tipo = "QuitarCarta" };
             Carta cartaBonus5 = new Carta { identificador = "PerderTurno.png", valor = 0, tipo = "PerderTurno" };
 
-            cartasbonus.Add(cartaBonus1);
-            cartasbonus.Add(cartaBonus2);
-            cartasbonus.Add(cartaBonus3);
-            cartasbonus.Add(cartaBonus4);
-            cartasbonus.Add(cartaBonus5);
-            cartasbonus.Add(cartaBonus1);
-            cartasbonus.Add(cartaBonus2);
-            cartasbonus.Add(cartaBonus3);
-            cartasbonus.Add(cartaBonus4);
-            cartasbonus.Add(cartaBonus5);
+            cartasBonus.Add(cartaBonus1);
+            cartasBonus.Add(cartaBonus2);
+            cartasBonus.Add(cartaBonus3);
+            cartasBonus.Add(cartaBonus4);
+            cartasBonus.Add(cartaBonus5);
+            cartasBonus.Add(cartaBonus1);
+            cartasBonus.Add(cartaBonus2);
+            cartasBonus.Add(cartaBonus3);
+            cartasBonus.Add(cartaBonus4);
+            cartasBonus.Add(cartaBonus5);
 
         }
 
@@ -399,10 +398,11 @@ namespace ServicioGloomm
             AdministradorLogger administradorLogger = new AdministradorLogger(this.GetType());
             try
             {
-                ValidarExistenciaCartasSobrantesBonus();
+                
 
-                Carta carta = cartasbonus[0];
-                cartasbonus.RemoveAt(0);
+                Carta carta = cartasBonus[0];
+                cartasBonus.RemoveAt(0);
+                ValidarExistenciaCartasSobrantesBonus();
                 return carta;
             }
             catch (FaultException<ManejadorExcepciones> ex)
@@ -416,7 +416,7 @@ namespace ServicioGloomm
         private void ValidarExistenciaCartasSobrantesBonus()
         {
             AdministradorLogger administradorLogger = new AdministradorLogger(this.GetType());
-            if (cartasbonus.Count == 0)
+            if (cartasBonus.Count == 0)
             {
 
                 foreach (var jugador in jugadoresConectadosTableroCallback)
@@ -440,7 +440,6 @@ namespace ServicioGloomm
                         }
                     }
                 }
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("21"));
             }
         }
     }

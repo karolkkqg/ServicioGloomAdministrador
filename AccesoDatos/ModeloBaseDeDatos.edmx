@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="ModeloGloom.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="GloomModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Amigos">
           <Key>
             <PropertyRef Name="Id" />
@@ -14,27 +14,6 @@
           <Property Name="Estado" Type="nvarchar" MaxLength="255" />
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
         </EntityType>
-        <EntityType Name="CartaEvento">
-          <Key>
-            <PropertyRef Name="IdCarta" />
-          </Key>
-          <Property Name="IdCarta" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="estado" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="robarCarta" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="IdjugadorARobar" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="retirar" Type="nvarchar" MaxLength="50" Nullable="false" />
-        </EntityType>
-        <EntityType Name="CartaFamiliar">
-          <Key>
-            <PropertyRef Name="IdCarta" />
-          </Key>
-          <Property Name="IdCarta" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="estado" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="nombre" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="familia" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="descripcion" Type="nvarchar" MaxLength="255" Nullable="false" />
-          <Property Name="vida" Type="int" Nullable="false" />
-        </EntityType>
         <EntityType Name="Jugador">
           <Key>
             <PropertyRef Name="NombreUsuario" />
@@ -43,38 +22,9 @@
           <Property Name="Nombre" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="Apellidos" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="Correo" Type="nvarchar" MaxLength="255" Nullable="false" />
-          <Property Name="Contraseña" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Contraseña" Type="varchar" MaxLength="255" />
           <Property Name="Tipo" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="Icono" Type="nvarchar" MaxLength="255" />
-        </EntityType>
-        <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'Gloom.dbo.Mensaje' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
-        <EntityType Name="Mensaje">
-          <Key>
-            <PropertyRef Name="JugadorEmisor" />
-            <PropertyRef Name="JugadorReceptor" />
-            <PropertyRef Name="Contenido" />
-            <PropertyRef Name="Estado" />
-          </Key>
-          <Property Name="JugadorEmisor" Type="nvarchar" MaxLength="255" Nullable="false" />
-          <Property Name="JugadorReceptor" Type="nvarchar" MaxLength="255" Nullable="false" />
-          <Property Name="Contenido" Type="nvarchar" MaxLength="255" Nullable="false" />
-          <Property Name="Estado" Type="nchar" MaxLength="10" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Modificador">
-          <Key>
-            <PropertyRef Name="IdCarta" />
-          </Key>
-          <Property Name="IdCarta" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="estado" Type="nchar" MaxLength="10" Nullable="false" />
-          <Property Name="valor" Type="int" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Muerte">
-          <Key>
-            <PropertyRef Name="IdCarta" />
-          </Key>
-          <Property Name="IdCarta" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="estado" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="Participantes">
           <Key>
@@ -120,50 +70,22 @@ advertencia 6002: La tabla o vista 'Gloom.dbo.Mensaje' no tiene definida ninguna
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Mensaje_Jugador">
-          <End Role="Jugador" Type="Self.Jugador" Multiplicity="1" />
-          <End Role="Mensaje" Type="Self.Mensaje" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Jugador">
-              <PropertyRef Name="NombreUsuario" />
-            </Principal>
-            <Dependent Role="Mensaje">
-              <PropertyRef Name="JugadorEmisor" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityContainer Name="ModeloGloomStoreContainer">
+        <EntityContainer Name="GloomModelStoreContainer">
           <EntitySet Name="Amigos" EntityType="Self.Amigos" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="CartaEvento" EntityType="Self.CartaEvento" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="CartaFamiliar" EntityType="Self.CartaFamiliar" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Jugador" EntityType="Self.Jugador" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Modificador" EntityType="Self.Modificador" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Muerte" EntityType="Self.Muerte" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Participantes" EntityType="Self.Participantes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Sala" EntityType="Self.Sala" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Mensaje" EntityType="Self.Mensaje" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [Mensaje].[JugadorEmisor] AS [JugadorEmisor], 
-    [Mensaje].[JugadorReceptor] AS [JugadorReceptor], 
-    [Mensaje].[Contenido] AS [Contenido], 
-    [Mensaje].[Estado] AS [Estado]
-    FROM [dbo].[Mensaje] AS [Mensaje]</DefiningQuery>
-          </EntitySet>
           <AssociationSet Name="FK_Amigos_Jugador" Association="Self.FK_Amigos_Jugador">
             <End Role="Jugador" EntitySet="Jugador" />
             <End Role="Amigos" EntitySet="Amigos" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Mensaje_Jugador" Association="Self.FK_Mensaje_Jugador">
-            <End Role="Jugador" EntitySet="Jugador" />
-            <End Role="Mensaje" EntitySet="Mensaje" />
           </AssociationSet>
         </EntityContainer>
       </Schema>
     </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="ModeloGloom" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="GloomModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="Amigos">
           <Key>
             <PropertyRef Name="Id" />
@@ -174,27 +96,6 @@ advertencia 6002: La tabla o vista 'Gloom.dbo.Mensaje' no tiene definida ninguna
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <NavigationProperty Name="Jugador" Relationship="Self.FK_Amigos_Jugador" FromRole="Amigos" ToRole="Jugador" />
         </EntityType>
-        <EntityType Name="CartaEvento">
-          <Key>
-            <PropertyRef Name="IdCarta" />
-          </Key>
-          <Property Name="IdCarta" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="estado" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="robarCarta" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="IdjugadorARobar" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="retirar" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-        </EntityType>
-        <EntityType Name="CartaFamiliar">
-          <Key>
-            <PropertyRef Name="IdCarta" />
-          </Key>
-          <Property Name="IdCarta" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="estado" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="familia" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="descripcion" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="vida" Type="Int32" Nullable="false" />
-        </EntityType>
         <EntityType Name="Jugador">
           <Key>
             <PropertyRef Name="NombreUsuario" />
@@ -203,26 +104,10 @@ advertencia 6002: La tabla o vista 'Gloom.dbo.Mensaje' no tiene definida ninguna
           <Property Name="Nombre" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Apellidos" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Correo" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Contraseña" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Contraseña" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="Tipo" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Icono" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Amigos" Relationship="Self.FK_Amigos_Jugador" FromRole="Jugador" ToRole="Amigos" />
-          <NavigationProperty Name="Mensaje" Relationship="Self.FK_Mensaje_Jugador" FromRole="Jugador" ToRole="Mensaje" />
-        </EntityType>
-        <EntityType Name="Modificador">
-          <Key>
-            <PropertyRef Name="IdCarta" />
-          </Key>
-          <Property Name="IdCarta" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="estado" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="valor" Type="Int32" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Muerte">
-          <Key>
-            <PropertyRef Name="IdCarta" />
-          </Key>
-          <Property Name="IdCarta" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="estado" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
         <EntityType Name="Participantes">
           <Key>
@@ -256,19 +141,6 @@ advertencia 6002: La tabla o vista 'Gloom.dbo.Mensaje' no tiene definida ninguna
           <Property Name="version" Type="Int32" />
           <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
         </EntityType>
-        <EntityType Name="Mensaje">
-          <Key>
-            <PropertyRef Name="JugadorEmisor" />
-            <PropertyRef Name="JugadorReceptor" />
-            <PropertyRef Name="Contenido" />
-            <PropertyRef Name="Estado" />
-          </Key>
-          <Property Name="JugadorEmisor" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="JugadorReceptor" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Contenido" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Estado" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Jugador" Relationship="Self.FK_Mensaje_Jugador" FromRole="Mensaje" ToRole="Jugador" />
-        </EntityType>
         <Association Name="FK_Amigos_Jugador">
           <End Role="Jugador" Type="Self.Jugador" Multiplicity="1" />
           <End Role="Amigos" Type="Self.Amigos" Multiplicity="*" />
@@ -281,36 +153,15 @@ advertencia 6002: La tabla o vista 'Gloom.dbo.Mensaje' no tiene definida ninguna
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Mensaje_Jugador">
-          <End Role="Jugador" Type="Self.Jugador" Multiplicity="1" />
-          <End Role="Mensaje" Type="Self.Mensaje" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Jugador">
-              <PropertyRef Name="NombreUsuario" />
-            </Principal>
-            <Dependent Role="Mensaje">
-              <PropertyRef Name="JugadorEmisor" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="EntidadesGloom" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Amigos" EntityType="Self.Amigos" />
-          <EntitySet Name="CartaEvento" EntityType="Self.CartaEvento" />
-          <EntitySet Name="CartaFamiliar" EntityType="Self.CartaFamiliar" />
           <EntitySet Name="Jugador" EntityType="Self.Jugador" />
-          <EntitySet Name="Modificador" EntityType="Self.Modificador" />
-          <EntitySet Name="Muerte" EntityType="Self.Muerte" />
           <EntitySet Name="Participantes" EntityType="Self.Participantes" />
           <EntitySet Name="Sala" EntityType="Self.Sala" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
-          <EntitySet Name="Mensaje" EntityType="Self.Mensaje" />
           <AssociationSet Name="FK_Amigos_Jugador" Association="Self.FK_Amigos_Jugador">
             <End Role="Jugador" EntitySet="Jugador" />
             <End Role="Amigos" EntitySet="Amigos" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Mensaje_Jugador" Association="Self.FK_Mensaje_Jugador">
-            <End Role="Jugador" EntitySet="Jugador" />
-            <End Role="Mensaje" EntitySet="Mensaje" />
           </AssociationSet>
         </EntityContainer>
       </Schema>
@@ -318,9 +169,9 @@ advertencia 6002: La tabla o vista 'Gloom.dbo.Mensaje' no tiene definida ninguna
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="ModeloGloomStoreContainer" CdmEntityContainer="EntidadesGloom">
+        <EntityContainerMapping StorageEntityContainer="GloomModelStoreContainer" CdmEntityContainer="EntidadesGloom">
           <EntitySetMapping Name="Amigos">
-            <EntityTypeMapping TypeName="ModeloGloom.Amigos">
+            <EntityTypeMapping TypeName="GloomModel.Amigos">
               <MappingFragment StoreEntitySet="Amigos">
                 <ScalarProperty Name="NombreUsuario" ColumnName="NombreUsuario" />
                 <ScalarProperty Name="JugadorAmigo" ColumnName="JugadorAmigo" />
@@ -329,31 +180,8 @@ advertencia 6002: La tabla o vista 'Gloom.dbo.Mensaje' no tiene definida ninguna
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="CartaEvento">
-            <EntityTypeMapping TypeName="ModeloGloom.CartaEvento">
-              <MappingFragment StoreEntitySet="CartaEvento">
-                <ScalarProperty Name="IdCarta" ColumnName="IdCarta" />
-                <ScalarProperty Name="estado" ColumnName="estado" />
-                <ScalarProperty Name="robarCarta" ColumnName="robarCarta" />
-                <ScalarProperty Name="IdjugadorARobar" ColumnName="IdjugadorARobar" />
-                <ScalarProperty Name="retirar" ColumnName="retirar" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="CartaFamiliar">
-            <EntityTypeMapping TypeName="ModeloGloom.CartaFamiliar">
-              <MappingFragment StoreEntitySet="CartaFamiliar">
-                <ScalarProperty Name="IdCarta" ColumnName="IdCarta" />
-                <ScalarProperty Name="estado" ColumnName="estado" />
-                <ScalarProperty Name="nombre" ColumnName="nombre" />
-                <ScalarProperty Name="familia" ColumnName="familia" />
-                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
-                <ScalarProperty Name="vida" ColumnName="vida" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Jugador">
-            <EntityTypeMapping TypeName="ModeloGloom.Jugador">
+            <EntityTypeMapping TypeName="GloomModel.Jugador">
               <MappingFragment StoreEntitySet="Jugador">
                 <ScalarProperty Name="NombreUsuario" ColumnName="NombreUsuario" />
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
@@ -365,25 +193,8 @@ advertencia 6002: La tabla o vista 'Gloom.dbo.Mensaje' no tiene definida ninguna
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Modificador">
-            <EntityTypeMapping TypeName="ModeloGloom.Modificador">
-              <MappingFragment StoreEntitySet="Modificador">
-                <ScalarProperty Name="IdCarta" ColumnName="IdCarta" />
-                <ScalarProperty Name="estado" ColumnName="estado" />
-                <ScalarProperty Name="valor" ColumnName="valor" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Muerte">
-            <EntityTypeMapping TypeName="ModeloGloom.Muerte">
-              <MappingFragment StoreEntitySet="Muerte">
-                <ScalarProperty Name="IdCarta" ColumnName="IdCarta" />
-                <ScalarProperty Name="estado" ColumnName="estado" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Participantes">
-            <EntityTypeMapping TypeName="ModeloGloom.Participantes">
+            <EntityTypeMapping TypeName="GloomModel.Participantes">
               <MappingFragment StoreEntitySet="Participantes">
                 <ScalarProperty Name="IdPartida" ColumnName="IdPartida" />
                 <ScalarProperty Name="NombreUsuario" ColumnName="NombreUsuario" />
@@ -392,7 +203,7 @@ advertencia 6002: La tabla o vista 'Gloom.dbo.Mensaje' no tiene definida ninguna
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Sala">
-            <EntityTypeMapping TypeName="ModeloGloom.Sala">
+            <EntityTypeMapping TypeName="GloomModel.Sala">
               <MappingFragment StoreEntitySet="Sala">
                 <ScalarProperty Name="IdSala" ColumnName="IdSala" />
                 <ScalarProperty Name="NombreSala" ColumnName="NombreSala" />
@@ -407,23 +218,13 @@ advertencia 6002: La tabla o vista 'Gloom.dbo.Mensaje' no tiene definida ninguna
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="sysdiagrams">
-            <EntityTypeMapping TypeName="ModeloGloom.sysdiagrams">
+            <EntityTypeMapping TypeName="GloomModel.sysdiagrams">
               <MappingFragment StoreEntitySet="sysdiagrams">
                 <ScalarProperty Name="name" ColumnName="name" />
                 <ScalarProperty Name="principal_id" ColumnName="principal_id" />
                 <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
                 <ScalarProperty Name="version" ColumnName="version" />
                 <ScalarProperty Name="definition" ColumnName="definition" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Mensaje">
-            <EntityTypeMapping TypeName="ModeloGloom.Mensaje">
-              <MappingFragment StoreEntitySet="Mensaje">
-                <ScalarProperty Name="JugadorEmisor" ColumnName="JugadorEmisor" />
-                <ScalarProperty Name="JugadorReceptor" ColumnName="JugadorReceptor" />
-                <ScalarProperty Name="Contenido" ColumnName="Contenido" />
-                <ScalarProperty Name="Estado" ColumnName="Estado" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

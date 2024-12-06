@@ -15,6 +15,7 @@ namespace ServicioGloomm
     {
         private static readonly Dictionary<string, BibliotecaClases.Jugador> jugadoresInvitados = new Dictionary<string, BibliotecaClases.Jugador>();
         private static readonly List<int> numeroJugadorInvitado = new List<int>();
+        private static readonly List<string> usuarioConectado = new List<string>();
 
         public int AgregarJugador(BibliotecaClases.Jugador jugador)
         {
@@ -76,6 +77,7 @@ namespace ServicioGloomm
 
         public int AutenticarJugador(BibliotecaClases.Jugador jugador)
         {
+           
             AdministradorLogger administradorLogger = new AdministradorLogger(this.GetType());
             try
             {
@@ -85,16 +87,29 @@ namespace ServicioGloomm
                     Contraseña = jugador.contraseña,
 
                 };
-
+                ValidarJugadorConectado(jugador.nombreUsuario);
                 int resultado = AccesoJugador.ValidarJugadorParaAutenticacion(nuevoJugador);
-                String mensaje = "Jugador actualizado " + jugador.nombreUsuario;
+                usuarioConectado.Add(jugador.nombreUsuario);
                 return resultado;
 
+            }
+            catch (InvalidOperationException ex)
+            {
+                administradorLogger.RegistroError(ex);
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Message));
             }
             catch (FaultException<ManejadorExcepciones> ex)
             {
                 administradorLogger.RegistroError(ex);
                 throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.mensaje));
+            }
+        }
+
+        private void ValidarJugadorConectado(string nombreUsuario)
+        {
+            if (usuarioConectado.Contains(nombreUsuario))
+            {
+                throw new InvalidOperationException("46");
             }
         }
 

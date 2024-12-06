@@ -42,6 +42,36 @@ namespace ServicioGloomm
 
         }
 
+        public BibliotecaClases.Sala ActualizarGanador(String idSala, String codigo)
+        {
+            AsegurarSalaExistente(idSala);
+            AdministradorLogger administradorLogger = new AdministradorLogger(this.GetType());
+            try
+            {
+                AccesoDatos.Sala SalaDb;
+                BibliotecaClases.Sala SalaBiblioteca = new BibliotecaClases.Sala();
+
+                SalaDb = AccesoSala.BuscarPartida(idSala, codigo);
+                SalaBiblioteca.fecha = SalaDb.Fecha;
+                SalaBiblioteca.idSala = idSala;
+                SalaBiblioteca.tipoSala = SalaDb.TipoSala;
+                SalaBiblioteca.tipoPartida = SalaDb.TipoPartida;
+                SalaBiblioteca.ganador = SalaDb.Ganador;
+                SalaBiblioteca.codigo = codigo;
+                SalaBiblioteca.nombreSala = SalaDb.NombreSala;
+                SalaBiblioteca.noJugadores = SalaDb.NoJugadores;
+                SalaBiblioteca.idAdministrador = SalaDb.IdAdministrador;
+
+                return SalaBiblioteca;
+            }
+            catch (FaultException<ManejadorExcepciones> ex)
+            {
+                administradorLogger.RegistroError(ex);
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.mensaje));
+            }
+
+        }
+
         public void ValidarCantidadJugadoresEnSala(string numeroSala, int cantidadJugadores)
         {
             
@@ -74,6 +104,17 @@ namespace ServicioGloomm
             {
                 personajesPorSala[numeroSala] = new Dictionary<string, (string nombrePersonaje, int vida)>();
             }
+            if (!jugadoresConectadosListos.ContainsKey(numeroSala))
+            {
+                jugadoresConectadosListos[numeroSala] = new List<string>();
+            }
+
+            if (!turnosPorSala.ContainsKey(numeroSala))
+            {
+                turnosPorSala[numeroSala] = new List<string>();
+            }
+
+
         }
 
     }

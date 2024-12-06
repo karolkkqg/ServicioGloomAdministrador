@@ -46,7 +46,6 @@ namespace ServicioGloomm
         void IngresarJugadorAJuego(string nombreUsuario, string numeroSala, int numeroJugadores);
         [OperationContract(IsOneWay = true)]
         void SacarATodosLosJugadoresDeSala(string numeroSala);
-        List<string> ObtenerPersonajesUsados();
 
         [OperationContract]
         List<Sala> ObtenerSalasActivas();

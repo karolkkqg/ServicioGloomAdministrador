@@ -19,15 +19,19 @@ namespace Pruebas.SalaTest
         [TestMethod]
         public void ObtenerJugadoresConectadosTestExitoso()
         {
-            ServicioJuego.salaJugadoresCallback.Clear();
-            ServicioJuego.salaJugadoresCallback.Add("jugador1", null);
-            ServicioJuego.salaJugadoresCallback.Add("jugador2", null);
-            ServicioJuego.salaJugadoresCallback.Add("jugador3", null);
+            ServicioJuego.salaJugadoresPorSala.Clear();
+
+            ServicioJuego.salaJugadoresPorSala["Sala1"] = new Dictionary<string, ServicioGloomm.ISalaCallback>
+            {
+                { "jugador1", null },
+                { "jugador2", null },
+                { "jugador3", null }
+            };
 
             var servicio = new ServicioJuego();
-            var resultado = servicio.ObtenerJugadoresConectados("jugador1");
+            var resultado = servicio.ObtenerJugadoresConectados("Sala1");
 
-            Assert.AreEqual(3, resultado.Count);
+            Assert.AreEqual(3, resultado.Count, "El número de jugadores conectados no es correcto.");
             CollectionAssert.Contains(resultado, "jugador1");
             CollectionAssert.Contains(resultado, "jugador2");
             CollectionAssert.Contains(resultado, "jugador3");

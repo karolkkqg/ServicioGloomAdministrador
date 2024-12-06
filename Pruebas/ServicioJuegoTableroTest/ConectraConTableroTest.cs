@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using ServicioGloomm;
 using System;
 using System.Collections.Generic;
@@ -10,8 +11,9 @@ using System.Threading.Tasks;
 
 namespace Pruebas.ServicioJuegoTableroTest
 {
-    //[TestClass]
-    public class ConectarConTableroTest : IJuegoAdministradorCallback
+
+    [TestClass]
+    public class ConectarConTableroTest
     {
         private ServicioJuego servicioJuego;
 
@@ -19,165 +21,119 @@ namespace Pruebas.ServicioJuegoTableroTest
         public void SetUp()
         {
             servicioJuego = new ServicioJuego();
+            ServicioJuego.jugadoresConectadosTableroCallback.Clear();
+            ServicioJuego.jugadoresConectadosTablero.Clear();
+            ServicioJuego.jugadoresVivos.Clear();
+            ServicioJuego.jugadoresVivos["Sala1"] = new List<string>();
         }
 
         [TestMethod]
-        public void ConectarConTablero_Exitoso()
+        public void ConectarConTableroAgregaJugadorExitosamente()
         {
-            var mockCallback = this as IJuegoAdministradorCallback;
-            var mockChannel = new MockContextChannel();
+            string nombreUsuario = "Jugador1";
+            string numeroSala = "Sala1";
 
-            using (new OperationContextScope(new OperationContext(mockChannel)))
+            var callback = new MockCallback();
+            using (var factory = new DuplexChannelFactory<IServicioJuegoTablero>(
+                new InstanceContext(callback),
+                new NetNamedPipeBinding(),
+                new EndpointAddress("net.pipe://localhost/ServicioPrueba")))
             {
-                OperationContext.Current.Extensions.Add(new MockOperationContextExtension(mockCallback));
-
-                servicioJuego.ConectarConTablero("Jugador1", "Sala1");
-                Assert.IsTrue(ServicioJuego.jugadoresConectadosTableroCallback.ContainsKey("Jugador1"), "El usuario no fue registrado en jugadoresConectadosTableroCallback.");
-                Assert.AreEqual(this, ServicioJuego.jugadoresConectadosTableroCallback["Jugador1"], "El callback registrado no coincide.");
-
-                Assert.IsTrue(ServicioJuego.jugadoresConectadosTablero.ContainsKey("Jugador1"), "El usuario no fue registrado en jugadoresConectadosTablero.");
-                Assert.AreEqual("Sala1", ServicioJuego.jugadoresConectadosTablero["Jugador1"], "La sala registrada no coincide.");
+                var client = factory.CreateChannel();
+                using (OperationContextScope scope = new OperationContextScope((IContextChannel)client))
+                {
+                    servicioJuego.ConectarConTablero(nombreUsuario, numeroSala);
+                }
             }
+
+            Assert.IsTrue(ServicioJuego.jugadoresConectadosTableroCallback.ContainsKey(nombreUsuario), "El callback no fue agregado correctamente.");
+
+            Assert.IsTrue(ServicioJuego.jugadoresConectadosTablero.ContainsKey(nombreUsuario), "El jugador no fue agregado correctamente a la lista de conectados al tablero.");
+            Assert.AreEqual(numeroSala, ServicioJuego.jugadoresConectadosTablero[nombreUsuario], "El número de sala no coincide.");
+
+            Assert.IsTrue(ServicioJuego.jugadoresVivos[numeroSala].Contains(nombreUsuario), "El jugador no fue agregado correctamente a la lista de jugadores vivos.");
         }
 
-        public void ActualizarTurno(string nombreJugador)
+        [TestMethod]
+        public void ConectarConTableroNoAgregaJugadorSiNombreUsuarioIgualANumeroSala()
         {
+            string nombreUsuario = "Sala1";
+            string numeroSala = "Sala1";
+
+            var callback = new MockCallback();
+            using (var factory = new DuplexChannelFactory<IServicioJuegoTablero>(
+                new InstanceContext(callback),
+                new NetNamedPipeBinding(),
+                new EndpointAddress("net.pipe://localhost/ServicioPrueba")))
+            {
+                var client = factory.CreateChannel();
+                using (OperationContextScope scope = new OperationContextScope((IContextChannel)client))
+                {
+                    servicioJuego.ConectarConTablero(nombreUsuario, numeroSala);
+                }
+            }
+
+            Assert.IsFalse(ServicioJuego.jugadoresConectadosTableroCallback.ContainsKey(nombreUsuario), "El callback fue agregado incorrectamente.");
+
+            Assert.IsFalse(ServicioJuego.jugadoresConectadosTablero.ContainsKey(nombreUsuario), "El jugador fue agregado incorrectamente a la lista de conectados al tablero.");
+
+            Assert.IsFalse(ServicioJuego.jugadoresVivos[numeroSala].Contains(nombreUsuario), "El jugador fue agregado incorrectamente a la lista de jugadores vivos.");
         }
 
-        public void EnviarTurno(string nombreDelUsuarioEnTurno)
+        [ClassCleanup]
+        public static void LimpiarDiccionarios()
         {
-            throw new NotImplementedException();
+            ServicioJuego.jugadoresConectadosTableroCallback.Clear();
+            ServicioJuego.jugadoresConectadosTablero.Clear();
+            ServicioJuego.jugadoresVivos.Clear();
         }
 
-        public void ActualizarImagenMazoCartaSobrante()
+        private class MockCallback : IJuegoAdministradorCallback
         {
-            throw new NotImplementedException();
-        }
+            public void ActualizarImagenMazoCartaBonus()
+            {
+                throw new NotImplementedException();
+            }
 
-        public void ActualizarImagenMazoCartaBonus()
-        {
-            throw new NotImplementedException();
-        }
+            public void ActualizarImagenMazoCartaSobrante()
+            {
+                throw new NotImplementedException();
+            }
 
-        public void ActualizarMazoJugador()
-        {
-            throw new NotImplementedException();
-        }
+            public void ActualizarJugadorMuerto(string jugadorMuerto)
+            {
+                throw new NotImplementedException();
+            }
 
-        public void EnviarGanador(string jugador)
-        {
-            throw new NotImplementedException();
-        }
-    }
+            public void ActualizarMazoJugador()
+            {
+                throw new NotImplementedException();
+            }
 
-    public class MockContextChannel : IContextChannel
-    {
+            public void ActualizarTurno(string nombreDelUsuarioEnTurno)
+            {
+                throw new NotImplementedException();
+            }
 
-        public event EventHandler Closed;
-        public event EventHandler Closing;
-        public event EventHandler Faulted;
-        public event EventHandler Opened;
-        public event EventHandler Opening;
+            public void EnviarGanador(string jugador)
+            {
+                throw new NotImplementedException();
+            }
 
-        public T GetProperty<T>() where T : class
-        {
-            return null;
-        }
+            public void EnviarTurno(string nombreDelUsuarioEnTurno)
+            {
+                throw new NotImplementedException();
+            }
 
-        public void Abort()
-        {
-            throw new NotImplementedException();
-        }
+            public void IniciarVotacion(string jugadorObjetivo)
+            {
+                throw new NotImplementedException();
+            }
 
-        public void Close()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Close(TimeSpan timeout)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IAsyncResult BeginClose(AsyncCallback callback, object state)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IAsyncResult BeginClose(TimeSpan timeout, AsyncCallback callback, object state)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void EndClose(IAsyncResult result)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Open()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Open(TimeSpan timeout)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IAsyncResult BeginOpen(AsyncCallback callback, object state)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IAsyncResult BeginOpen(TimeSpan timeout, AsyncCallback callback, object state)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void EndOpen(IAsyncResult result)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IExtensionCollection<IContextChannel> Extensions => new ExtensionCollection<IContextChannel>(this);
-        //x|public OperationTimeout Timeout { get => timeout; set => timeout = value; }
-        public string SessionId => "MockSession";
-
-        public bool AllowOutputBatching { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        public IInputSession InputSession => throw new NotImplementedException();
-
-        public EndpointAddress LocalAddress => throw new NotImplementedException();
-
-        public TimeSpan OperationTimeout { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        public IOutputSession OutputSession => throw new NotImplementedException();
-
-        public EndpointAddress RemoteAddress => throw new NotImplementedException();
-
-        public CommunicationState State => throw new NotImplementedException();
-    }
-    public class MockOperationContextExtension : IExtension<OperationContext>
-    {
-        private readonly IJuegoAdministradorCallback mockCallback;
-
-        public MockOperationContextExtension(IJuegoAdministradorCallback mockCallback)
-        {
-            this.mockCallback = mockCallback;
-        }
-
-        public void Attach(OperationContext owner)
-        {
-        }
-
-        public void Detach(OperationContext owner)
-        {
-        }
-
-        public IJuegoAdministradorCallback GetCallbackChannel<T>() where T : class
-        {
-            return mockCallback;
+            public void NotificarExpulsion(string jugadorExpulsado)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }
-

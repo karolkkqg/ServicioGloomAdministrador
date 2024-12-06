@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Core;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -29,7 +30,11 @@ namespace AccesoDatos
             {
                 throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString()));
             }
-}
+            catch (EntityException ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41"));
+            }
+        }
 
         private static int EjecutarSolictudAmistad(Amistad solicitud)
         {
@@ -47,10 +52,16 @@ namespace AccesoDatos
             {
                 throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString()));
             }
+            catch (EntityException ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41"));
+            }
         }
 
         public static void ValidarSiSonAmigos(string nombreUsuario1, string nombreUsuario2)
         {
+            try
+            {
                 using (var contexto = new EntidadesGloom())
                 {
                     var amistad = contexto.Amigos
@@ -64,23 +75,37 @@ namespace AccesoDatos
                         throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("4"));
                     }
                 }
+            }
+            catch (EntityException ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41"));
+            }
+            
         }
 
         public static void ValidarSiSonExisteSolcitud(string nombreUsuario1, string nombreUsuario2)
         {
-            using (var contexto = new EntidadesGloom())
+            try
             {
-                var amistad = contexto.Amigos
-                    .Where(a =>
-                        (a.NombreUsuario == nombreUsuario1 && a.JugadorAmigo == nombreUsuario2 && a.Estado == "Pendiente") ||
-                        (a.NombreUsuario == nombreUsuario2 && a.JugadorAmigo == nombreUsuario1 && a.Estado == "Pendiente"))
-                    .FirstOrDefault();
-
-                if (amistad != null)
+                using (var contexto = new EntidadesGloom())
                 {
-                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("5"));
+                    var amistad = contexto.Amigos
+                        .Where(a =>
+                            (a.NombreUsuario == nombreUsuario1 && a.JugadorAmigo == nombreUsuario2 && a.Estado == "Pendiente") ||
+                            (a.NombreUsuario == nombreUsuario2 && a.JugadorAmigo == nombreUsuario1 && a.Estado == "Pendiente"))
+                        .FirstOrDefault();
+
+                    if (amistad != null)
+                    {
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("5"));
+                    }
                 }
             }
+            catch (EntityException ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41"));
+            }
+           
         }
 
         public static void ValidarSiEsMismoJugadorSolcitud(string nombreUsuario1, string nombreUsuario2)
@@ -113,8 +138,11 @@ namespace AccesoDatos
             {
                 throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString()));
             }
-            
+            catch (EntityException ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41"));
             }
+        }
         public static int EliminarAmigo(string nombreUsuario, string nombreAmigo)
         {
             try
@@ -131,6 +159,10 @@ namespace AccesoDatos
             catch (SqlException ex)
             {
                 throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString()));
+            }
+            catch (EntityException ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41"));
             }
         }
 
@@ -149,6 +181,10 @@ namespace AccesoDatos
             {
                 throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString()));
             }
+            catch (EntityException ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41"));
+            }
         }
 
         public static List<Amigos> ObtenerSolicitudesJugador(string nombreUsuario)
@@ -164,6 +200,10 @@ namespace AccesoDatos
             catch (SqlException ex)
             {
                 throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString()));
+            }
+            catch (EntityException ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41"));
             }
         }
 
@@ -193,28 +233,30 @@ namespace AccesoDatos
 
         public static string BuscarCorreoAmigo(string nombreUsurioAmigo)
         {
-            using (var contexto = new EntidadesGloom())
+            try
             {
-                /*var existeAmigo = contexto.Amigos.Any(a => a.NombreUsuario == nombreUsurioAmigo);
-                if (!existeAmigo)
+                using (var contexto = new EntidadesGloom())
                 {
-                    return "El amigo no existe en la tabla Amigos.";
-                }*/
 
-                var correoJugadorAmigo = contexto.Amigos
-            .Where(a => a.JugadorAmigo == nombreUsurioAmigo)
-            .Join(contexto.Jugador,
-                  a => a.JugadorAmigo,
-                  j => j.NombreUsuario,
-                  (a, j) => j.Correo)
-            .FirstOrDefault();
+                    var correoJugadorAmigo = contexto.Amigos
+                .Where(a => a.JugadorAmigo == nombreUsurioAmigo)
+                .Join(contexto.Jugador,
+                      a => a.JugadorAmigo,
+                      j => j.NombreUsuario,
+                      (a, j) => j.Correo)
+                .FirstOrDefault();
 
-                if (correoJugadorAmigo == null)
-                {
-                    return "Correo del jugador amigo no encontrado";
+                    if (correoJugadorAmigo == null)
+                    {
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("42"));
+                    }
+
+                    return correoJugadorAmigo;
                 }
-
-                return correoJugadorAmigo;
+            }
+            catch (EntityException ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41"));
             }
         }
     }

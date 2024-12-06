@@ -1,6 +1,7 @@
 ﻿using BibliotecaClases;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core;
 using System.Data.SqlClient;
 using System.Linq;
 using System.ServiceModel;
@@ -24,6 +25,10 @@ namespace AccesoDatos
             {
                 throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString()));
             }
+            catch (EntityException ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41"));
+            }
         }
 
         public static int EjecutarRegistroPartida(Sala sala)
@@ -41,19 +46,31 @@ namespace AccesoDatos
             {
                 throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString()));
             }
+            catch (EntityException ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41"));
+            }
         }
 
         private static Sala ValidarNombreSala(Sala sala)
         {
-            using (var contexto = new EntidadesGloom())
+            try
             {
-                var nombreSalaEncontrada = contexto.Sala.FirstOrDefault(j => j.NombreSala == sala.NombreSala);
-                if (nombreSalaEncontrada != null)
+                using (var contexto = new EntidadesGloom())
                 {
-                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("8"));
+                    var nombreSalaEncontrada = contexto.Sala.FirstOrDefault(j => j.NombreSala == sala.NombreSala);
+                    if (nombreSalaEncontrada != null)
+                    {
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("8"));
+                    }
+                    return sala;
                 }
-                return sala;
             }
+            catch (EntityException ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41"));
+            }
+            
         }
 
         public static List<Sala> ObtenerHistorialPartidas(string nombreJugador)
@@ -63,7 +80,7 @@ namespace AccesoDatos
                 using (var contexto = new EntidadesGloom())
                 {
                     var salas = contexto.Sala
-                .Where(s => s.Ganador != "no hay ganador" &&
+                .Where(s => s.Ganador != "Sin ganador" &&
                             contexto.Participantes.Any(p => p.IdPartida == s.IdSala && p.NombreUsuario == nombreJugador))
                 .ToList();
 
@@ -73,6 +90,10 @@ namespace AccesoDatos
             catch (SqlException ex)
             {
                 throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString()));
+            }
+            catch (EntityException ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41"));
             }
         }
 
@@ -94,6 +115,10 @@ namespace AccesoDatos
             {
                 throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString()));
             }
+            catch (EntityException ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41"));
+            }
         }
 
         public static int AgregarParticipante(BibliotecaClases.Sala participanteSala)
@@ -112,6 +137,10 @@ namespace AccesoDatos
             {
                 throw new FaultException<ManejadorExcepciones>(
                     new ManejadorExcepciones(ex.Number.ToString()));
+            }
+            catch (EntityException ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41"));
             }
         }
 
@@ -135,6 +164,10 @@ namespace AccesoDatos
             {
                 throw new FaultException<ManejadorExcepciones>(
                     new ManejadorExcepciones(ex.Number.ToString()));
+            }
+            catch (EntityException ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41"));
             }
         }
 
@@ -161,6 +194,28 @@ namespace AccesoDatos
                 IdPartida = participante.idSala,
                 NombreUsuario = participante.jugador
             };
+        }
+
+        public static int ActualizarGanador(string idPartida, string ganador)
+        {
+            try
+            {
+                using (var contexto = new EntidadesGloom())
+                {
+                    var partida = contexto.Sala.FirstOrDefault(p => p.IdSala == idPartida);
+                    partida.Ganador = ganador;
+                    int filasAfectadas = contexto.SaveChanges();
+                    return filasAfectadas;
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41"));
+            }
+            catch (EntityException ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Message));
+            }
         }
     }
 }

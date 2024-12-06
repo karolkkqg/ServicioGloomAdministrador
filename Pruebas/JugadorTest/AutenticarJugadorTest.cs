@@ -2,12 +2,8 @@
 using BibliotecaClases;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
-using System.Data.Entity.Validation;
 using System.Linq;
 using System.ServiceModel;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pruebas.JugadorTest
 {
@@ -15,6 +11,7 @@ namespace Pruebas.JugadorTest
     public class AutenticarJugadorTest
     {
         private AccesoDatos.Jugador jugador;
+        private AccesoDatos.Jugador jugadorValido;
 
         [TestInitialize]
         public void TestInitialize()
@@ -33,56 +30,47 @@ namespace Pruebas.JugadorTest
         }
 
         [TestMethod()]
-        public void TestAuteticarUsuarioExitoso()
+        public void TestAutenticarUsuarioExitoso()
         {
-           int jugadorEncontrado = AccesoJugador.ValidarJugadorParaAutenticacion(jugador);
+
+            jugador = new AccesoDatos.Jugador
+            {
+                NombreUsuario = "TacoDoradoDePato",
+                Nombre = "Hector",
+                Apellidos = "Juarez Castillo",
+                Correo = "hectJuarPato@gmail.com",
+                Contraseña = "123456",
+                Tipo = "Registrado",
+                Icono = "Icono1",
+            };
+            int jugadorEncontrado = AccesoJugador.ValidarJugadorParaAutenticacion(jugadorValido);
             Assert.AreEqual(1, jugadorEncontrado);
-            LimpiarDatosDePrueba();
         }
 
         [TestMethod()]
-        public void TestAuteticarUsuarioUsuarioNoenonctradoFallido()
+        public void TestAutenticarUsuarioUsuarioNoEncontradoFallido()
         {
-            jugador.NombreUsuario = "TacoDoradoDePapa";
-            jugador.Nombre = "Hector";
-            jugador.Apellidos = "Juarez Castillo";
-            jugador.Contraseña = "123456";
-            jugador.Tipo = "Registrado";
-            jugador.Icono = "Icono1";
-            jugador.Correo = "usuarioNoRegistrado@hotmail.com";
-
-            var exception = Assert.ThrowsException<FaultException<ManejadorExcepciones>>(() =>
-            {
-                AccesoJugador.ValidarJugadorParaAutenticacion(jugador);
-            });
-
-            Assert.AreEqual("3", exception.Detail.mensaje);
-
-            LimpiarDatosDePrueba();
-        }
-
-        [TestMethod()]
-        public void TestAuteticarUsuarioContraseñaIncorrectaFallido()
-        {
-            jugador.NombreUsuario = "TacoDoradoDePato";
-            jugador.Nombre = "Hector";
-            jugador.Apellidos = "Juarez Castillo";
-            jugador.Contraseña = "12345600000";
-            jugador.Tipo = "Registrado";
-            jugador.Icono = "Icono1";
-            jugador.Correo = "hectJuarPato@gmail.com";
-
+            jugador.NombreUsuario = "TacoDePapa";
             var exception = Assert.ThrowsException<FaultException<ManejadorExcepciones>>(() =>
             {
                 AccesoJugador.ValidarJugadorParaAutenticacion(jugador);
             });
             Assert.AreEqual("3", exception.Detail.mensaje);
-
-            LimpiarDatosDePrueba();
         }
 
-        [ClassCleanup]
-        public static void LimpiarDatosDePrueba()
+        [TestMethod()]
+        public void TestAutenticarUsuarioContrasenaIncorrectaFallido()
+        {
+            jugador.Contraseña = "12345600000"; 
+            var exception = Assert.ThrowsException<FaultException<ManejadorExcepciones>>(() =>
+            {
+                AccesoJugador.ValidarJugadorParaAutenticacion(jugador);
+            });
+            Assert.AreEqual("3", exception.Detail.mensaje);
+        }
+
+        [TestCleanup]
+        public void LimpiarDatosDePrueba()
         {
             using (var contexto = new EntidadesGloom())
             {
@@ -94,7 +82,6 @@ namespace Pruebas.JugadorTest
                     contexto.Jugador.Remove(jugador);
                     contexto.SaveChanges();
                 }
-
             }
         }
     }

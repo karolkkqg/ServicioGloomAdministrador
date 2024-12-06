@@ -1,5 +1,7 @@
 ﻿using BibliotecaClases;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using ServicioGloomm;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,65 +11,68 @@ using System.Threading.Tasks;
 
 namespace Pruebas.SalaTest
 {
-    //[TestClass]
-    public class SeleccionarPersonajeTest
+    [TestClass]
+    public class SeleciconarPersonajeTest
     {
-        private ServicioGloomm.ServicioJuego servicioSala;
-        private List<string> personajesUsados;
-        private Dictionary<string, (string nombrePersonaje, int vida)> personajesPorUsuario;
+        private ServicioJuego servicioJuego;
 
         [TestInitialize]
-        public void TestInitialize()
+        public void SetUp()
         {
-            servicioSala = new ServicioGloomm.ServicioJuego();
-            personajesUsados = new List<string>();
-            personajesPorUsuario = new Dictionary<string, (string nombrePersonaje, int vida)>();
-            LimpiarDatos();
+            servicioJuego = new ServicioJuego();
+
+            ServicioJuego.salaJugadoresPorSala.Clear();
+            ServicioJuego.personajesUsadosPorSala.Clear();
+            ServicioJuego.personajesPorSala.Clear();
+
+            var mockCallback = new Mock<ISalaCallback>();
+
+            ServicioJuego.salaJugadoresPorSala.Add("Sala1", new Dictionary<string, ISalaCallback>
+        {
+            { "Jugador1", mockCallback.Object }
+        });
+
+            ServicioJuego.personajesUsadosPorSala.Add("Sala1", new List<string>());
+            ServicioJuego.personajesPorSala.Add("Sala1", new Dictionary<string, (string, int)>());
         }
 
         [TestMethod]
-        public void SeleccionarPersonajeExitosoPersonajeNoUsado()
+        public void SeleccionarPersonaje_AsignaPersonajeCorrectamente()
         {
-            servicioSala.SeleccionarPersonaje("Usuario1", "Personaje1", "Sala1");
+            string numeroSala = "Sala1";
+            string nombreUsuario = "Jugador1";
+            string nombrePersonaje = "Personaje1";
 
-            var personajes = servicioSala.ObtenerUsuariosYPersonajes("Sala1");
-            Assert.AreEqual(1, personajes.Count);
+            servicioJuego.SeleccionarPersonaje(nombreUsuario, nombrePersonaje, numeroSala);
+
+            Assert.IsTrue(ServicioJuego.personajesUsadosPorSala[numeroSala].Contains(nombrePersonaje), "El personaje no fue agregado correctamente a personajesUsadosPorSala.");
+            Assert.IsTrue(ServicioJuego.personajesPorSala[numeroSala].ContainsKey(nombreUsuario), "El personaje no fue asignado correctamente al jugador.");
+            Assert.AreEqual(nombrePersonaje, ServicioJuego.personajesPorSala[numeroSala][nombreUsuario].Item1, "El personaje asignado no es correcto.");
         }
 
         [TestMethod]
-        public void SeleccionarPersonajeCambioDePersonaje()
+        public void SeleccionarPersonaje_LanzaExcepcionSiPersonajeYaSeleccionado()
         {
-            servicioSala.SeleccionarPersonaje("Usuario1", "Personaje1", "Sala1");
-            servicioSala.SeleccionarPersonaje("Usuario1", "Personaje2", "Sala1");
+            string numeroSala = "Sala1";
+            string nombreUsuario = "Jugador1";
+            string nombrePersonaje = "Personaje1";
 
-            var personajes = servicioSala.ObtenerUsuariosYPersonajes("Sala1");
-            Assert.AreEqual(1, personajes.Count);
-        }
+            ServicioJuego.personajesUsadosPorSala[numeroSala].Add(nombrePersonaje);
 
-        [TestMethod]
-        public void SeleccionarPersonajeFallaPorPersonajeYaUsado()
-        {
-            var excepcion = Assert.ThrowsException<FaultException<ManejadorExcepciones>>(() =>
+            var exception = Assert.ThrowsException<FaultException<ManejadorExcepciones>>(() =>
             {
-                servicioSala.SeleccionarPersonaje("Usuario1", "Personaje1", "Sala1");
-                servicioSala.SeleccionarPersonaje("Usuario2", "Personaje1", "Sala1");
+                servicioJuego.SeleccionarPersonaje(nombreUsuario, nombrePersonaje, numeroSala);
             });
-            Assert.AreEqual("14", excepcion.Detail.mensaje);
 
-        }
-
-        public void LimpiarDatos()
-        {
-            personajesUsados.Clear();
-            personajesPorUsuario.Clear();
-            servicioSala.LimpiarListaJugadores();
-            servicioSala.LimpiarListaPersonajes();
+            Assert.AreEqual("14", exception.Detail.mensaje, "El mensaje de la excepción no es el esperado.");
         }
 
         [TestCleanup]
-        public void TestCleanup()
+        public void LimpiarDiccionarios()
         {
-            LimpiarDatos();
+            ServicioJuego.salaJugadoresPorSala.Clear();
+            ServicioJuego.personajesUsadosPorSala.Clear();
+            ServicioJuego.personajesPorSala.Clear();
         }
     }
 }
