@@ -40,6 +40,34 @@ namespace ServicioGloomm
 
         [OperationContract(IsOneWay = true)]
         void TerminarPartidaMiniJuego(string numeroSala);
+
+        [OperationContract(IsOneWay = true)]
+        void AplicarModificadorPositivo(Carta carta, string usuarioObjetivo, string personajeObjetivo);
+
+        [OperationContract(IsOneWay = true)]
+        void AplicarModificadorNegativo(Carta carta, string nombreUsuario, string personajeObjetivo);
+
+        [OperationContract(IsOneWay = true)]
+        void AplicarCartaMuerte(string numeroSala, string nombreUsuario, string personajeObjetivo);
+
+
+        [OperationContract(IsOneWay = true)]
+        void SolicitarExpulsion(string solicitante, string jugadorObjetivo, string numeroSala);
+
+        [OperationContract(IsOneWay = true)]
+        void TerminarPartidaNormal(string numeroSala);
+
+        [OperationContract]
+        bool EsSalaActiva(string numeroSala);
+
+        [OperationContract(IsOneWay = true)]
+        void IncrementarTurnos(string numeroSala);
+
+        [OperationContract]
+        Dictionary<string, (string familia, int vidaTotal)> ObtenerResumenFamiliasPorSala(string numeroSala);
+
+        [OperationContract]
+        void BorrarEstructurasPorSala(string numeroSala);
     }
 
     [ServiceContract]
@@ -66,7 +94,12 @@ namespace ServicioGloomm
         [OperationContract(IsOneWay = true)]
         void NotificarVotacionExpulsion(string jugadorPropuesto);
 
+        [OperationContract(IsOneWay =true)]
+        void RecibirExpulsion(string jugadorObjetivo);
+
         [OperationContract(IsOneWay = true)]
-        void NotificarResultadoExpulsion(string jugadorExpulsado, bool expulsado);
+        void ActualizarInterfazExpulsion(string jugadorExpulsado);
+
+    
     }
 }

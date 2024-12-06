@@ -102,9 +102,20 @@
     <Compile Include="SalaTest\ObtenerUsuariosYPersonajesTest.cs" />
     <Compile Include="SalaTest\SacarDeSalaTest.cs" />
     <Compile Include="SalaTest\SeleccionarPersonajeTest.cs" />
+    <Compile Include="SalaTest\ObtenerSalasActivasConEstadoTest.cs" />
+    <Compile Include="SalaTest\UnirseASalaPublicaNormalTest.cs" />
+    <Compile Include="SalaTest\ObtenerCodigoSalaTest.cs" />
+    <Compile Include="SalaTest\SalirDeSalaTest.cs" />
+    <Compile Include="SalaTest\ObtenerFamiliaSeleccionadaTest.cs" />
+    <Compile Include="SalaTest\UnitTest1.cs" />
+    <Compile Include="SalaTest\ValidarFamiliaSeleccionadaTest.cs" />
     <Compile Include="ServicioCartaTest\AgregarCartaAMazoJugadorTest.cs" />
     <Compile Include="ServicioCartaTest\ObtenerCartasBonusTest.cs" />
     <Compile Include="ServicioCartaTest\QuitarCartaDeMazoJugadorExternoTest.cs" />
+    <Compile Include="ServicioCartaTest\ObtenerMazoRestanteTest.cs" />
+    <Compile Include="ServicioCreacionPartidaTest\ObtenerFamiliasYPersonajesPorUsuarioTest.cs" />
+    <Compile Include="ServicioCreacionPartidaTest\ObtenerFamiliaPorJugadorTest.cs" />
+    <Compile Include="ServicioCreacionPartidaTest\ObtenerFamiliasYPersonajesTest.cs" />
     <Compile Include="ServicioCreacionPartidaTest\ValidarCantidadJugadoresEnSalaTest.cs" />
     <Compile Include="ServicioCreacionPartidaTest\ValidarPartidaNoIniciadaTest.cs" />
     <Compile Include="ServicioJuegoTableroTest\AgregarCastigoTest.cs" />
@@ -126,6 +137,7 @@
     <Compile Include="ServicioJuegoTableroTest\ObtenerCartasSobrantesTest.cs" />
     <Compile Include="ServicioJuegoTableroTest\ObtenerJugadorActualTest.cs" />
     <Compile Include="ServicioJuegoTableroTest\TerminarPartidaMinijuegoTest.cs" />
+    <Compile Include="ServicioJuegoTableroTest\SolicitarExpulsionTest.cs" />
     <Compile Include="SpyCallbackCalculatorService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

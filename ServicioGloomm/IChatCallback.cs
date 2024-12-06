@@ -12,6 +12,6 @@ namespace ServicioGloomm
     public interface IChatCallback
     {
         [OperationContract(IsOneWay = true)]
-        void EnviarMensajeCliente(Chat mensajesChat);
+        void RecibirMensaje(Chat mensaje);
     }
 }

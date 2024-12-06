@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Pruebas.ServicioJuegoTableroTest
 {
     //[TestClass]
-    public class ConectarConTableroTest : IJuegoAdministradorCallback
+    /*public class ConectarConTableroTest : IJuegoAdministradorCallback
     {
         private ServicioJuego servicioJuego;
 
@@ -65,6 +65,51 @@ namespace Pruebas.ServicioJuegoTableroTest
         }
 
         public void EnviarGanador(string jugador)
+        {
+            throw new NotImplementedException();
+        }
+
+        void IJuegoAdministradorCallback.EnviarTurno(string nombreDelUsuarioEnTurno)
+        {
+            throw new NotImplementedException();
+        }
+
+        void IJuegoAdministradorCallback.ActualizarTurno(string nombreDelUsuarioEnTurno)
+        {
+            throw new NotImplementedException();
+        }
+
+        void IJuegoAdministradorCallback.ActualizarImagenMazoCartaSobrante()
+        {
+            throw new NotImplementedException();
+        }
+
+        void IJuegoAdministradorCallback.ActualizarImagenMazoCartaBonus()
+        {
+            throw new NotImplementedException();
+        }
+
+        void IJuegoAdministradorCallback.ActualizarMazoJugador()
+        {
+            throw new NotImplementedException();
+        }
+
+        void IJuegoAdministradorCallback.EnviarGanador(string jugador)
+        {
+            throw new NotImplementedException();
+        }
+
+        void IJuegoAdministradorCallback.NotificarVotacionExpulsion(string jugadorPropuesto)
+        {
+            throw new NotImplementedException();
+        }
+
+        void IJuegoAdministradorCallback.NotificarResultadoExpulsion(string jugadorExpulsado, bool expulsado)
+        {
+            throw new NotImplementedException();
+        }
+
+        void IJuegoAdministradorCallback.RecibirExpulsion(string jugadorObjetivo)
         {
             throw new NotImplementedException();
         }
@@ -178,6 +223,6 @@ namespace Pruebas.ServicioJuegoTableroTest
         {
             return mockCallback;
         }
-    }
+    }*/
 }
 

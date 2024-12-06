@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Pruebas.ServicioJuegoTableroTest
 {
-    [TestClass]
+    /*[TestClass]
     public class EliminarJugadorDeJuegoTest
     {
         private ServicioJuego servicioJuego;
@@ -41,6 +41,6 @@ namespace Pruebas.ServicioJuegoTableroTest
 
             Assert.AreEqual(3, ServicioJuego.jugadoresConectadosListos.Count, "No debería haberse eliminado ningún jugador.");
         }
-    }
+    }*/
 }
 

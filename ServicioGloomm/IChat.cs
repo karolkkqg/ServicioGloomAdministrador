@@ -11,13 +11,13 @@ namespace ServicioGloomm
     [ServiceContract(CallbackContract = typeof(IChatCallback))]
     public interface IChat
     {
-        [OperationContract(IsOneWay = true)]
-        void EnviarMensaje(string nombreUsuario, string mensaje);
+        [OperationContract]
+        void AgregarJugadorAChat(string nombreUsuario, string idSala);
 
         [OperationContract]
-        List<Chat> ObtenerHistorialMensajes();
+        void EnviarMensaje(string nombreUsuario, string mensaje, string idSala);
 
         [OperationContract]
-        void AgregarJugadorAChat(string nombreUsuario);
+        List<Chat> ObtenerHistorialMensajes(string idSala);
     }
 }

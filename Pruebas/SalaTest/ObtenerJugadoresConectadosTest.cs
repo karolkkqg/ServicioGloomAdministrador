@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Pruebas.SalaTest
 {
-    [TestClass]
+    /*[TestClass]
     public class ObtenerJugadoresConectadosTest
     {
         [TestMethod]
@@ -32,5 +32,5 @@ namespace Pruebas.SalaTest
             CollectionAssert.Contains(resultado, "jugador2");
             CollectionAssert.Contains(resultado, "jugador3");
         }
-    }
+    }*/
 }

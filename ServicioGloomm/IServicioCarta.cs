@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ServicioGloomm
 {
-    [ServiceContract]
+    [ServiceContract(CallbackContract = typeof(IServicioCartaCallback))]
     public interface IServicioCarta
     {
         [OperationContract]
@@ -25,6 +25,15 @@ namespace ServicioGloomm
 
         [OperationContract(IsOneWay = true)]
         void QuitarCartaDeMazoJugadorExterno(string nombreUsuario);
+
+        [OperationContract]
+        List<Carta> ObtenerMazoRestante();
+    }
+
+    public interface IServicioCartaCallback
+    {
+        [OperationContract(IsOneWay = true)]
+        void NotificarActualizacion(string mensaje);
     }
 
 }

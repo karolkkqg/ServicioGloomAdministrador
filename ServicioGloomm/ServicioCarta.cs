@@ -1,6 +1,6 @@
 ﻿using BibliotecaClases;
 using BlbibliotecaClases;
-using ServicioGlomm;
+using ServicioGloomm;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +32,35 @@ namespace ServicioGloomm
 
             return cartasSobrantesGlobal;
         }
+
+        /*public List<Carta> BarajearMazo(string numeroSala)
+        {
+            try
+            {
+                Console.WriteLine($"Barajando mazo para la sala {numeroSala}");
+
+                // Validar que las cartas sobrantes están disponibles para esta sala
+                if (!CartasSobrantes.Any())
+                {
+                    Console.WriteLine($"Error: No hay cartas sobrantes para la sala {numeroSala}.");
+                    throw new FaultException<ManejadorExcepciones>(
+                        new ManejadorExcepciones("No hay cartas sobrantes para barajar.")
+                    );
+                }
+
+                // Lógica de barajado (simulada aquí)
+                Console.WriteLine($"Cartas sobrantes: {CartasSobrantes.Count}");
+                return CartasSobrantes.OrderBy(c => Guid.NewGuid()).ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al barajar el mazo: {ex.Message}");
+                throw new FaultException<ManejadorExcepciones>(
+                    new ManejadorExcepciones($"Error al barajar el mazo: {ex.Message}")
+                );
+            }
+        }*/
+
 
         private List<Carta> CrearCartasDeMuerte()
         {
@@ -443,5 +472,12 @@ namespace ServicioGloomm
                 throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("21"));
             }
         }
+
+        public List<Carta> ObtenerMazoRestante()
+        {
+            // Devuelve las cartas sobrantes del mazo general
+            return cartasSobrantesGlobal.ToList();
+        }
+
     }
 }

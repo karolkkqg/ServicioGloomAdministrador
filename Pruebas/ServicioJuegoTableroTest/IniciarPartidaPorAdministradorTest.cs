@@ -1,17 +1,13 @@
 ﻿using BibliotecaClases;
-using BlbibliotecaClases;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ServicioGloomm;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.ServiceModel;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pruebas.ServicioJuegoTableroTest
 {
-    //[TestClass]
+    [TestClass]
     public class IniciarPartidaPorAdministradorTest
     {
         private ServicioJuego servicioJuego;
@@ -20,39 +16,56 @@ namespace Pruebas.ServicioJuegoTableroTest
         public void TestInitialize()
         {
             servicioJuego = new ServicioJuego();
+
+            // Limpiar estructuras compartidas
             ServicioJuego.CartasSobrantes.Clear();
             ServicioJuego.indiceTurnoActual.Clear();
             ServicioJuego.partidaYaIniciada.Clear();
             ServicioJuego.jugadoresConectadosListos.Clear();
+            ServicioJuego.turnosPorSala.Clear();
 
-            ServicioJuego.jugadoresConectadosListos.Add("Jugador1", "Sala1");
-            ServicioJuego.jugadoresConectadosListos.Add("Jugador2", "Sala1");
-            ServicioJuego.jugadoresConectadosListos.Add("Jugador3", "Sala1");
+            // Configuración inicial
+            ServicioJuego.jugadoresConectadosListos["Sala1"] = new List<string> { "Jugador1", "Jugador2", "Jugador3" };
+            ServicioJuego.partidaYaIniciada["Sala1"] = false;
 
-            ServicioJuego.partidaYaIniciada.Add("Sala1", false);
+            // Inicializar salaJugadoresPorSala con datos válidos
+            ServicioJuego.salaJugadoresPorSala["Sala1"] = new Dictionary<string, ISalaCallback>
+            {
+                { "Jugador1", null },
+                { "Jugador2", null },
+                { "Jugador3", null }
+            };
         }
 
         [TestMethod]
         public void IniciarPartidaPorAdministradorTestExitoso()
         {
+            // Arrange
             string nombreAdministrador = "Admin1";
             string numeroSala = "Sala1";
             int numeroJugadores = 3;
 
+            // Act
             servicioJuego.IniciarPartidaPorAdministrador(nombreAdministrador, numeroSala, numeroJugadores);
 
+            // Assert: La partida debe estar marcada como iniciada
             Assert.IsTrue(ServicioJuego.partidaYaIniciada.ContainsKey(numeroSala));
             Assert.IsTrue(ServicioJuego.partidaYaIniciada[numeroSala]);
 
+            // Assert: Cartas sobrantes deben estar asignadas
             Assert.IsNotNull(ServicioJuego.CartasSobrantes);
             Assert.IsTrue(ServicioJuego.CartasSobrantes.Count > 0);
 
-            Assert.IsTrue(ServicioJuego.direccionJugadorEnJuego.ContainsKey(numeroSala));
-            Assert.AreEqual(numeroJugadores, ServicioJuego.direccionJugadorEnJuego[numeroSala].Count);
+            // Assert: Turnos por sala deben estar inicializados
+            Assert.IsTrue(ServicioJuego.turnosPorSala.ContainsKey(numeroSala));
+            Assert.AreEqual(numeroJugadores, ServicioJuego.turnosPorSala[numeroSala].Count);
 
-            Assert.IsTrue(ServicioJuego.TurnsInGameboard.ContainsKey(numeroSala));
-            Assert.IsNotNull(ServicioJuego.TurnsInGameboard[numeroSala]);
+            // Assert: Indice de turno inicializado correctamente
+            Assert.IsTrue(ServicioJuego.indiceTurnoActual.ContainsKey(numeroSala));
+            Assert.AreEqual(0, ServicioJuego.indiceTurnoActual[numeroSala]);
         }
+
+        
 
         [TestCleanup]
         public void Cleanup()
@@ -61,6 +74,8 @@ namespace Pruebas.ServicioJuegoTableroTest
             ServicioJuego.indiceTurnoActual.Clear();
             ServicioJuego.partidaYaIniciada.Clear();
             ServicioJuego.jugadoresConectadosListos.Clear();
+            ServicioJuego.turnosPorSala.Clear();
+            ServicioJuego.salaJugadoresPorSala.Clear();
         }
     }
 }

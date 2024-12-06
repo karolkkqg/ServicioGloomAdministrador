@@ -20,10 +20,10 @@ namespace BlbibliotecaClases
 
         }
 
-        public Chat(string NombreUsuario, string Mensaje)
+        public Chat(string nombreDeUsuario, string mensajeEscrito)
         {
-            nombreUsuario = NombreUsuario;
-            mensaje = Mensaje;
+            nombreUsuario = nombreDeUsuario;
+            mensaje = mensajeEscrito;
         }
 
         public override string ToString()

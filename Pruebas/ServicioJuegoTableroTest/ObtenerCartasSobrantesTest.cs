@@ -35,8 +35,8 @@ namespace Pruebas.ServicioJuegoTableroTest
                 new Carta { identificador = "Carta2.png", valor = 20 }
             });
 
-            cartasSobrantes.Add(new Carta { identificador = "Carta1", valor = 10 });
-            cartasSobrantes.Add(new Carta { identificador = "Carta2", valor = 20 });
+            //cartasSobrantes.Add(new Carta { identificador = "Carta1", valor = 10 });
+            //cartasSobrantes.Add(new Carta { identificador = "Carta2", valor = 20 });
 
             List<Carta> resultado = servicioJuego.ObtenerCartasSobrantes();
 

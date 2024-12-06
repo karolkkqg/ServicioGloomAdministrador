@@ -8,10 +8,11 @@ using System.Threading.Tasks;
 
 namespace ServicioGloomm
 {
-    [ServiceContract]
+    [ServiceContract(CallbackContract = typeof(ICreacionPartidaCallback))]
     public interface ICreacionPartida
     {
         [OperationContract]
+        [FaultContract(typeof(ManejadorExcepciones))]
         Dictionary<string, (string nombrePersonaje, int vida)> ObtenerUsuariosYPersonajes(string numeroSala);
 
         [OperationContract]
@@ -26,5 +27,24 @@ namespace ServicioGloomm
         [FaultContract(typeof(ManejadorExcepciones))]
         void ValidarPartidaNoIniciada(string numeroSala);
 
+        [OperationContract]
+        [FaultContract(typeof(ManejadorExcepciones))]
+        Dictionary<string, (string familia, List<(string nombrePersonaje, int vida)> personajes)> ObtenerFamiliaYPersonajesPorUsuario(string numeroSala);
+
+        [OperationContract]
+        [FaultContract(typeof(ManejadorExcepciones))]
+        Dictionary<string, string> ObtenerFamiliaPorJugador(string numeroSala);
+
+        [OperationContract]
+        [FaultContract(typeof(ManejadorExcepciones))]
+        Dictionary<string, List<(string nombrePersonaje, int vida)>> ObtenerFamiliasYPersonajes(string numeroSala);
+
+    }
+
+    [ServiceContract]
+    public interface ICreacionPartidaCallback
+    {
+        [OperationContract(IsOneWay = true)]
+        void NotificarPartidaCreada(string mensaje);
     }
 }

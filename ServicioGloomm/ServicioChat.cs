@@ -1,86 +1,63 @@
-﻿using BibliotecaClases;
-using BlbibliotecaClases;
+﻿using BlbibliotecaClases;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ServicioGloomm
 {
-    [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Reentrant)]
     public partial class ServicioJuego : IChat
     {
+        private readonly Dictionary<string, Queue<Chat>> mensajesPorSala = new Dictionary<string, Queue<Chat>>();
+        private readonly Dictionary<string, Dictionary<string, IChatCallback>> jugadoresPorSala = new Dictionary<string, Dictionary<string, IChatCallback>>();
 
-        private Queue<Chat> mensajes = new Queue<Chat>();
-        private Dictionary<string, IChatCallback> jugadoresPartida = new Dictionary<string, IChatCallback>();
-        private IChatCallback respuesta;
-
-
-        public List<Chat> ObtenerHistorialMensajes()
-        {
-            return mensajes.ToList();
-
-        }
-
-
-        public void AgregarJugadorAChat(string nombreUsuario)
+        public void AgregarJugadorAChat(string nombreUsuario, string idSala)
         {
             var callback = OperationContext.Current.GetCallbackChannel<IChatCallback>();
-            if (!jugadoresPartida.ContainsKey(nombreUsuario))
+
+            if (!jugadoresPorSala.ContainsKey(idSala))
             {
-                jugadoresPartida.Add(nombreUsuario, callback);
+                jugadoresPorSala[idSala] = new Dictionary<string, IChatCallback>();
+                mensajesPorSala[idSala] = new Queue<Chat>();
+            }
+
+            if (!jugadoresPorSala[idSala].ContainsKey(nombreUsuario))
+            {
+                jugadoresPorSala[idSala].Add(nombreUsuario, callback);
+                Console.WriteLine($"Jugador {nombreUsuario} agregado a la sala {idSala}");
             }
         }
 
-
-
-
-        public void EnviarMensaje(string nomberUsuario, string message)
-
+        public void EnviarMensaje(string nombreUsuario, string mensaje, string idSala)
         {
+            if (!jugadoresPorSala.ContainsKey(idSala)) return;
 
-            if (nomberUsuario.Length > 15)
+            if (nombreUsuario.Length > 15)
             {
-                nomberUsuario = nomberUsuario.Substring(0, 15);
+                nombreUsuario = nombreUsuario.Substring(0, 15);
             }
 
-            respuesta = OperationContext.Current.GetCallbackChannel<IChatCallback>();
+            var chatMensaje = new Chat(nombreUsuario, mensaje);
+            mensajesPorSala[idSala].Enqueue(chatMensaje);
 
-
-            Chat mensajeChat = new Chat(nomberUsuario, message);
-
-
-            AgregarMensaje(mensajeChat);
-            MandarMensajeAJugadores(mensajeChat);
-            
-
-
-        }
-        private void AgregarMensaje(Chat mensajesChat)
-        {
-            mensajes?.Enqueue(mensajesChat);
-        }
-
-        private void MandarMensajeAJugadores(Chat mensajesChat)
-        {
-            foreach (var jugador in jugadoresPartida.Values)
+            foreach (var jugador in jugadoresPorSala[idSala].Values)
             {
                 try
                 {
-                    jugador.EnviarMensajeCliente(mensajesChat);
+                    Console.WriteLine($"Llamando a RecibirMensaje para: {nombreUsuario}");
+                    jugador.RecibirMensaje(chatMensaje);
                 }
-                catch (CommunicationException ex)
+                catch (Exception ex)
                 {
-                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("29"));
-                }
-                catch (TimeoutException ex)
-                {
-                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("29"));
+                    Console.WriteLine($"Error al enviar mensaje a cliente: {ex.Message}");
                 }
             }
+        }
 
+
+        public List<Chat> ObtenerHistorialMensajes(string idSala)
+        {
+            return mensajesPorSala.ContainsKey(idSala) ? mensajesPorSala[idSala].ToList() : new List<Chat>();
         }
     }
 }

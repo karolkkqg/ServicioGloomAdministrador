@@ -82,11 +82,6 @@ namespace ServicioGloomm
         [OperationContract]
         Dictionary<string, HashSet<string>> ObtenerFamiliasSeleccionadasPorSala();
 
-        [OperationContract]
-        Dictionary<string, string> ObtenerFamiliaPorJugador();
-
-        [OperationContract]
-        Dictionary<string, List<(string nombrePersonaje, int vida)>> ObtenerFamiliasYPersonajes();
 
 
     }
@@ -109,11 +104,12 @@ namespace ServicioGloomm
         [OperationContract(IsOneWay = true)]
         void ActualizarSalasActivas(List<Sala> salasActivas);
 
+
         [OperationContract(IsOneWay = true)]
         void ResultadoUnirseASala(string idSala, string codigo, bool esExitoso);
 
         [OperationContract(IsOneWay = true)]
-        void ActualizarSeleccionFamilia(string nombreUsuario, string nombreFamilia);
+        void ActualizarSeleccionFamilia(string nombreFamilia, string nombreFamiliaAnterior);
 
     }
 }

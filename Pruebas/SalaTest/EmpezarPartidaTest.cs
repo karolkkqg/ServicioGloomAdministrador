@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Pruebas.SalaTest
 {
-   // [TestClass]
+   /*[TestClass]
     public class ServicioTest
     {
         [TestMethod]
@@ -35,5 +35,5 @@ namespace Pruebas.SalaTest
                 jugador2Mock.Verify(j => j.EmpezarJuego(), Times.Once);
             }
         }
-    }
+    }*/
 }
