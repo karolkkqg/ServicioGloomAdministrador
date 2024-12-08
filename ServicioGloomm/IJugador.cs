@@ -37,7 +37,8 @@ namespace ServicioGloomm
         [FaultContract(typeof(ManejadorExcepciones))]
         bool EliminarJugadorInvitado(string nombreUsuario);
 
-
+        [OperationContract(IsOneWay = true)]
+        void CerrarSesionJugador(string nombreJugador);
     }
 
 }

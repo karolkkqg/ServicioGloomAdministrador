@@ -66,7 +66,7 @@ namespace Pruebas
             {
                 AccesoSala.AgregarPartidaABaseDeDatos(sala);
             });
-            Assert.AreEqual("8", excepcion.Detail.mensaje);
+            Assert.AreEqual("8", excepcion.Detail.codigo);
 
             LimpiarDatosDePrueba();
         }

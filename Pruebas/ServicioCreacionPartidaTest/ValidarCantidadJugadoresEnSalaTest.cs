@@ -39,7 +39,7 @@ namespace Pruebas.ServicioCreacionPartidaTest
                 servicioJuego.ValidarCantidadJugadoresEnSala("SAL001", 2);
             });
 
-            Assert.AreEqual("34", excepcion.Detail.Mensaje, "El mensaje de error no coincide con el esperado.");
+            Assert.AreEqual("34", excepcion.Detail.codigo, "El mensaje de error no coincide con el esperado.");
         }
 
         [TestMethod]

@@ -15,8 +15,12 @@ namespace BibliotecaClases
         [DataMember]
         public string mensaje {  get; set; }
 
-        public ManejadorExcepciones(string mensajeError)
+        [DataMember]
+        public string codigo { get; set; }
+
+        public ManejadorExcepciones(string codigoError, string mensajeError)
         {
+            codigo = codigoError;
             mensaje = mensajeError;
         }
         public string Mensaje

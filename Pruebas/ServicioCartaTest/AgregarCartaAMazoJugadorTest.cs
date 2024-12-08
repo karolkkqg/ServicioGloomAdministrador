@@ -60,7 +60,7 @@ namespace Pruebas.ServicioCartaTest
                 servicioJuego.AgregarCartaAMazoJugador("Jugador1");
             });
 
-            Assert.AreEqual("20", excepcion.Detail.mensaje, "El mensaje de error no coincide con el esperado.");
+            Assert.AreEqual("20", excepcion.Detail.codigo, "El mensaje de error no coincide con el esperado.");
         }
     }
 }

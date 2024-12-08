@@ -54,7 +54,7 @@ namespace Pruebas.SalaTest
                 servicioJuego.SacarATodosLosJugadoresDeSala(numeroSala);
             });
 
-            Assert.AreEqual("16", exception.Detail.mensaje, "El código de la excepción no es el esperado.");
+            Assert.AreEqual("16", exception.Detail.codigo, "El código de la excepción no es el esperado.");
 
             Assert.IsFalse(ServicioJuego.salaJugadoresPorSala["Sala1"].ContainsKey("Jugador2"), "El jugador no fue eliminado tras el fallo de comunicación.");
         }
@@ -72,7 +72,7 @@ namespace Pruebas.SalaTest
                 servicioJuego.SacarATodosLosJugadoresDeSala(numeroSala);
             });
 
-            Assert.AreEqual("18", exception.Detail.mensaje, "El código de la excepción no es el esperado.");
+            Assert.AreEqual("18", exception.Detail.codigo, "El código de la excepción no es el esperado.");
 
             Assert.IsFalse(ServicioJuego.salaJugadoresPorSala["Sala1"].ContainsKey("Jugador3"), "El jugador no fue eliminado tras el fallo de timeout.");
         }

@@ -70,7 +70,7 @@ namespace Pruebas.ServicioJuegoTableroTest
             }
             catch (FaultException<ManejadorExcepciones> ex)
             {
-                Assert.AreEqual("45", ex.Detail.Mensaje, "No se lanzó la excepción 45 al intentar auto-eliminarse.");
+                Assert.AreEqual("45", ex.Detail.codigo, "No se lanzó la excepción 45 al intentar auto-eliminarse.");
                 throw;
             }
         }
@@ -87,7 +87,7 @@ namespace Pruebas.ServicioJuegoTableroTest
             }
             catch (FaultException<ManejadorExcepciones> ex)
             {
-                Assert.AreEqual("44", ex.Detail.Mensaje, "No se lanzó la excepción 44 al intentar matar a un jugador con vida mayor a -400.");
+                Assert.AreEqual("44", ex.Detail.codigo, "No se lanzó la excepción 44 al intentar matar a un jugador con vida mayor a -400.");
                 throw;
             }
         }

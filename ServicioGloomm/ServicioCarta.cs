@@ -273,7 +273,7 @@ namespace ServicioGloomm
             } catch (FaultException<ManejadorExcepciones> ex) 
             {
                 administradorLogger.RegistroError(ex); 
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.Mensaje));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.Mensaje));
             }  
         }
 
@@ -287,7 +287,7 @@ namespace ServicioGloomm
             List<Carta> mazoDelJugador = barajaJugadores[nombreUsuario];
             if (mazoDelJugador.Count >= 7)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("20"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("20", "No puede agarrar más de 7 cartas"));
             }
         }
 
@@ -307,12 +307,12 @@ namespace ServicioGloomm
                         catch (CommunicationException ex)
                         {
                             administradorLogger.RegistroError(ex);
-                            throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16"));
+                            throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16", "No se pudo conectar el servidor con todos los jugadores"));
                         }
                         catch (TimeoutException ex)
                         {
                             administradorLogger.RegistroError(ex);
-                            throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18"));
+                            throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18", "Se termino el tiempo de espera del servidor, intente realizar la operación más tarde"));
                         }
                     }
                 }
@@ -351,18 +351,18 @@ namespace ServicioGloomm
                         catch (FaultException<ManejadorExcepciones> ex)
                         {
                             administradorLogger.RegistroError(ex);
-                            throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.Mensaje));       
+                            throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.Mensaje));       
                         }
                         catch (CommunicationException ex)
                         {
                             administradorLogger.RegistroError(ex); 
-                            throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16"));
+                            throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16", "No se pudo conectar el servidor con todos los jugadores"));
 
                         }
                         catch (TimeoutException ex)
                         {
                             administradorLogger.RegistroError(ex);
-                            throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18"));
+                            throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18", "Se termino el tiempo de espera del servidor, intente realizar la operación más tarde"));
                         }
                     }
                 }
@@ -373,7 +373,7 @@ namespace ServicioGloomm
         {
             if (barajaJugadores[nombreUsuario].Count == 0)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("38"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("38", "El jugador ya no tiene cartas para quitar"));
             }
         }
 
@@ -411,7 +411,7 @@ namespace ServicioGloomm
             catch (FaultException<ManejadorExcepciones> ex)
             {
                 administradorLogger.RegistroError(ex);
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.Mensaje));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.Mensaje));
             }
             
         }
@@ -434,12 +434,12 @@ namespace ServicioGloomm
                         catch (CommunicationException ex)
                         {
                             administradorLogger.RegistroError(ex);
-                            throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16"));
+                            throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16", "No se pudo conectar el servidor con todos los jugadores"));
                         }
                         catch (TimeoutException ex)
                         {
                             administradorLogger.RegistroError(ex);
-                            throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18"));
+                            throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18", "Se termino el tiempo de espera del servidor, intente realizar la operación más tarde"));
                         }
                     }
                 }

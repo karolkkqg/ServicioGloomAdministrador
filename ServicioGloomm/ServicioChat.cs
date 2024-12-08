@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
+using System.ServiceModel.Channels;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,17 +14,15 @@ namespace ServicioGloomm
     public partial class ServicioJuego : IChat
     {
 
-        private Queue<Chat> mensajes = new Queue<Chat>();
-        private Dictionary<string, IChatCallback> jugadoresPartida = new Dictionary<string, IChatCallback>();
+        private static Queue<Chat> mensajes = new Queue<Chat>();
+        private static Dictionary<string, IChatCallback> jugadoresPartida = new Dictionary<string, IChatCallback>();
         private IChatCallback respuesta;
 
 
         public List<Chat> ObtenerHistorialMensajes()
         {
             return mensajes.ToList();
-
         }
-
 
         public void AgregarJugadorAChat(string nombreUsuario)
         {
@@ -35,28 +34,22 @@ namespace ServicioGloomm
         }
 
 
-
-
-        public void EnviarMensaje(string nomberUsuario, string message)
+        public void EnviarMensaje(string nombreUsuario, string mensaje)
 
         {
 
-            if (nomberUsuario.Length > 15)
+            if (nombreUsuario.Length > 15)
             {
-                nomberUsuario = nomberUsuario.Substring(0, 15);
+                nombreUsuario = nombreUsuario.Substring(0, 15);
             }
 
             respuesta = OperationContext.Current.GetCallbackChannel<IChatCallback>();
 
 
-            Chat mensajeChat = new Chat(nomberUsuario, message);
-
+            Chat mensajeChat = new Chat(nombreUsuario, mensaje);
 
             AgregarMensaje(mensajeChat);
             MandarMensajeAJugadores(mensajeChat);
-            
-
-
         }
         private void AgregarMensaje(Chat mensajesChat)
         {
@@ -65,19 +58,19 @@ namespace ServicioGloomm
 
         private void MandarMensajeAJugadores(Chat mensajesChat)
         {
-            foreach (var jugador in jugadoresPartida.Values)
+            foreach (var jugador in jugadoresPartida)
             {
                 try
                 {
-                    jugador.EnviarMensajeCliente(mensajesChat);
+                    jugador.Value.EnviarMensajeCliente(mensajesChat);
                 }
                 catch (CommunicationException ex)
                 {
-                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("29"));
+                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("29", "Problema de enviar el correo"));
                 }
                 catch (TimeoutException ex)
                 {
-                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("29"));
+                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("29", "Problema de enviar el correo"));
                 }
             }
 

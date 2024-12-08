@@ -63,7 +63,7 @@ namespace Pruebas.SalaTest
                 servicio.ValidarFamiliaSeleccionada(cantidadJugadores, idSala);
             });
 
-            Assert.AreEqual("48", excepcion.Detail.mensaje, "El mensaje de error no coincide.");
+            Assert.AreEqual("48", excepcion.Detail.codigo, "El mensaje de error no coincide.");
         }
 
     }

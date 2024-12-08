@@ -47,7 +47,7 @@ namespace Pruebas.SalaTest
             }
             catch (FaultException<ManejadorExcepciones> ex)
             {
-                Assert.Fail(ex.Detail.mensaje);
+                Assert.Fail(ex.Detail.codigo);
             }
         }
 
@@ -67,7 +67,7 @@ namespace Pruebas.SalaTest
             {
                 servicioSala.ValidarPersonajesSeleccionados("Sala1", cantidadJugadores);
             });
-            Assert.AreEqual("15", excepcion.Detail.mensaje);
+            Assert.AreEqual("15", excepcion.Detail.codigo);
         }
         public void LimpiarDatos()
         {
