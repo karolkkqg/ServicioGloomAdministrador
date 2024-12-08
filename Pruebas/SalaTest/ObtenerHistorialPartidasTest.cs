@@ -22,8 +22,8 @@ namespace Pruebas.SalaTest
             {
                 idSala = "Sala0000",
                 nombreSala = "Sala de Juegos",
-                tipoSala = "Competitiva",
-                tipoPartida = "Multijugador",
+                tipoSala = "Normal",
+                tipoPartida = "Pública",
                 noJugadores = 4,
                 codigo = "1234",
                 idAdministrador = "TacoDePato",

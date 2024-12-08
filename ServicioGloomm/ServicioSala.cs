@@ -46,15 +46,17 @@ namespace ServicioGloomm
             return new Dictionary<string, (string nombrePersonaje, int vida)>(personajesPorSala[numeroSala]);
         }
 
+        
+
         public int CrearPartida(BibliotecaClases.Sala sala)
         {
             AdministradorLogger administradorLogger = new AdministradorLogger(this.GetType());
             try
             {
+               
                 String codigoGenerado = GenerarCodigo();
                 sala.codigo = codigoGenerado;
                 sala.idSala = codigoGenerado;
-
                 var nuevaPartida = new BibliotecaClases.Sala
                 {
                     nombreSala = sala.nombreSala,
@@ -66,21 +68,40 @@ namespace ServicioGloomm
                     fecha = sala.fecha,
                     ganador = sala.ganador,
                     idSala = sala.idSala,
-
                 };
+                Task<int> resultadoTask = Task.Run(() => AccesoSala.AgregarPartidaABaseDeDatos(sala));
+                int resultado = resultadoTask.Result;
 
+                AsegurarSalaExistente(sala.idSala);
+                if (!familiasSeleccionadasPorSala.ContainsKey(sala.idSala))
+                {
+                    familiasSeleccionadasPorSala[sala.idSala] = new HashSet<string>();
 
-                int resultado = AccesoSala.AgregarPartidaABaseDeDatos(nuevaPartida);
-                String mensaje = "Partida creada " + sala.nombreSala;
-                return resultado;
+                    
+                    salasActivasEnMemoria[sala.idSala] = sala;
+
+                    administradoresDeSala[sala.idSala] = sala.idAdministrador;
+                    
+                    jugadoresEnSala[sala.idSala] = new HashSet<string>();
+                    jugadoresEnSala[sala.idSala].Add(sala.idAdministrador);
+
+                    
+                    ActualizarSalasParaTodos();
+
+                    return resultado;
+                }
             }
-
-
             catch (FaultException<ManejadorExcepciones> ex)
             {
                 administradorLogger.RegistroError(ex);
                 throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.mensaje));
             }
+            catch (CommunicationException ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(
+                    new ManejadorExcepciones("Error de comunicación: " + ex.Message)); 
+            }
+            return -1;
         }
 
         private string GenerarCodigo()
