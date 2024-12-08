@@ -54,7 +54,7 @@ namespace Pruebas.ServicioCartaTest
                 servicioJuego.QuitarCartaDeMazoJugadorExterno(nombreUsuario)
             );
 
-            Assert.AreEqual("38", exception.Detail.Mensaje, "El mensaje de la excepción no coincide.");
+            Assert.AreEqual("38", exception.Detail.codigo, "El mensaje de la excepción no coincide.");
         }
 
         [TestMethod]

@@ -57,7 +57,7 @@ namespace ServicioGloom.Tests
             {
                 AccesoJugador.AgregarJugadorABaseDeDatos(jugador);
             });
-            Assert.AreEqual("2", exception.Detail.mensaje);
+            Assert.AreEqual("2", exception.Detail.codigo);
             LimpiarDatosDePrueba();
         }
 
@@ -81,7 +81,7 @@ namespace ServicioGloom.Tests
                 AccesoJugador.AgregarJugadorABaseDeDatos(jugadorConNombreRepetido);
             });
 
-            Assert.AreEqual("1", exception.Detail.mensaje);
+            Assert.AreEqual("1", exception.Detail.codigo);
 
 
             LimpiarDatosDePrueba();

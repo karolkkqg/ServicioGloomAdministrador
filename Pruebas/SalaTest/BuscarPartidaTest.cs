@@ -53,7 +53,7 @@ namespace Pruebas.SalaTest
             {
                 AccesoSala.BuscarPartida("12345", "654321");
             });
-            Assert.AreEqual("10", excepcion.Detail.mensaje);
+            Assert.AreEqual("10", excepcion.Detail.codigo);
 
             LimpiarDatosDePrueba();
         }
@@ -65,7 +65,7 @@ namespace Pruebas.SalaTest
             {
                 AccesoSala.BuscarPartida("654321", "12345");
             });
-            Assert.AreEqual("10", excepcion.Detail.mensaje);
+            Assert.AreEqual("10", excepcion.Detail.codigo);
 
             LimpiarDatosDePrueba();
         }
@@ -77,7 +77,7 @@ namespace Pruebas.SalaTest
             {
                 AccesoSala.BuscarPartida("654321", "654321");
             });
-            Assert.AreEqual("10", excepcion.Detail.mensaje);
+            Assert.AreEqual("10", excepcion.Detail.codigo);
 
             LimpiarDatosDePrueba();
         }

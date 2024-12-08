@@ -14,7 +14,6 @@ namespace ServicioGloomm
     {
         public BibliotecaClases.Sala BuscarSalaExistente(String idSala, String codigo)
         {
-            AsegurarSalaExistente(idSala);
             AdministradorLogger administradorLogger = new AdministradorLogger(this.GetType());
             try
             {
@@ -37,7 +36,7 @@ namespace ServicioGloomm
             catch (FaultException<ManejadorExcepciones> ex)
             {
                 administradorLogger.RegistroError(ex);
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.mensaje));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.mensaje));
             }
 
         }
@@ -67,7 +66,7 @@ namespace ServicioGloomm
             catch (FaultException<ManejadorExcepciones> ex)
             {
                 administradorLogger.RegistroError(ex);
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.mensaje));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.mensaje));
             }
 
         }
@@ -77,7 +76,7 @@ namespace ServicioGloomm
             
             if (salaJugadores[numeroSala].Count() == cantidadJugadores)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("34"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("34", "La sala ya está llena, no puede ingresar"));
             }
         }
 
@@ -85,7 +84,7 @@ namespace ServicioGloomm
         {
             if (partidaYaIniciada[numeroSala] == true)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("39"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("39", "La partida ya se encuentra iniciada, no puede ingresar"));
             }
         }
 
@@ -108,7 +107,6 @@ namespace ServicioGloomm
             {
                 jugadoresConectadosListos[numeroSala] = new List<string>();
             }
-
             if (!turnosPorSala.ContainsKey(numeroSala))
             {
                 turnosPorSala[numeroSala] = new List<string>();

@@ -67,7 +67,7 @@ namespace Pruebas.SalaTest
                 AccesoSala.BuscarCodigoSala(administradorInvalido, sala.nombreSala);
             });
 
-            Assert.AreEqual("Código no encontrado", excepcion.Detail.mensaje, "El mensaje de error no coincide con el esperado.");
+            Assert.AreEqual("Código no encontrado", excepcion.Detail.codigo, "El mensaje de error no coincide con el esperado.");
         }
 
         [TestMethod]
@@ -80,7 +80,7 @@ namespace Pruebas.SalaTest
                 AccesoSala.BuscarCodigoSala(sala.idAdministrador, nombreSalaInvalido);
             });
 
-            Assert.AreEqual("Código no encontrado", excepcion.Detail.mensaje, "El mensaje de error no coincide con el esperado.");
+            Assert.AreEqual("Código no encontrado", excepcion.Detail.codigo, "El mensaje de error no coincide con el esperado.");
         }
 
         [ClassCleanup]

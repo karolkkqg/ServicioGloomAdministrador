@@ -55,7 +55,7 @@ namespace Pruebas.JugadorTest
             {
                 AccesoJugador.ValidarJugadorParaAutenticacion(jugador);
             });
-            Assert.AreEqual("3", exception.Detail.mensaje);
+            Assert.AreEqual("3", exception.Detail.codigo);
         }
 
         [TestMethod()]
@@ -66,7 +66,7 @@ namespace Pruebas.JugadorTest
             {
                 AccesoJugador.ValidarJugadorParaAutenticacion(jugador);
             });
-            Assert.AreEqual("3", exception.Detail.mensaje);
+            Assert.AreEqual("3", exception.Detail.codigo);
         }
 
         [TestCleanup]

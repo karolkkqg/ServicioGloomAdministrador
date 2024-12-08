@@ -73,7 +73,7 @@ namespace Pruebas.SalaTest
                 servicioJuego.CrearPartida(salaRepetida);
             });
 
-            Assert.AreEqual("8", excepcion.Detail.mensaje, "El código de la excepción no es el esperado.");
+            Assert.AreEqual("8", excepcion.Detail.codigo, "El código de la excepción no es el esperado.");
 
             LimpiarDatosDePrueba();
         }

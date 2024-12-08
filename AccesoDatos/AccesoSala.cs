@@ -23,11 +23,11 @@ namespace AccesoDatos
             }
             catch (SqlException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString()));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString(), ex.Message));
             }
             catch (EntityException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"));
             }
         }
 
@@ -44,11 +44,11 @@ namespace AccesoDatos
             }
             catch (SqlException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString()));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString(), ex.Message));
             }
             catch (EntityException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"));
             }
         }
 
@@ -61,14 +61,14 @@ namespace AccesoDatos
                     var nombreSalaEncontrada = contexto.Sala.FirstOrDefault(j => j.NombreSala == sala.NombreSala);
                     if (nombreSalaEncontrada != null)
                     {
-                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("8"));
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("8", "Nombre de sala ocupado"));
                     }
                     return sala;
                 }
             }
             catch (EntityException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"));
             }
             
         }
@@ -89,11 +89,11 @@ namespace AccesoDatos
             }
             catch (SqlException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString()));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString(), ex.Message));
             }
             catch (EntityException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"));
             }
         }
 
@@ -113,11 +113,11 @@ namespace AccesoDatos
             }
             catch (SqlException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString()));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString(), ex.Message));
             }
             catch (EntityException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"));
             }
         }
 
@@ -136,11 +136,11 @@ namespace AccesoDatos
             catch (SqlException ex)
             {
                 throw new FaultException<ManejadorExcepciones>(
-                    new ManejadorExcepciones(ex.Number.ToString()));
+                    new ManejadorExcepciones(ex.Number.ToString(), ex.Message));
             }
             catch (EntityException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"));
             }
         }
 
@@ -154,7 +154,7 @@ namespace AccesoDatos
 
                     if (sala == null)
                     {
-                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("10"));
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("10", "No se encontró ninguna sala con ese código o id"));
                     }
 
                     return sala;
@@ -163,11 +163,11 @@ namespace AccesoDatos
             catch (SqlException ex)
             {
                 throw new FaultException<ManejadorExcepciones>(
-                    new ManejadorExcepciones(ex.Number.ToString()));
+                    new ManejadorExcepciones(ex.Number.ToString(), ex.Message));
             }
             catch (EntityException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"));
             }
         }
 
@@ -210,11 +210,11 @@ namespace AccesoDatos
             }
             catch (SqlException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"));
             }
             catch (EntityException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Message));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"));
             }
         }
 
@@ -225,7 +225,7 @@ namespace AccesoDatos
                 var codigoSala = contexto.Sala.Where(c => c.IdAdministrador == administrador && c.NombreSala == nombreSala).Select(c => c.Codigo).FirstOrDefault();
                 if (codigoSala == null)
                 {
-                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("Código no encontrado"));
+                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("10", "No se encontró ninguna sala con ese código o id"));
                 }
 
                 return codigoSala;

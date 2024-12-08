@@ -42,7 +42,7 @@ namespace ServicioGloomm
             catch (FaultException<ManejadorExcepciones> ex)
             {
                 administradorLogger.RegistroError(ex);
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.mensaje));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.mensaje));
             }
             
         }
@@ -71,7 +71,7 @@ namespace ServicioGloomm
             catch (FaultException<ManejadorExcepciones> ex)
             {
                 administradorLogger.RegistroError(ex);
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.mensaje));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.mensaje));
             }
         }
 
@@ -96,12 +96,12 @@ namespace ServicioGloomm
             catch (InvalidOperationException ex)
             {
                 administradorLogger.RegistroError(ex);
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Message));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Message, ex.Message));
             }
             catch (FaultException<ManejadorExcepciones> ex)
             {
                 administradorLogger.RegistroError(ex);
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.mensaje));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.mensaje));
             }
         }
 
@@ -135,7 +135,7 @@ namespace ServicioGloomm
             catch (FaultException<ManejadorExcepciones> ex)
             {
                 administradorLogger.RegistroError(ex);
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.mensaje));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.mensaje));
             }
         }
 
@@ -196,6 +196,14 @@ namespace ServicioGloomm
         public void LimpiarListaJugadoresInvitados()
         {
             jugadoresInvitados.Clear();
+        }
+
+        public void CerrarSesionJugador(string nombreUsuario)
+        {
+            if (usuarioConectado.Contains(nombreUsuario))
+            {
+                usuarioConectado.Remove(nombreUsuario);
+            }
         }
     }
 }

@@ -64,7 +64,7 @@ namespace Pruebas.SalaTest
                 servicioJuego.SeleccionarPersonaje(nombreUsuario, nombrePersonaje, numeroSala);
             });
 
-            Assert.AreEqual("14", exception.Detail.mensaje, "El mensaje de la excepción no es el esperado.");
+            Assert.AreEqual("14", exception.Detail.codigo, "El mensaje de la excepción no es el esperado.");
         }
 
         [TestCleanup]

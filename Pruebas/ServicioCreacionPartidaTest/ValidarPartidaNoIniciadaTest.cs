@@ -38,7 +38,7 @@ namespace Pruebas.ServicioCreacionPartidaTest
             {
                 servicioJuego.ValidarPartidaNoIniciada("Sala2");
             });
-            Assert.AreEqual("39", excepcion.Detail.Mensaje, "El mensaje de error no coincide con el esperado.");
+            Assert.AreEqual("39", excepcion.Detail.codigo, "El mensaje de error no coincide con el esperado.");
         }
     }
 }

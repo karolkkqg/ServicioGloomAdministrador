@@ -80,7 +80,7 @@ namespace AccesoDatos.Tests
             {
                 AccesoAmigos.AgregarSolcitudAmistad(solicitud);
             });
-            Assert.AreEqual("5", exception.Detail.mensaje);
+            Assert.AreEqual("5", exception.Detail.codigo);
             
         }
 
@@ -104,7 +104,7 @@ namespace AccesoDatos.Tests
             {
                 AccesoAmigos.AgregarSolcitudAmistad(solicitud);
             });
-            Assert.AreEqual("4", exception.Detail.mensaje);
+            Assert.AreEqual("4", exception.Detail.codigo);
 
         }
 
@@ -127,7 +127,7 @@ namespace AccesoDatos.Tests
             {
                 AccesoAmigos.AgregarSolcitudAmistad(solicitud);
             });
-            Assert.AreEqual("6", exception.Detail.mensaje);
+            Assert.AreEqual("6", exception.Detail.codigo);
 
         }
 
