@@ -60,6 +60,7 @@
     <Compile Include="AdministradorDeComportamiento.cs" />
     <Compile Include="AdministradorLogger.cs" />
     <Compile Include="IAmigos.cs" />
+    <Compile Include="IServicioBusquedaPartida.cs" />
     <Compile Include="IChat.cs" />
     <Compile Include="IChatCallback.cs" />
     <Compile Include="ICreacionPartida.cs" />
@@ -68,6 +69,9 @@
     <Compile Include="IServicioCarta.cs" />
     <Compile Include="IServicioHistorialPartida.cs" />
     <Compile Include="IServicioJuegoTablero.cs" />
+    <Compile Include="IServicioSalaMiniHistoria.cs" />
+    <Compile Include="IServicioSalaNormal.cs" />
+    <Compile Include="ServicioBusquedaPartida.cs" />
     <Compile Include="ServicioCarta.cs" />
     <Compile Include="ServicioChat.cs" />
     <Compile Include="ServicioCreacionPartida.cs" />
@@ -80,6 +84,7 @@
     <Compile Include="IServicioAdministrador.cs" />
     <Compile Include="ServicioAmigos.cs" />
     <Compile Include="ServicioSala.cs" />
+    <Compile Include="ServicioSalaNormal.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AccesoDatos\AccesoDatos.csproj">

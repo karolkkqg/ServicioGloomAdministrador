@@ -144,13 +144,13 @@ namespace AccesoDatos
             }
         }
 
-        public static Sala BuscarPartida(String idSala, String codigo)
+        public static Sala BuscarPartida(String nombreSala, String codigo)
         {
             try
             {
                 using (var contexto = new EntidadesGloom())
                 {
-                    var sala = contexto.Sala.FirstOrDefault(p => p.IdSala == idSala && p.Codigo == codigo);
+                    var sala = contexto.Sala.FirstOrDefault(p => p.NombreSala == nombreSala && p.Codigo == codigo);
 
                     if (sala == null)
                     {
@@ -196,7 +196,7 @@ namespace AccesoDatos
             };
         }
 
-        public static int ActualizarGanador(string idPartida, string ganador)
+        public static int ActualizarEstadoPartida(string idPartida, string ganador)
         {
             try
             {
@@ -230,6 +230,31 @@ namespace AccesoDatos
 
                 return codigoSala;
 
+            }
+        }
+
+        public static List<Sala> ObtenerSalasEnPartida()
+        {
+            try
+            {
+                using (var contexto = new EntidadesGloom())
+                {
+                    var salasEnPartida = contexto.Sala
+                        .Where(s => s.Ganador == "En partida")
+                        .ToList();
+
+                    return salasEnPartida;
+                }
+
+            }
+            catch (SqlException ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(
+                    new ManejadorExcepciones(ex.Number.ToString(), ex.Message));
+            }
+            catch (EntityException ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"));
             }
         }
     }

@@ -21,7 +21,7 @@ namespace ServicioGloomm
         public static readonly Dictionary<string, Dictionary<string, (string nombrePersonaje, int vida)>> personajesPorSala = new Dictionary<string, Dictionary<string, (string, int)>>();
         public static readonly Dictionary<string, List<string>> personajesUsadosPorSala = new Dictionary<string, List<string>>();
         public static readonly Dictionary<string, HashSet<string>> jugadoresEnSala = new Dictionary<string, HashSet<string>>();
-        private static readonly Dictionary<string, ISalaCallback> usuariosSalaCallback = new Dictionary<string, ISalaCallback>();
+        public static readonly Dictionary<string, ISalaCallback> usuariosSalaCallback = new Dictionary<string, ISalaCallback>();
         public static readonly Dictionary<string, HashSet<string>> familiasSeleccionadasPorSala = new Dictionary<string, HashSet<string>>();
         public static readonly Dictionary<string, List<(string nombrePersonaje, int vida)>> personajesFamiliaDeUsuario = new Dictionary<string, List<(string, int)>>();
         public static readonly Dictionary<string, BibliotecaClases.Sala> salasActivasEnMemoria = new Dictionary<string, BibliotecaClases.Sala>();
@@ -103,6 +103,7 @@ namespace ServicioGloomm
             }
             return -1;
         }
+
 
         private string GenerarCodigo()
         {
@@ -213,7 +214,7 @@ namespace ServicioGloomm
             }
         }
 
-        private string AgregarJugadorYPersonaje(string nombreUsuario, string nombrePersonaje, string numeroSala)
+        public string AgregarJugadorYPersonaje(string nombreUsuario, string nombrePersonaje, string numeroSala)
         {
             InicializarSalaSiNoExiste(numeroSala);
 
@@ -231,7 +232,7 @@ namespace ServicioGloomm
             }
         }
 
-        private void InicializarSalaSiNoExiste(string numeroSala)
+        public void InicializarSalaSiNoExiste(string numeroSala)
         {
             if (!personajesPorSala.ContainsKey(numeroSala))
             {
@@ -244,7 +245,7 @@ namespace ServicioGloomm
             }
         }
 
-        private string ActualizarPersonajeAnterior(string nombreUsuario, string nombrePersonaje, string numeroSala)
+        public string ActualizarPersonajeAnterior(string nombreUsuario, string nombrePersonaje, string numeroSala)
         {
             var personajesEnSala = personajesPorSala[numeroSala];
             var personajesUsados = personajesUsadosPorSala[numeroSala];
@@ -269,7 +270,7 @@ namespace ServicioGloomm
             return personajeAnterior;
         }
 
-        private void ValidarJugadorNoListo(string nombreUsuario)
+        public void ValidarJugadorNoListo(string nombreUsuario)
         {
             if (jugadoresConectadosListos.ContainsKey(nombreUsuario))
             {
@@ -278,7 +279,7 @@ namespace ServicioGloomm
 
         }
 
-        private void EstaSiendoUtilizado(string numeroSala, string nombrePersonaje)
+        public void EstaSiendoUtilizado(string numeroSala, string nombrePersonaje)
         {
             if (personajesUsadosPorSala[numeroSala].Contains(nombrePersonaje))
             {
@@ -576,14 +577,32 @@ namespace ServicioGloomm
 
         public List<BibliotecaClases.Sala> ObtenerSalasActivas()
         {
-
-
-            foreach (var sala in salasActivasEnMemoria.Values)
+            AdministradorLogger administradorLogger = new AdministradorLogger(this.GetType());
+            try
             {
-                sala.noJugadoresActuales = jugadoresEnSala.ContainsKey(sala.idSala) ? jugadoresEnSala[sala.idSala].Count : 0;
+                var salasAccesoDatos = AccesoSala.ObtenerSalasEnPartida();
+
+                var salasBibliotecaClases = salasAccesoDatos.Select(s => new BibliotecaClases.Sala
+                {
+                    idSala = s.IdSala,
+                    nombreSala = s.NombreSala,
+                    tipoSala = s.TipoSala,
+                    tipoPartida = s.TipoPartida,
+                    noJugadores = s.NoJugadores,
+                    codigo = s.Codigo,
+                    idAdministrador = s.IdAdministrador,
+                    fecha = s.Fecha,
+                    ganador = s.Ganador
+                }).ToList();
+
+                return salasBibliotecaClases;
+            }
+            catch (FaultException<ManejadorExcepciones> ex)
+            {
+                administradorLogger.RegistroError(ex);
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Message));
             }
 
-            return salasActivasEnMemoria.Values.ToList();
         }
 
         public List<BibliotecaClases.Sala> ObtenerSalasActivasConEstado()
@@ -602,24 +621,7 @@ namespace ServicioGloomm
             return listaSalasActivas;
         }
 
-        public void UnirseASalaPublica(string idSala, string idUsuario)
-        {
-            if (salasActivasEnMemoria.TryGetValue(idSala, out var sala) && sala.tipoPartida == "Pública" && sala.tipoSala == "Normal")
-            {
-                if (!jugadoresEnSala.ContainsKey(idSala))
-                {
-                    jugadoresEnSala[idSala] = new HashSet<string>();
-                }
-                jugadoresEnSala[idSala].Add(idUsuario);
-                usuariosSalaCallback[idUsuario] = OperationContext.Current.GetCallbackChannel<ISalaCallback>();
-                ActualizarSalasParaTodos();
-                NotificarResultadoUnirseASala(idUsuario, idSala, true);
-            }
-            else
-            {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("23", "La sala no es pública o no existe."));
-            }
-        }
+
 
         public void SalirDeSala(string idSala, string idUsuario)
         {
@@ -634,7 +636,7 @@ namespace ServicioGloomm
             }
         }
 
-        private void ActualizarSalasParaTodos()
+        public void ActualizarSalasParaTodos()
         {
             var listaActualizada = ObtenerSalasActivasConEstado();
             foreach (var callback in usuariosSalaCallback.Values)
@@ -643,7 +645,7 @@ namespace ServicioGloomm
             }
         }
 
-        private void NotificarResultadoUnirseASala(string idUsuario, string idSala, bool esExitoso)
+        public void NotificarResultadoUnirseASala(string idUsuario, string idSala, bool esExitoso)
         {
             if (usuariosSalaCallback.TryGetValue(idUsuario, out var callback))
             {
@@ -1158,5 +1160,21 @@ namespace ServicioGloomm
 
             return resultado;
         }
+
+
+        public void CambiarEstadoParaPartida(string numeroSala, string ganador)
+        {
+            AdministradorLogger administradorLogger = new AdministradorLogger(this.GetType());
+            try
+            {
+                AccesoSala.ActualizarEstadoPartida(numeroSala, ganador);
+            }
+            catch (FaultException<ManejadorExcepciones> ex)
+            {
+                administradorLogger.RegistroError(ex);
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Message));
+            }
+        }
     }
+
 }

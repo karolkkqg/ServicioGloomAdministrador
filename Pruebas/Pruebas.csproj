@@ -115,7 +115,6 @@
     <Compile Include="SalaTest\ObtenerCodigoSalaTest.cs" />
     <Compile Include="SalaTest\SalirDeSalaTest.cs" />
     <Compile Include="SalaTest\ObtenerFamiliaSeleccionadaTest.cs" />
-    <Compile Include="SalaTest\UnitTest1.cs" />
     <Compile Include="SalaTest\ValidarFamiliaSeleccionadaTest.cs" />
     <Compile Include="ServicioCartaTest\AgregarCartaAMazoJugadorTest.cs" />
     <Compile Include="ServicioCartaTest\ObtenerCartasBonusTest.cs" />

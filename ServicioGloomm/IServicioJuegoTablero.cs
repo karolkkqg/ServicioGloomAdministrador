@@ -68,6 +68,7 @@ namespace ServicioGloomm
 
         [OperationContract]
         void BorrarEstructurasPorSala(string numeroSala);
+
     }
 
     [ServiceContract]
@@ -103,4 +104,6 @@ namespace ServicioGloomm
         [OperationContract(IsOneWay = true)]
         void ActualizarInterfazExpulsion(string jugadorExpulsado);
     }
+
+    
 }

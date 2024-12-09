@@ -19,12 +19,12 @@ namespace Pruebas.SalaTest
         {
             nuevaSala = new BibliotecaClases.Sala
             {
-                idSala = "Sala0000",
+                idSala = "12345",
                 nombreSala = "Sala de Juegos",
                 tipoSala = "Normal",
                 tipoPartida = "Pública",
                 noJugadores = 4,
-                codigo = "1234",
+                codigo = "12345",
                 idAdministrador = "TacoDePato",
                 fecha = DateTime.Now.ToString(),
                 ganador = "Jugador1"
@@ -33,7 +33,7 @@ namespace Pruebas.SalaTest
 
             nuevaParticipante = new BibliotecaClases.Sala
             {
-                idSala = "Sala0000",
+                idSala = "12345",
                 jugador = "Jugador1"
             };
         }
@@ -51,14 +51,14 @@ namespace Pruebas.SalaTest
         {
             using (var contexto = new EntidadesGloom())
             {
-                var participante = contexto.Participantes.FirstOrDefault(s => s.IdPartida == "Sala0000");
+                var participante = contexto.Participantes.FirstOrDefault(s => s.IdPartida == "12345");
                 if (participante != null)
                 {
                     contexto.Participantes.Remove(participante);
                     contexto.SaveChanges();
                 }
 
-                var sala = contexto.Sala.FirstOrDefault(s => s.IdSala == "Sala0000");
+                var sala = contexto.Sala.FirstOrDefault(s => s.IdSala == "12345");
                 if (sala != null)
                 {
                     contexto.Sala.Remove(sala);

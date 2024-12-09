@@ -43,8 +43,9 @@ namespace ServicioGloomm
             {
                 administradorLogger.RegistroError(ex);
                 throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.mensaje));
+
             }
-            
+
         }
 
         public int ActualizarJugador(BibliotecaClases.Jugador jugador)

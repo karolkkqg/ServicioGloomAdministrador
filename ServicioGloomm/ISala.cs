@@ -57,14 +57,7 @@ namespace ServicioGloomm
         [OperationContract]
         void SalirDeSala(string idSala, string idUsuario);
 
-        [OperationContract]
-        void UnirseASalaPublicaNormal(string idSala, string idUsuario);
-
-        [OperationContract]
-        void UnirseASalaPrivadaNormal(string idUsuario, string idSala, string codigoAcceso);
-
-        [OperationContract]
-        void UnirseASalaPrivadaMiniHistoria(string idUsuario, string idSala, string codigoAcceso);
+       
 
         [OperationContract]
         string ObtenerCodigoSala(string idAdminsitrador, string nombreSala);
@@ -81,30 +74,25 @@ namespace ServicioGloomm
         [OperationContract]
         Dictionary<string, HashSet<string>> ObtenerFamiliasSeleccionadasPorSala();
 
+        [OperationContract]
+        void CambiarEstadoParaPartida(string numeroSala, string ganador);
+
     }
 
     [ServiceContract]
     public interface ISalaCallback
     {
-        [OperationContract(IsOneWay =true)]
+        [OperationContract(IsOneWay = true)]
         void EmpezarJuego();
 
         [OperationContract(IsOneWay = true)]
         void ActualizarNumeroJugadores();
-        [OperationContract(IsOneWay = true)]
-        void ActualizarImagenPersonaje(string personaje, string personajeAnterior);
 
         [OperationContract(IsOneWay = true)]
         void SacarDeSalaATodosJugadores();
-        
 
-        [OperationContract(IsOneWay = true)]
-        void ActualizarSalasActivas(List<Sala> salasActivas);
-
-        [OperationContract(IsOneWay = true)]
-        void ResultadoUnirseASala(string idSala, string codigo, bool esExitoso);
-
-        [OperationContract(IsOneWay = true)]
-        void ActualizarSeleccionFamilia(string nombreFamilia, string nombreFamiliaAnterior);
     }
+
+
+
 }

@@ -12,7 +12,7 @@ namespace ServicioGloomm
 {
     public partial class ServicioJuego : ICreacionPartida
     {
-        public BibliotecaClases.Sala BuscarSalaExistente(String idSala, String codigo)
+        public BibliotecaClases.Sala BuscarSalaExistente(String nombreSala, String codigo)
         {
             AdministradorLogger administradorLogger = new AdministradorLogger(this.GetType());
             try
@@ -20,14 +20,14 @@ namespace ServicioGloomm
                 AccesoDatos.Sala SalaDb;
                 BibliotecaClases.Sala SalaBiblioteca = new BibliotecaClases.Sala();
 
-                SalaDb = AccesoSala.BuscarPartida(idSala, codigo);
+                SalaDb = AccesoSala.BuscarPartida(nombreSala, codigo);
                 SalaBiblioteca.fecha = SalaDb.Fecha;
-                SalaBiblioteca.idSala = idSala;
+                SalaBiblioteca.idSala = SalaDb.IdSala;
                 SalaBiblioteca.tipoSala = SalaDb.TipoSala;
                 SalaBiblioteca.tipoPartida = SalaDb.TipoPartida;
                 SalaBiblioteca.ganador = SalaDb.Ganador;
                 SalaBiblioteca.codigo = codigo;
-                SalaBiblioteca.nombreSala = SalaDb.NombreSala;
+                SalaBiblioteca.nombreSala = nombreSala;
                 SalaBiblioteca.noJugadores = SalaDb.NoJugadores;
                 SalaBiblioteca.idAdministrador = SalaDb.IdAdministrador;
 

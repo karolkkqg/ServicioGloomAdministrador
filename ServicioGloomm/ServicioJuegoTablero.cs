@@ -36,7 +36,7 @@ namespace ServicioGloomm
         {
             return salaJugadoresPorSala[numeroSala].Keys.ToList();
         }
-       
+
 
         public void IngresarJugadorAJuego(string nombreUsuario, string numeroSala, int numeroJugadores)
         {
@@ -70,7 +70,7 @@ namespace ServicioGloomm
                 {
                     throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.Mensaje));
                 }
-                
+
 
             }
         }
@@ -213,7 +213,7 @@ namespace ServicioGloomm
                 jugadoresConectadosTablero.Add(nombreUsuario, numeroSala);
                 jugadoresVivos[numeroSala].Add(nombreUsuario);
             }
-            
+
         }
 
         public List<string> ObtenerJugadores(string numeroSala)
@@ -334,7 +334,7 @@ namespace ServicioGloomm
             AdministradorLogger administradorLogger = new AdministradorLogger(this.GetType());
             try
             {
-                AccesoSala.ActualizarGanador(numeroSala, ganador);
+                AccesoSala.ActualizarEstadoPartida(numeroSala, ganador);
             }
             catch (FaultException<ManejadorExcepciones> ex)
             {
@@ -373,7 +373,7 @@ namespace ServicioGloomm
             {
                 jugadoresConectadosTablero[numeroSala] = string.Empty;
             }
-            
+
             if (!jugadoresConCastigos.ContainsKey(numeroSala))
             {
                 jugadoresConCastigos[numeroSala] = 0;
@@ -863,5 +863,7 @@ namespace ServicioGloomm
         {
             return turnosPorSala.ContainsKey(numeroSala);
         }
+
+
     }
 }
