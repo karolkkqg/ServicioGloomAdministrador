@@ -790,61 +790,6 @@ namespace ServicioGloomm
             return false;
         }
 
-        public void UnirseASalaPublicaNormal(string idSala, string idUsuario)
-        {
-            if (salasActivasEnMemoria.TryGetValue(idSala, out var sala) && sala.tipoPartida == "Pública" && sala.tipoSala == "Normal")
-            {
-                if (!jugadoresEnSala.ContainsKey(idSala))
-                {
-                    jugadoresEnSala[idSala] = new HashSet<string>();
-                }
-                jugadoresEnSala[idSala].Add(idUsuario);
-                usuariosSalaCallback[idUsuario] = OperationContext.Current.GetCallbackChannel<ISalaCallback>();
-                ActualizarSalasParaTodos();
-                NotificarResultadoUnirseASala(idUsuario, idSala, true);
-            }
-            else
-            {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("23", "La sala no es pública o no existe."));
-            }
-        }
-
-        public void UnirseASalaPrivadaNormal(string idUsuario, string idSala, string codigoAcceso)
-        {
-            if (!salasActivasEnMemoria.TryGetValue(idSala, out var sala) || sala.tipoSala != "Normal" || sala.codigo != codigoAcceso)
-            {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("24", "Verifique el código de la sala."));
-            }
-
-            if (!jugadoresEnSala.ContainsKey(idSala))
-            {
-                jugadoresEnSala[idSala] = new HashSet<string>();
-            }
-            jugadoresEnSala[idSala].Add(idUsuario);
-            usuariosSalaCallback[idUsuario] = OperationContext.Current.GetCallbackChannel<ISalaCallback>();
-            ActualizarSalasParaTodos();
-            NotificarResultadoUnirseASala(idUsuario, idSala, true);
-        }
-
-
-
-        public void UnirseASalaPrivadaMiniHistoria(string idUsuario, string idSala, string codigoAcceso)
-        {
-            if (!salasActivasEnMemoria.TryGetValue(idSala, out var sala) || sala.tipoSala != "Mini historia" || sala.codigo != codigoAcceso)
-            {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("24", "Verifique el código de la sala."));
-            }
-
-            if (!jugadoresEnSala.ContainsKey(idSala))
-            {
-                jugadoresEnSala[idSala] = new HashSet<string>();
-            }
-            jugadoresEnSala[idSala].Add(idUsuario);
-            usuariosSalaCallback[idUsuario] = OperationContext.Current.GetCallbackChannel<ISalaCallback>();
-            ActualizarSalasParaTodos();
-            NotificarResultadoUnirseASala(idUsuario, idSala, true);
-        }
-
         private void FamiliaEnSeleccion(string numeroSala, string nombreFamilia)
         {
             if (familiasSeleccionadasPorSala[numeroSala].Contains(nombreFamilia))

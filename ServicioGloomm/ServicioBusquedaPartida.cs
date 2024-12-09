@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ServicioGlomm
 {
-    public partial class ServicioJuego:IServicioBusquedaPartida
+    public partial class ServicioJuego : IServicioBusquedaPartida
     {
         public List<BibliotecaClases.Sala> ObtenerSalasActivas()
         {
@@ -57,5 +57,6 @@ namespace ServicioGlomm
                 callback.ResultadoUnirseASala(idSala, salasActivasEnMemoria[idSala].codigo, esExitoso);
             }
         }
+
     }
 }
