@@ -22,11 +22,11 @@ namespace Pruebas
                 tipoSala = "Normal",
                 tipoPartida = "Publica",
                 noJugadores = 4,
-                codigo = "12345",
+                codigo = "123450000",
                 idAdministrador = "Pinku",
                 fecha = "22/10/24",
                 ganador = "Ninguno",
-                idSala = "12345",
+                idSala = "123450000",
 
             };
         }

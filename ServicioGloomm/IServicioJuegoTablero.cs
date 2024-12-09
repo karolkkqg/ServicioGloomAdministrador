@@ -92,8 +92,8 @@ namespace ServicioGloomm
         [OperationContract(IsOneWay = true)]
         void EnviarGanador(string jugador);
 
-        [OperationContract(IsOneWay = true)]
-        void ActualizarJugadorMuerto(string jugadorMuerto);
+        //[OperationContract(IsOneWay = true)]
+        //void ActualizarJugadorMuerto(string jugadorMuerto);
 
         [OperationContract(IsOneWay = true)]
         void NotificarVotacionExpulsion(string jugadorPropuesto);

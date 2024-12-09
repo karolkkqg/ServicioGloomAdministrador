@@ -30,7 +30,7 @@ namespace ServicioGloomm
         public static readonly Dictionary<string, List<string>> jugadoresVivos = new Dictionary<string, List<string>>();
         private BibliotecaClases.Sala nuevaParticipante;
         private Dictionary<string, int> turnosJugados = new Dictionary<string, int>();
-        public readonly Dictionary<string, List<string>> votosExpulsion = new Dictionary<string, List<string>>();
+        public static readonly Dictionary<string, List<string>> votosExpulsion = new Dictionary<string, List<string>>();
 
         public List<string> ObtenerJugadoresConectados(string numeroSala)
         {
@@ -246,7 +246,7 @@ namespace ServicioGloomm
             }
             EliminarJugadorDeLista(numeroSala, jugadorAMatar);
 
-            NotificarJugadorMuerto(jugadorAMatar);
+            //NotificarJugadorMuerto(jugadorAMatar);
         }
 
 
@@ -274,7 +274,7 @@ namespace ServicioGloomm
                 jugadoresVivos[numeroSala].Remove(jugadorAMatar);
             }
         }
-
+        /*
         private void NotificarJugadorMuerto(string jugadorAMatar)
         {
             AdministradorLogger administradorLogger = new AdministradorLogger(this.GetType());
@@ -300,7 +300,7 @@ namespace ServicioGloomm
                 }
             }
         }
-
+        */
         public void TerminarPartidaMiniJuego(string numeroSala, string jugadorGanador)
         {
 
@@ -609,7 +609,6 @@ namespace ServicioGloomm
         {
             if (!jugadoresConectadosTableroCallback.ContainsKey(jugadorObjetivo))
             {
-                Console.WriteLine($"El jugador {jugadorObjetivo} no está conectado o no existe.");
                 return;
             }
 
@@ -631,7 +630,7 @@ namespace ServicioGloomm
             {
                 try
                 {
-                    string mensaje = $"Has sido expulsado de la sala {numeroSala}.";
+                    string mensaje = numeroSala;
                     callback.RecibirExpulsion(mensaje);
                 }
                 catch (CommunicationException ex)

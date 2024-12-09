@@ -1,150 +1,78 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using ServicioGloomm;
 using System;
 using System.Collections.Generic;
 
-namespace Pruebas.ServicioJuegoTableroTest
+namespace Pruebas.SalaTest
 {
-    /*[TestClass]
-    public class SolicitarExpulsionTest
+    [TestClass]
+    public class SolicitarExpulsionTests
     {
-        private ServicioJuego servicio;
-        private const string NumeroSala = "SalaTest";
+        private ServicioJuego servicioJuego;
 
         [TestInitialize]
-        public void TestInitialize()
+        public void SetUp()
         {
-            servicio = new ServicioJuego();
+            servicioJuego = new ServicioJuego();
 
-            // Inicializar los diccionarios
             ServicioJuego.jugadoresConectadosTableroCallback.Clear();
             ServicioJuego.jugadoresConectadosTablero.Clear();
-            ServicioJuego.salaJugadoresPorSala.Clear();
+            ServicioJuego.turnosPorSala.Clear();
+            ServicioJuego.votosExpulsion.Clear();
+            ServicioJuego.administradoresDeSala.Clear();
+            var mockCallback1 = new Mock<IJuegoAdministradorCallback>();
+            var mockCallback2 = new Mock<IJuegoAdministradorCallback>();
 
-            // Agregar datos de prueba
-            ServicioJuego.jugadoresConectadosTableroCallback["Jugador1"] = new MockCallback();
-            ServicioJuego.jugadoresConectadosTableroCallback["Jugador2"] = new MockCallback();
+            ServicioJuego.jugadoresConectadosTableroCallback.Add("Pinku", mockCallback1.Object);
+            ServicioJuego.jugadoresConectadosTableroCallback.Add("Jugador2", mockCallback2.Object);
 
-            ServicioJuego.jugadoresConectadosTablero["Jugador1"] = NumeroSala;
-            ServicioJuego.jugadoresConectadosTablero["Jugador2"] = NumeroSala;
+            ServicioJuego.jugadoresConectadosTablero.Add("Pinku", "12345");
+            ServicioJuego.jugadoresConectadosTablero.Add("Jugador2", "12345");
 
-            ServicioJuego.salaJugadoresPorSala[NumeroSala] = new Dictionary<string, ISalaCallback>
-        {
-            { "Jugador1", new MockCallback() },
-            { "Jugador2", new MockCallback() }
-        };
+            ServicioJuego.turnosPorSala.Add("12345", new List<string> { "Pinku", "Jugador2" });
 
-            // Asignar administrador para la sala
-            ServicioJuego.administradoresDeSala[NumeroSala] = "Administrador";
+            ServicioJuego.administradoresDeSala.Add("12345", "Pinku");
         }
 
         [TestMethod]
-        public void SolicitarExpulsion_JugadorNoExiste_NoHaceNada()
+        public void SolicitarExpulsion_ExpulsaJugadorDirectamente_SiEsAdministrador()
         {
-            // Arrange
-            string solicitante = "Jugador1";
-            string jugadorObjetivo = "JugadorInexistente";
+            servicioJuego.SolicitarExpulsion("Pinku", "Jugador2", "12345");
 
-            // Act
-            servicio.SolicitarExpulsion(solicitante, jugadorObjetivo, NumeroSala);
-
-            // Assert
-            Assert.IsFalse(ServicioJuego.jugadoresConectadosTableroCallback.ContainsKey(jugadorObjetivo),
-                "El jugador inexistente no debería estar en los callbacks.");
+            Assert.IsFalse(ServicioJuego.jugadoresConectadosTableroCallback.ContainsKey("Jugador2"), "El jugador no fue expulsado correctamente.");
+            Assert.IsFalse(ServicioJuego.jugadoresConectadosTablero.ContainsKey("Jugador2"), "El jugador no fue removido correctamente del tablero.");
         }
 
         [TestMethod]
-        public void SolicitarExpulsion_SolicitanteEsAdministrador_ExpulsaJugador()
+        public void SolicitarExpulsion_NoHaceNada_SiJugadorNoConectado()
         {
-            // Arrange
-            string solicitante = "Administrador";
-            string jugadorObjetivo = "Jugador1";
+          
+            servicioJuego.SolicitarExpulsion("Pinku", "JugadorDesconectado", "12345");
 
-            // Act
-            servicio.SolicitarExpulsion(solicitante, jugadorObjetivo, NumeroSala);
-
-            // Assert
-            Assert.IsFalse(ServicioJuego.jugadoresConectadosTableroCallback.ContainsKey(jugadorObjetivo),
-                "El jugador debería haber sido expulsado.");
-            Assert.IsFalse(ServicioJuego.jugadoresConectadosTablero.ContainsKey(jugadorObjetivo),
-                "El jugador debería haber sido removido de los datos de tablero.");
+            Assert.IsFalse(ServicioJuego.votosExpulsion.ContainsKey("12345"), "No debería haberse iniciado una votación.");
+            Assert.IsTrue(ServicioJuego.jugadoresConectadosTableroCallback.ContainsKey("Pinku"), "El solicitante debería permanecer conectado.");
         }
 
         [TestMethod]
-        public void SolicitarExpulsion_SolicitanteNoEsAdministrador_IniciaVotacion()
+        public void ExpulsarJugador_NotificaExpulsion()
         {
-            // Arrange
-            string solicitante = "Jugador1";
-            string jugadorObjetivo = "Jugador2";
+            var mockCallback = new Mock<IJuegoAdministradorCallback>();
+            ServicioJuego.jugadoresConectadosTableroCallback["Jugador2"] = mockCallback.Object;
 
-            // Act
-            servicio.SolicitarExpulsion(solicitante, jugadorObjetivo, NumeroSala);
+            servicioJuego.ExpulsarJugador("Jugador2", "12345");
 
-            // Assert
-            Assert.IsTrue(servicio.votosExpulsion.ContainsKey(NumeroSala),
-                "Debería haberse iniciado una votación para la sala.");
-            Assert.IsTrue(servicio.votosExpulsion[NumeroSala].Contains(solicitante),
-                "El solicitante debería haber votado automáticamente.");
+            mockCallback.Verify(m => m.RecibirExpulsion(It.IsAny<string>()), Times.Once, "El jugador expulsado no recibió la notificación.");
         }
 
         [TestCleanup]
-        public void TestCleanup()
+        public void LimpiarDatos()
         {
-            // Limpiar los datos de prueba
             ServicioJuego.jugadoresConectadosTableroCallback.Clear();
             ServicioJuego.jugadoresConectadosTablero.Clear();
-            ServicioJuego.salaJugadoresPorSala.Clear();
+            ServicioJuego.turnosPorSala.Clear();
+            ServicioJuego.votosExpulsion.Clear();
             ServicioJuego.administradoresDeSala.Clear();
-            servicio.votosExpulsion.Clear();
         }
-
-        // Mock callback para simular los callbacks en los tests
-        private class MockCallback : IJuegoAdministradorCallback
-        {
-            public void RecibirExpulsion(string jugadorObjetivo)
-            {
-                // Simula el método del callback
-            }
-
-            public void NotificarVotacionExpulsion(string jugadorObjetivo)
-            {
-                // Simula el método del callback
-            }
-
-            public void ActualizarTurno(string jugadorSiguiente)
-            {
-                // Simula el método del callback
-            }
-
-            void IJuegoAdministradorCallback.EnviarTurno(string nombreDelUsuarioEnTurno)
-            {
-                throw new NotImplementedException();
-            }
-
-            void IJuegoAdministradorCallback.ActualizarImagenMazoCartaSobrante()
-            {
-                throw new NotImplementedException();
-            }
-
-            void IJuegoAdministradorCallback.ActualizarImagenMazoCartaBonus()
-            {
-                throw new NotImplementedException();
-            }
-
-            void IJuegoAdministradorCallback.ActualizarMazoJugador()
-            {
-                throw new NotImplementedException();
-            }
-
-            void IJuegoAdministradorCallback.EnviarGanador(string jugador)
-            {
-                throw new NotImplementedException();
-            }
-
-            void IJuegoAdministradorCallback.NotificarResultadoExpulsion(string jugadorExpulsado, bool expulsado)
-            {
-                throw new NotImplementedException();
-            }
-        }
-    }*/
+    }
 }

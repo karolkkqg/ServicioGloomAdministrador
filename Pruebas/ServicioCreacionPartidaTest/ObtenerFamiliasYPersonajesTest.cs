@@ -14,7 +14,6 @@ namespace Pruebas.ServicioCreacionPartidaTest
         [TestInitialize]
         public void TestInitialize()
         {
-            // Limpiar y reinicializar los diccionarios estáticos antes de cada prueba
             ServicioJuego.jugadoresEnSala.Clear();
             ServicioJuego.familiasSeleccionadasPorSala.Clear();
             ServicioJuego.personajesFamiliaDeUsuario.Clear();
@@ -28,17 +27,13 @@ namespace Pruebas.ServicioCreacionPartidaTest
         [TestMethod]
         public void ObtenerFamiliasYPersonajes_SalaConFamiliasValidas_RetornaDatos()
         {
-            // Arrange
             string numeroSala = "1";
             ServicioJuego.jugadoresEnSala[numeroSala] = new HashSet<string> { "Jugador1", "Jugador2" };
             ServicioJuego.familiasSeleccionadasPorSala[numeroSala] = new HashSet<string> { "Familia1", "Familia2" };
             ServicioJuego.personajesFamiliaDeUsuario["Jugador1"] = ServicioJuego.familias["Familia1"];
             ServicioJuego.personajesFamiliaDeUsuario["Jugador2"] = ServicioJuego.familias["Familia2"];
-
-            // Act
             var resultado = new ServicioJuego().ObtenerFamiliaYPersonajesPorUsuario(numeroSala);
 
-            // Assert
             Assert.IsNotNull(resultado, "El resultado no debería ser nulo.");
             Assert.AreEqual(2, resultado.Count, "El resultado debería contener datos de 2 usuarios.");
             Assert.IsTrue(resultado.ContainsKey("Jugador1"), "El resultado debería incluir 'Jugador1'.");
@@ -58,15 +53,12 @@ namespace Pruebas.ServicioCreacionPartidaTest
         [TestMethod]
         public void ObtenerFamiliasYPersonajes_SalaSinFamilias_RetornaVacio()
         {
-            // Arrange
+            
             string numeroSala = "1";
             ServicioJuego.jugadoresEnSala[numeroSala] = new HashSet<string> { "Jugador1" };
-            ServicioJuego.familiasSeleccionadasPorSala[numeroSala] = new HashSet<string>(); // Sin familias seleccionadas
+            ServicioJuego.familiasSeleccionadasPorSala[numeroSala] = new HashSet<string>();
 
-            // Act
             var resultado = new ServicioJuego().ObtenerFamiliaYPersonajesPorUsuario(numeroSala);
-
-            // Assert
             Assert.IsNotNull(resultado, "El resultado no debería ser nulo.");
             Assert.AreEqual(0, resultado.Count, "El resultado debería estar vacío si no hay familias seleccionadas.");
         }
@@ -74,15 +66,11 @@ namespace Pruebas.ServicioCreacionPartidaTest
         [TestMethod]
         public void ObtenerFamiliasYPersonajes_FamiliasNoCoinciden_RetornaVacio()
         {
-            // Arrange
             string numeroSala = "1";
             ServicioJuego.jugadoresEnSala[numeroSala] = new HashSet<string> { "Jugador1" };
             ServicioJuego.familiasSeleccionadasPorSala[numeroSala] = new HashSet<string> { "FamiliaInvalida" };
-
-            // Act
             var resultado = new ServicioJuego().ObtenerFamiliaYPersonajesPorUsuario(numeroSala);
 
-            // Assert
             Assert.IsNotNull(resultado, "El resultado no debería ser nulo.");
             Assert.AreEqual(0, resultado.Count, "El resultado debería estar vacío si las familias seleccionadas no son válidas.");
         }

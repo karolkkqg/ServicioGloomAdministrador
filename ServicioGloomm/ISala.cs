@@ -27,10 +27,6 @@ namespace ServicioGloomm
 
         [OperationContract]
         [FaultContract(typeof(ManejadorExcepciones))]
-        void SeleccionarPersonaje(string nombreUsuario, string nombrePersonaje, string numeroSala);
-
-        [OperationContract]
-        [FaultContract(typeof(ManejadorExcepciones))]
         void ValidarPersonajesSeleccionados(string numeroSala, int cantidadJugadores);
 
         [OperationContract]
@@ -48,16 +44,12 @@ namespace ServicioGloomm
         void SacarATodosLosJugadoresDeSala(string numeroSala);
 
         [OperationContract]
-        List<Sala> ObtenerSalasActivas();
-
-        [OperationContract]
         [FaultContract(typeof(ManejadorExcepciones))]
         List<Sala> ObtenerSalasActivasConEstado();
 
         [OperationContract]
         void SalirDeSala(string idSala, string idUsuario);
 
-       
 
         [OperationContract]
         string ObtenerCodigoSala(string idAdminsitrador, string nombreSala);

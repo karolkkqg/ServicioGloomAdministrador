@@ -1,72 +1,86 @@
-﻿using BlbibliotecaClases;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using ServicioGloomm;
-using System;
 using System.ServiceModel;
-using System.Threading.Tasks;
+using System;
+using BlbibliotecaClases;
 
-namespace Pruebas.ServicioJuegoTest
+[TestClass]
+public class EnviarMensajeTest
 {
-    /*[TestClass]
-    public class ChatTest
+    private ServicioJuego servicioJuego;
+    private Mock<IChatCallback> mockCallback;
+    private ServiceHost serviceHost;
+
+    [TestInitialize]
+    public void SetUp()
     {
-        private static ServicioGloomJuego chatProxy;
-        private static ChatCallbackImplementation chatCallbackImplementation;
+        // Crear el servicio de manera real para habilitar OperationContext
+        servicioJuego = new ServicioJuego();
 
-        [TestInitialize]
-        public void Setup()
-        {
-            chatCallbackImplementation = new ChatCallbackImplementation();
-            chatProxy = new ServicioGloomJuego(new InstanceContext(chatCallbackImplementation));
-        }
+        // Inicializar el Mock del callback
+        mockCallback = new Mock<IChatCallback>();
 
-        [TestCleanup]
-        public void Cleanup()
-        {
-            chatProxy.Close();
-        }
+        // Crear y abrir un host para el servicio con una instancia única
+        serviceHost = new ServiceHost(servicioJuego, new Uri("net.pipe://localhost"));
+        serviceHost.AddServiceEndpoint(typeof(IChat), new NetNamedPipeBinding(), "Servicio");
+        serviceHost.Open();
 
-        [TestMethod]
-        public async Task AgregarJugadorTestExitoso()
-        {
-            string nombreUsuario = "Jugador1";
-            chatProxy.AgregarJugador(nombreUsuario);
+        // Simular OperationContext.Current asignando un contexto válido
+        var factory = new ChannelFactory<IChat>(new NetNamedPipeBinding(), "net.pipe://localhost/Servicio");
+        var proxy = factory.CreateChannel();
 
-            await Task.Delay(2000);
+        OperationContext.Current = new OperationContext((IContextChannel)proxy);
 
-            Assert.IsTrue(chatCallbackImplementation.MensajeRecibido, "No se recibió el mensaje de bienvenida.");
-
-            chatProxy.DesconectarJugador(nombreUsuario);  
-        }
-
-        [TestMethod]
-        public async Task EnviarMensajeTestExitoso()
-        {
-            string nombreUsuario = "Jugador1";
-            chatProxy.AgregarJugador(nombreUsuario);
-
-            string mensajeTexto = "Hola, este es un mensaje de prueba.";
-            chatProxy.EnviarMensaje(nombreUsuario, mensajeTexto);
-
-            await Task.Delay(2000);
-
-            Assert.IsTrue(chatCallbackImplementation.MensajeRecibido, "No se recibió el mensaje en el callback.");
-            Assert.AreEqual(mensajeTexto, chatCallbackImplementation.UltimoMensaje.mensaje);
-
-            chatProxy.DesconectarJugador(nombreUsuario);  
-        }
+        // Limpiar datos previos
+        ServicioJuego.jugadoresPartida.Clear();
     }
 
-    public class ChatCallbackImplementation : IChatCallback
+    [TestMethod]
+    public void EnviarMensaje_AgregaMensajeAColaYNotificaJugadores()
     {
-        public bool MensajeRecibido { get; private set; }
-        public Chat UltimoMensaje { get; private set; }
+        // Arrange
+        string nombreUsuario = "JugadorPrueba";
+        string mensaje = "Mensaje de prueba";
+        servicioJuego.AgregarJugadorAChat(nombreUsuario);
 
-        public void EnviarMensajeCliente(Chat mensaje)
+        // Act
+        servicioJuego.EnviarMensaje(nombreUsuario, mensaje);
+
+        // Assert
+        Assert.AreEqual(1, ServicioJuego.jugadoresPartida.Count, "El jugador no fue agregado correctamente.");
+        Assert.AreEqual(1, servicioJuego.ObtenerHistorialMensajes().Count, "El mensaje no fue agregado al historial.");
+
+        var mensajeEnviado = servicioJuego.ObtenerHistorialMensajes()[0];
+        Assert.AreEqual(nombreUsuario, mensajeEnviado.nombreUsuario, "El nombre del usuario no coincide.");
+        Assert.AreEqual(mensaje, mensajeEnviado.mensaje, "El contenido del mensaje no coincide.");
+
+        mockCallback.Verify(callback => callback.EnviarMensajeCliente(It.Is<Chat>(
+            m => m.nombreUsuario == nombreUsuario && m.mensaje == mensaje)), Times.Once, "El mensaje no fue enviado al callback correctamente.");
+    }
+
+    [TestCleanup]
+    public void TearDown()
+    {
+        if (serviceHost != null)
         {
-            MensajeRecibido = true;
-            UltimoMensaje = mensaje;
-            Console.WriteLine("Mensaje recibido en callback: ");
+            try
+            {
+                if (serviceHost.State == CommunicationState.Faulted)
+                {
+                    serviceHost.Abort();
+                }
+                else
+                {
+                    serviceHost.Close();
+                }
+            }
+            catch
+            {
+                serviceHost.Abort();
+            }
         }
-    }*/
+
+        ServicioJuego.jugadoresPartida.Clear();
+    }
 }

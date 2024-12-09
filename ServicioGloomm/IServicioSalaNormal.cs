@@ -5,10 +5,13 @@ using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServicioGlomm
+namespace ServicioGloomm
 {
+    [ServiceContract(CallbackContract = typeof(IServicioSalaNormalCallback))]
     public interface IServicioSalaNormal
     {
+        [OperationContract]
+        void ConectarConSalaNormal(string numeroSala, string nombreUsuario);
     }
 
     public interface IServicioSalaNormalCallback{
