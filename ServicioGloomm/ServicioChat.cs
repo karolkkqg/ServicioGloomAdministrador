@@ -10,12 +10,11 @@ using System.Threading.Tasks;
 
 namespace ServicioGloomm
 {
-    [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Reentrant)]
     public partial class ServicioJuego : IChat
     {
 
-        private static Queue<Chat> mensajes = new Queue<Chat>();
-        private static Dictionary<string, IChatCallback> jugadoresPartida = new Dictionary<string, IChatCallback>();
+        public static Queue<Chat> mensajes = new Queue<Chat>();
+        public static Dictionary<string, IChatCallback> jugadoresPartida = new Dictionary<string, IChatCallback>();
         private IChatCallback respuesta;
 
 

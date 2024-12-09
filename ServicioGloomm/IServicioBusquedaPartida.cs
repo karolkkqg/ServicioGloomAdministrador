@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using BibliotecaClases;
 using ServicioGloomm;
 
-namespace ServicioGlomm
+namespace ServicioGloomm
 {
     [ServiceContract(CallbackContract = typeof(IBusquedaPartidaCallback))]
     public interface IServicioBusquedaPartida

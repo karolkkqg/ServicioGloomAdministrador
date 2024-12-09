@@ -84,6 +84,7 @@
     <Compile Include="IServicioAdministrador.cs" />
     <Compile Include="ServicioAmigos.cs" />
     <Compile Include="ServicioSala.cs" />
+    <Compile Include="ServicioSalaMiniHistoria.cs" />
     <Compile Include="ServicioSalaNormal.cs" />
   </ItemGroup>
   <ItemGroup>

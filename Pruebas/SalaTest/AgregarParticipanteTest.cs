@@ -17,9 +17,10 @@ namespace Pruebas.SalaTest
         [TestInitialize]
         public void TestInitialize()
         {
+            LimpiarDatosDePrueba();
             nuevaSala = new BibliotecaClases.Sala
             {
-                idSala = "12345",
+                idSala = "Omagaaaaa",
                 nombreSala = "Sala de Juegos",
                 tipoSala = "Normal",
                 tipoPartida = "Pública",
@@ -33,8 +34,8 @@ namespace Pruebas.SalaTest
 
             nuevaParticipante = new BibliotecaClases.Sala
             {
-                idSala = "12345",
-                jugador = "Jugador1"
+                idSala = "Omagaaaaa",
+                jugador = "Jugador010"
             };
         }
 
@@ -51,14 +52,14 @@ namespace Pruebas.SalaTest
         {
             using (var contexto = new EntidadesGloom())
             {
-                var participante = contexto.Participantes.FirstOrDefault(s => s.IdPartida == "12345");
+                var participante = contexto.Participantes.FirstOrDefault(s => s.NombreUsuario == "Jugador010");
                 if (participante != null)
                 {
                     contexto.Participantes.Remove(participante);
                     contexto.SaveChanges();
                 }
 
-                var sala = contexto.Sala.FirstOrDefault(s => s.IdSala == "12345");
+                var sala = contexto.Sala.FirstOrDefault(s => s.IdSala == "Omagaaaaa");
                 if (sala != null)
                 {
                     contexto.Sala.Remove(sala);

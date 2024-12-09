@@ -27,7 +27,10 @@ namespace AccesoDatos
             }
             catch (EntityException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"));
+                Console.WriteLine(ex.Message);
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", ex.Message));
+                
+
             }
         }
 
