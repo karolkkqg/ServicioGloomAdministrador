@@ -634,6 +634,8 @@ namespace ServicioGloomm
             return false;
         }
 
+<<<<<<< HEAD
+=======
         public void UnirseASalaPublicaNormal(string idSala, string idUsuario)
         {
             if (salasActivasEnMemoria.TryGetValue(idSala, out var sala) && sala.tipoPartida == "Pública" && sala.tipoSala == "Normal")
@@ -688,6 +690,7 @@ namespace ServicioGloomm
             
         }
 
+>>>>>>> 936f47926b14da06fc7b45166957ae1bf59032a1
         private void FamiliaEnSeleccion(string numeroSala, string nombreFamilia)
         {
             if (familiasSeleccionadasPorSala[numeroSala].Contains(nombreFamilia))
