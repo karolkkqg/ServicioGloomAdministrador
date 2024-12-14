@@ -16,10 +16,6 @@ namespace ServicioGloomm
         [FaultContract(typeof(ManejadorExcepciones))]
         int AgregarParticipantesAPartida(Sala sala);
 
-        [OperationContract]
-        [FaultContract(typeof(ManejadorExcepciones))]
-        int CrearPartida(Sala sala);
-
         [OperationContract(IsOneWay = true)]
         void ConectarConSala(string numeroSala, string nombreUsuario);
         [OperationContract]
@@ -49,10 +45,6 @@ namespace ServicioGloomm
 
         [OperationContract]
         void SalirDeSala(string idSala, string idUsuario);
-
-
-        [OperationContract]
-        string ObtenerCodigoSala(string idAdminsitrador, string nombreSala);
 
         [OperationContract]
         List<string> ObtenerFamiliaSeleccionada(string idSala);

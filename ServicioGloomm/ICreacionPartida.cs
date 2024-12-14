@@ -38,5 +38,15 @@ namespace ServicioGloomm
         [FaultContract(typeof(ManejadorExcepciones))]
         Dictionary<string, List<(string nombrePersonaje, int vida)>> ObtenerFamiliasYPersonajes(string numeroSala);
 
+        [OperationContract]
+        [FaultContract(typeof(ManejadorExcepciones))]
+        int CrearPartida(Sala sala);
+
+        [OperationContract]
+        Dictionary<string, (string familia, int vidaTotal)> ObtenerResumenFamiliasPorSala(string numeroSala);
+
+        [OperationContract]
+        string ObtenerCodigoSala(string idAdminsitrador, string nombreSala);
+
     }
 }

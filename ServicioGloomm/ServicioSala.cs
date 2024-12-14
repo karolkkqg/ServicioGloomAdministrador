@@ -20,7 +20,7 @@ namespace ServicioGloomm
         public static readonly Dictionary<string, List<string>> salaJugadores = new Dictionary<string, List<string>>();
         public static readonly Dictionary<string, Dictionary<string, (string nombrePersonaje, int vida)>> personajesPorSala = new Dictionary<string, Dictionary<string, (string, int)>>();
         public static readonly Dictionary<string, HashSet<string>> jugadoresEnSala = new Dictionary<string, HashSet<string>>();
-        public static readonly Dictionary<string, ISalaCallback> usuariosSalaCallback = new Dictionary<string, ISalaCallback>();
+        public static readonly Dictionary<string, IBusquedaPartidaCallback> usuariosSalaCallback = new Dictionary<string, IBusquedaPartidaCallback>();
         public static readonly Dictionary<string, HashSet<string>> familiasSeleccionadasPorSala = new Dictionary<string, HashSet<string>>();
         public static readonly Dictionary<string, List<(string nombrePersonaje, int vida)>> personajesFamiliaDeUsuario = new Dictionary<string, List<(string, int)>>();
         public static readonly Dictionary<string, BibliotecaClases.Sala> salasActivasEnMemoria = new Dictionary<string, BibliotecaClases.Sala>();
@@ -643,7 +643,7 @@ namespace ServicioGloomm
                     jugadoresEnSala[idSala] = new HashSet<string>();
                 }
                 jugadoresEnSala[idSala].Add(idUsuario);
-                usuariosSalaCallback[idUsuario] = OperationContext.Current.GetCallbackChannel<ISalaCallback>();
+                usuariosSalaCallback[idUsuario] = OperationContext.Current.GetCallbackChannel<IBusquedaPartidaCallback>();
                 
             }
             else
@@ -664,7 +664,7 @@ namespace ServicioGloomm
                 jugadoresEnSala[idSala] = new HashSet<string>();
             }
             jugadoresEnSala[idSala].Add(idUsuario);
-            usuariosSalaCallback[idUsuario] = OperationContext.Current.GetCallbackChannel<ISalaCallback>();
+            usuariosSalaCallback[idUsuario] = OperationContext.Current.GetCallbackChannel<IBusquedaPartidaCallback>();
             //ActualizarSalasParaTodos();
             
         }
@@ -683,7 +683,7 @@ namespace ServicioGloomm
                 jugadoresEnSala[idSala] = new HashSet<string>();
             }
             jugadoresEnSala[idSala].Add(idUsuario);
-            usuariosSalaCallback[idUsuario] = OperationContext.Current.GetCallbackChannel<ISalaCallback>();
+            usuariosSalaCallback[idUsuario] = OperationContext.Current.GetCallbackChannel<IBusquedaPartidaCallback>();
             //ActualizarSalasParaTodos();
             
         }
@@ -721,22 +721,6 @@ namespace ServicioGloomm
             }
 
             return familiaAnterior;
-        }
-
-        public string ObtenerCodigoSala(string idAdminsitrador, string nombreSala)
-        {
-            try
-            {
-                string codigoSala;
-
-                codigoSala = AccesoSala.BuscarCodigoSala(idAdminsitrador, nombreSala);
-
-                return codigoSala.Trim();
-            }
-            catch (FaultException<ManejadorExcepciones> ex)
-            {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.mensaje));
-            }
         }
 
        
@@ -953,6 +937,49 @@ namespace ServicioGloomm
 
             return resultado;
         }
+
+        public string ObtenerUsuarioConMenorPuntaje(string numeroSala)
+        {
+            AdministradorLogger administradorLogger = new AdministradorLogger(this.GetType());
+            string jugadorConMenorPuntaje = "";
+            int menorPuntaje = int.MaxValue;
+
+            try
+            {
+                if (!jugadoresEnSala.ContainsKey(numeroSala) || !familiasSeleccionadasPorSala.ContainsKey(numeroSala))
+                {
+                    return jugadorConMenorPuntaje;
+                }
+
+                foreach (var jugador in jugadoresEnSala[numeroSala])
+                {
+                    if (personajesFamiliaDeUsuario.TryGetValue(jugador, out var personajesFamilia))
+                    {
+                        string familia = familias.FirstOrDefault(kvp =>
+                            kvp.Value.SequenceEqual(personajesFamilia)).Key;
+
+                        if (!string.IsNullOrEmpty(familia))
+                        {
+                            int vidaTotal = personajesFamilia.Sum(p => p.vida);
+
+                            if (vidaTotal < menorPuntaje)
+                            {
+                                menorPuntaje = vidaTotal;
+                                jugadorConMenorPuntaje = jugador;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (FaultException<ManejadorExcepciones> ex)
+            {
+                administradorLogger.RegistroError(ex);
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.Mensaje));
+            }
+
+            return jugadorConMenorPuntaje;
+        }
+
 
 
         public void CambiarEstadoParaPartida(string numeroSala, string ganador)

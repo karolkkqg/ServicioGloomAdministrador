@@ -37,6 +37,11 @@ namespace ServicioGloomm
             return salaJugadoresPorSala[numeroSala].Keys.ToList();
         }
 
+        public List<string> ObtenerJugadoresPartida(string numeroSala)
+        {
+            return salaJugadoresPorSala[numeroSala].Keys.ToList();
+        }
+
 
         public void IngresarJugadorAJuego(string nombreUsuario, string numeroSala, int numeroJugadores)
         {
@@ -246,7 +251,7 @@ namespace ServicioGloomm
             }
             EliminarJugadorDeLista(numeroSala, jugadorAMatar);
 
-            //NotificarJugadorMuerto(jugadorAMatar);
+            
         }
 
 
@@ -274,33 +279,7 @@ namespace ServicioGloomm
                 jugadoresVivos[numeroSala].Remove(jugadorAMatar);
             }
         }
-        /*
-        private void NotificarJugadorMuerto(string jugadorAMatar)
-        {
-            AdministradorLogger administradorLogger = new AdministradorLogger(this.GetType());
-
-            foreach (var jugador in jugadoresConectadosTableroCallback)
-            {
-                if (jugadoresConectadosTableroCallback.ContainsKey(jugador.Key))
-                {
-                    try
-                    {
-                        jugadoresConectadosTableroCallback[jugador.Key].ActualizarJugadorMuerto(jugadorAMatar);
-                    }
-                    catch (CommunicationException ex)
-                    {
-                        administradorLogger.RegistroError(ex);
-                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16", "No se pudo conectar el servidor con todos los jugadores"));
-                    }
-                    catch (TimeoutException ex)
-                    {
-                        administradorLogger.RegistroError(ex);
-                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18", "Se termino el tiempo de espera del servidor, intente realizar la operación más tarde"));
-                    }
-                }
-            }
-        }
-        */
+        
         public void TerminarPartidaMiniJuego(string numeroSala, string jugadorGanador)
         {
 
@@ -442,7 +421,7 @@ namespace ServicioGloomm
                 }
             }
 
-            if (jugadorGanador != null)
+            if (jugadorGanador != "Sin ganador")
             {
                 foreach (var jugador in jugadoresConectadosTableroCallback.Keys)
                 {
@@ -461,7 +440,7 @@ namespace ServicioGloomm
                         catch (TimeoutException ex)
                         {
                             administradorLogger.RegistroError(ex);
-                            throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18", "Se termino el tiempo de espera del servidor, intente realizar la operación más tarde"));
+                            throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18", "Se terminó el tiempo de espera del servidor, intente realizar la operación más tarde"));
                         }
                     }
                 }
@@ -484,10 +463,38 @@ namespace ServicioGloomm
                 jugadores.Remove(jugador);
             }
 
-
             turnosPorSala[numeroSala] = jugadores;
 
+
+            if (!ObtenerMazoRestante())
+            {
+                string jugadorPuntajeMenor = ObtenerUsuarioConMenorPuntaje(numeroSala);
+                foreach (var jugador in jugadoresConectadosTableroCallback.Keys)
+                {
+                    if (jugadoresConectadosTablero[jugador] == numeroSala)
+                    {
+                        try
+                        {
+                            
+                            jugadoresConectadosTableroCallback[jugador].EnviarGanador(jugadorPuntajeMenor);
+                        }
+                        catch (CommunicationException ex)
+                        {
+                            administradorLogger.RegistroError(ex);
+                            throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16", "No se pudo conectar el servidor con todos los jugadores"));
+                        }
+                        catch (TimeoutException ex)
+                        {
+                            administradorLogger.RegistroError(ex);
+                            throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18", "Se terminó el tiempo de espera del servidor, intente realizar la operación más tarde"));
+                        }
+                    }
+                }
+
+                LimpiarEstructurasDeSala(numeroSala);
+            }
         }
+
 
 
         public void NotificarGanador(string jugadorGanador, string numeroSala)
@@ -630,7 +637,7 @@ namespace ServicioGloomm
             {
                 try
                 {
-                    string mensaje = numeroSala;
+                    string mensaje = jugadorObjetivo;
                     callback.RecibirExpulsion(mensaje);
                 }
                 catch (CommunicationException ex)
@@ -826,32 +833,6 @@ namespace ServicioGloomm
             }
         }
 
-
-        public void RegistrarVotoExpulsion(string numeroSala, string jugadorQueVota, bool votoAFavor)
-        {
-            if (!votosExpulsion.ContainsKey(numeroSala))
-            {
-                return;
-            }
-
-            if (!votoAFavor || votosExpulsion[numeroSala].Contains(jugadorQueVota))
-            {
-                return;
-            }
-
-            votosExpulsion[numeroSala].Add(jugadorQueVota);
-
-            var jugadoresSala = ObtenerJugadores(numeroSala);
-            int votosRequeridos = (int)Math.Ceiling(jugadoresSala.Count / 2.0);
-
-            if (votosExpulsion[numeroSala].Count >= votosRequeridos)
-            {
-                string jugadorObjetivo = votosExpulsion[numeroSala][0];
-                ExpulsarJugador(jugadorObjetivo, numeroSala);
-                votosExpulsion[numeroSala].Clear();
-
-            }
-        }
 
         private bool EsAdministrador(string nombreUsuario, string numeroSala)
         {

@@ -243,7 +243,7 @@ namespace AccesoDatos
                 using (var contexto = new EntidadesGloom())
                 {
                     var salasEnPartida = contexto.Sala
-                        .Where(s => s.Ganador == "En partida")
+                        .Where(s => s.Ganador == "Sin ganador")
                         .ToList();
 
                     return salasEnPartida;

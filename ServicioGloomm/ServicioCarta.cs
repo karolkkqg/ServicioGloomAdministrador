@@ -277,9 +277,9 @@ namespace ServicioGloomm
             }  
         }
 
-        public List<Carta> ObtenerMazoRestante()
+        public bool ObtenerMazoRestante()
         {
-            return cartasSobrantesGlobal.ToList();
+            return cartasSobrantesGlobal.Any();
         }
 
         private void ValidarCantidadDeCartasJugador(string nombreUsuario)

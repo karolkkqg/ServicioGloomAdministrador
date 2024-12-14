@@ -64,10 +64,10 @@ namespace ServicioGloomm
         void IncrementarTurnos(string numeroSala);
 
         [OperationContract]
-        Dictionary<string, (string familia, int vidaTotal)> ObtenerResumenFamiliasPorSala(string numeroSala);
+        void BorrarEstructurasPorSala(string numeroSala);
 
         [OperationContract]
-        void BorrarEstructurasPorSala(string numeroSala);
+        List<string> ObtenerJugadoresPartida(string numeroSala);
 
     }
 

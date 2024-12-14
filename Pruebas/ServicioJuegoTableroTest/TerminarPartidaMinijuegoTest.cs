@@ -92,7 +92,7 @@ namespace Pruebas.ServicioJuegoTableroTest
             }
         }
 
-        [TestMethod]
+        /*[TestMethod]
         public void MatarJugador_JugadorValidoEliminado_NotificaCallback()
         {
             servicioJuego.MatarJugador("Sala1", "Jugador3", "Jugador1");
@@ -105,7 +105,7 @@ namespace Pruebas.ServicioJuegoTableroTest
                 mockCallback.Verify(c => c.ActualizarJugadorMuerto("Jugador3"), Times.Once,
                     "No se llamó a ActualizarJugadorMuerto con el jugador eliminado.");
             }
-        }
+        }*/
 
         [TestMethod]
         public void MatarJugador_Quedan2Jugadores_TerminaPartidaYNotificaGanador()

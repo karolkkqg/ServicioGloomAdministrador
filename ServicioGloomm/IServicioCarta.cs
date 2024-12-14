@@ -27,7 +27,7 @@ namespace ServicioGloomm
         void QuitarCartaDeMazoJugadorExterno(string nombreUsuario);
 
         [OperationContract]
-        List<Carta> ObtenerMazoRestante();
+        bool ObtenerMazoRestante();
 
     }
 
