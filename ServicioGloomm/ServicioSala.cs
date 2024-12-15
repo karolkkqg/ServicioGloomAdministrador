@@ -637,24 +637,6 @@ namespace ServicioGloomm
             return familiaAnterior;
         }
 
-        public string ObtenerCodigoSala(string idAdminsitrador, string nombreSala)
-        {
-            try
-            {
-                string codigoSala;
-
-                codigoSala = AccesoSala.BuscarCodigoSala(idAdminsitrador, nombreSala);
-
-                return codigoSala.Trim();
-            }
-            catch (FaultException<ManejadorExcepciones> ex)
-            {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.mensaje), new FaultReason(ex.Detail.mensaje));
-            }
-        }
-
-       
-
         public string ObtenerFamiliaAnterior(string nombreUsuario)
         {
             string familiaAnterior = "sin familia";
