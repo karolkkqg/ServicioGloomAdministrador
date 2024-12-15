@@ -1,4 +1,5 @@
-﻿using BlbibliotecaClases;
+﻿using BibliotecaClases;
+using BlbibliotecaClases;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,8 @@ namespace ServicioGloomm
         [OperationContract]
         List<Carta> ObtenerMazoJugador(string nombreJugador);
 
-        [OperationContract(IsOneWay =true)]
+        [OperationContract]
+        [FaultContract(typeof(ManejadorExcepciones))]
         void AgregarCartaAMazoJugador(string nombreUsuario);
 
         [OperationContract(IsOneWay = true)]

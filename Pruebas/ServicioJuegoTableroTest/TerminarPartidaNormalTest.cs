@@ -6,7 +6,7 @@ using System.Linq;
 namespace Pruebas.SalaTest
 {
     [TestClass]
-    public class ActualizarGanadorTest
+    public class TerminarPartidaNormalTest
     {
         private BibliotecaClases.Sala sala;
 

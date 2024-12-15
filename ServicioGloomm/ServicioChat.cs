@@ -69,11 +69,11 @@ namespace ServicioGloomm
                 }
                 catch (CommunicationException ex)
                 {
-                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("29", "Problema de enviar el correo"));
+                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("29", "Problema de enviar el correo"), new FaultReason("Problema de enviar el correo"));
                 }
                 catch (TimeoutException ex)
                 {
-                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("29", "Problema de enviar el correo"));
+                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("29", "Problema de enviar el correo"), new FaultReason("Problema de enviar el correo"));
                 }
             }
 

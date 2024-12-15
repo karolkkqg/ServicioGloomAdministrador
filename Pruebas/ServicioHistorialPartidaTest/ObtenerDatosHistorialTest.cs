@@ -7,10 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Pruebas.SalaTest
+namespace Pruebas.ServicioHistorialPartidaTest
 {
     [TestClass]
-    public class ObtenerHistorialPartidasTest
+    public class ObtenerDatosHistorialTest
     {
 
         private BibliotecaClases.Sala nuevaSala;
@@ -19,6 +19,7 @@ namespace Pruebas.SalaTest
         [TestInitialize]
         public void TestInitialize()
         {
+            LimpiarDatosDePrueba();
             nuevaSala = new BibliotecaClases.Sala
             {
                 nombreSala = "Bellakos",

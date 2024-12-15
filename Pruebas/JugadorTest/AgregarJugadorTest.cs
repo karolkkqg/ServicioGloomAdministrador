@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace Pruebas.JugadorTest
 {
     [TestClass()]
-    public class AgregarJugadorABaseDeDatosTest
+    public class AgregarJugadorTest
     {
         private AccesoDatos.Jugador jugador;
 

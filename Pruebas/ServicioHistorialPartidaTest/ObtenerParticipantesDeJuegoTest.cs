@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Pruebas.SalaTest
 {
-    public class ObtenerParticipantesDeSalaTest
+    public class ObtenerParticipantesDeJuegoTest
     {
         private BibliotecaClases.Sala nuevaSala;
         private BibliotecaClases.Sala nuevaParticipante;

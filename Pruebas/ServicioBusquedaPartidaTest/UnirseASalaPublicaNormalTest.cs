@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ServiceModel;
 
-namespace Pruebas.SalaTest
+namespace Pruebas.ServicioBusquedaPartidaTest
 {
     [TestClass]
     public class UnirseASalaPublicaNormalTest
@@ -24,7 +24,7 @@ namespace Pruebas.SalaTest
             callbackMock = new Mock<ISalaCallback>();
         }
         [TestMethod]
-        public void UnirseASalaPublicaNormal_SalaValida_AgregaJugadorYNotifica()
+        public void UnirseASalaPublicaNormalSalaValidaAgregaJugadorYNotifica()
         {
             string idSala = "Sala1";
             string idUsuario = "Usuario1";
@@ -67,7 +67,7 @@ namespace Pruebas.SalaTest
 
 
         [TestMethod]
-        public void UnirseASalaPublicaNormal_SalaValidaConJugadores_AgregaJugador()
+        public void UnirseASalaPublicaNormalSalaValidaConJugadoresAgregaJugador()
         {
             string idSala = "Sala1";
             string idUsuario1 = "Usuario1";
@@ -110,10 +110,9 @@ namespace Pruebas.SalaTest
         }
 
 
-
         [TestMethod]
         [ExpectedException(typeof(FaultException<ManejadorExcepciones>))]
-        public void UnirseASalaPublicaNormal_SalaNoExiste_LanzaExcepcion()
+        public void UnirseASalaPublicaNormalSalaNoExisteLanzaExcepcion()
         {
             string idSala = "SalaInexistente";
             string idUsuario = "Usuario1";

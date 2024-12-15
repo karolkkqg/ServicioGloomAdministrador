@@ -4,13 +4,18 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Pruebas.AmistadTest
 {
     [TestClass]
-    public class ValidarSolicitudAmistadTest
+<<<<<<<< HEAD:Pruebas/AmistadTest/ObtenerListaAmigoTest.cs
+    public class ObtenerListaAmigoTest
+========
+    public class ObtenerListaAmigosTest
+>>>>>>>> fc57b69e650943319e3eb2a4a59d7695bacdd073:Pruebas/AmistadTest/ObtenerListaAmigosTest.cs
     {
         private AccesoDatos.Jugador jugador;
         private AccesoDatos.Jugador jugadorAmigo;
@@ -41,24 +46,33 @@ namespace Pruebas.AmistadTest
                 Icono = "Icono2"
             };
             AccesoJugador.AgregarJugadorABaseDeDatos(jugadorAmigo);
-        }
 
-        [TestMethod]
-        public void TestCambiarEstadoSolicitudAceptadoExitoso()
-        {
             Amistad solicitud = new Amistad
             {
                 nombreUsuario = new BibliotecaClases.Jugador { nombreUsuario = "UsuarioTest1" },
                 jugadorAmigo = new BibliotecaClases.Jugador { nombreUsuario = "UsuarioTest2" },
-                estado = "Pendiente"
+                estado = "Aceptado"
             };
             AccesoAmigos.AgregarSolcitudAmistad(solicitud);
-
-            solicitud.estado = "Aceptado";
-            int filasAfectadas = AccesoAmigos.CambiarEstadoSolicitud(solicitud);
-
-            Assert.AreEqual(1, filasAfectadas, "El estado de la solicitud no fue actualizado correctamente.");
         }
+
+        [TestMethod]
+        public void TestObtenerAmigosDelJugadorExitoso()
+        {
+            var amigos = AccesoAmigos.ObtenerAmigosDelJugador("UsuarioTest1");
+
+            Assert.AreEqual(1, amigos.Count);
+            Assert.AreEqual("UsuarioTest2", amigos.First().JugadorAmigo);
+        }
+
+        [TestMethod]
+        public void TestObtenerAmigosDelJugadorSinAmigos()
+        {
+            var amigos = AccesoAmigos.ObtenerAmigosDelJugador("UsuarioSinAmigos");
+
+            Assert.AreEqual(0, amigos.Count);
+        }
+
 
         [TestCleanup]
         public void LimpiarDatosDePrueba()

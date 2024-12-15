@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Pruebas.AmistadTest
 {
     [TestClass]
-    public class ObtenerListaAmigoTest
+    public class ObtenerAmigosDelJugadorTest
     {
         private AccesoDatos.Jugador jugador;
         private AccesoDatos.Jugador jugadorAmigo;

@@ -48,12 +48,15 @@ namespace ServicioGloomm
                         administradorLogger.RegistroError(ex);
 
                         salaJugadoresPorSala[numeroSala].Remove(jugador.Key);
-                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16", "No se pudo conectar el servidor con todos los jugadores"));
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16", "No se pudo conectar el servidor con todos los jugadores"),
+                            new FaultReason("No se pudo conectar el servidor con todos los jugadores")
+                        );
+
                     }
                     catch (TimeoutException ex)
                     {
                         administradorLogger.RegistroError(ex);
-                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18", "Se termino el tiempo de espera del servidor, intente realizar la operación más tarde"));
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18", "Se termino el tiempo de espera del servidor, intente realizar la operación más tarde"), new FaultReason("Se termino el tiempo de espera del servidor, intente realizar la operación más tarde"));
                     }
                 }
             }
@@ -72,7 +75,9 @@ namespace ServicioGloomm
         {
             if (personajesUsadosPorSala[numeroSala].Contains(nombrePersonaje))
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("14", "Personaje utilizado"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("14", "Personaje utilizado"),
+                    new FaultReason("Personaje utilizado")
+                );
             }
             else
             {
@@ -164,12 +169,17 @@ namespace ServicioGloomm
                             administradorLogger.RegistroError(ex);
 
                             salaJugadoresPorSala[numeroSala].Remove(jugador.Key);
-                            throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16", "No se pudo conectar el servidor con todos los jugadores"));
+                            throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16", "No se pudo conectar el servidor con todos los jugadores"),
+                                new FaultReason("No se pudo conectar el servidor con todos los jugadores")
+                            );
+
                         }
                         catch (TimeoutException ex)
                         {
                             administradorLogger.RegistroError(ex);
-                            throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18", "Se termino el tiempo de espera del servidor, intente realizar la operación más tarde"));
+                            throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18", "Se termino el tiempo de espera del servidor, intente realizar la operación más tarde"),
+                                new FaultReason("Se termino el tiempo de espera del servidor, intente realizar la operación más tarde")
+                            );
                         }
                     }
                 }

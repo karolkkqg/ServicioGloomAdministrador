@@ -140,7 +140,17 @@ namespace Pruebas.ServicioJuegoTableroTest
                 throw new NotImplementedException();
             }
 
+            public void NotificarResultadoVotacion(string mensaje)
+            {
+                throw new NotImplementedException();
+            }
+
             public void NotificarVotacionExpulsion(string jugadorPropuesto)
+            {
+                throw new NotImplementedException();
+            }
+
+            public List<string> ObtenerJugadoresVivos(string numeroSala)
             {
                 throw new NotImplementedException();
             }

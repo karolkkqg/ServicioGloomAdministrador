@@ -19,6 +19,10 @@ namespace ServicioGloomm
 
         [OperationContract]
         [FaultContract(typeof(ManejadorExcepciones))]
+        int ActualizarJugadorSinContrasena(BibliotecaClases.Jugador jugador);
+
+        [OperationContract]
+        [FaultContract(typeof(ManejadorExcepciones))]
         int AutenticarJugador(Jugador jugador);
 
         [OperationContract]

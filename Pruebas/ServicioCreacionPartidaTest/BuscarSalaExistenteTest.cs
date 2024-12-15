@@ -40,9 +40,9 @@ namespace Pruebas.SalaTest
         [TestMethod()]
         public void TestBuscarpartidaExitoso()
         {
-            var resultado = AccesoSala.BuscarPartida("Bellakos", "12345");
+            var resultado= AccesoSala.BuscarPartida("Bellakos", "12345");
 
-            Assert.IsNotNull(resultado);
+           Assert.IsNotNull(resultado);
 
             LimpiarDatosDePrueba();
         }
@@ -52,7 +52,7 @@ namespace Pruebas.SalaTest
         {
             var excepcion = Assert.ThrowsException<FaultException<ManejadorExcepciones>>(() =>
             {
-                AccesoSala.BuscarPartida("12345", "654321");
+                AccesoSala.BuscarPartida("Bellakos", "654321");
             });
             Assert.AreEqual("10", excepcion.Detail.codigo);
 

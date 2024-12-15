@@ -21,12 +21,18 @@ namespace Pruebas.SalaTest
         {
             servicioJuego = new ServicioJuego();
             ServicioJuego.salaJugadoresPorSala.Clear();
+            ServicioJuego.jugadoresConectadosListos.Clear();
 
             ServicioJuego.salaJugadoresPorSala.Add("Sala1", new Dictionary<string, ISalaCallback>
             {
                 { "Jugador1", Mock.Of<ISalaCallback>() },
                 { "Jugador2", Mock.Of<ISalaCallback>() },
                 { "Jugador3", Mock.Of<ISalaCallback>() }
+            });
+
+            ServicioJuego.jugadoresConectadosListos.Add("Sala1", new List<string>
+            {
+                "Jugador1", "Jugador2", "Jugador3"
             });
         }
 

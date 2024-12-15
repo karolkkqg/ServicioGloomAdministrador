@@ -13,9 +13,6 @@ namespace ServicioGloomm
     public interface IServicioBusquedaPartida
     {
         [OperationContract]
-        List<Sala> ObtenerSalasActivas();
-
-        [OperationContract]
         void UnirseASalaPublicaNormal(string idSala, string idUsuario);
 
         [OperationContract]

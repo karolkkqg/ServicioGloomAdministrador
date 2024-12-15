@@ -17,6 +17,6 @@ namespace ServicioGloomm
 
         [OperationContract]
         [FaultContract(typeof(ManejadorExcepciones))]
-        List<String> ObtenrParticipantesDeJuego(String identificadorSala);
+        List<String> ObtenerParticipantesDeJuego(String identificadorSala);
     }
 }

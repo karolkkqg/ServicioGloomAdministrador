@@ -64,7 +64,6 @@ namespace Pruebas.AmistadTest
 
             Assert.AreEqual("doristodoriana@gmail.com", correo, "El correo no coincide");
 
-            //LimpiarDatosDePrueba();
         }
 
         [ClassCleanup]

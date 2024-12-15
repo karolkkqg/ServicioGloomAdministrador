@@ -42,7 +42,7 @@ namespace ServicioGloomm
             catch (FaultException<ManejadorExcepciones> ex)
             {
                 administradorLogger.RegistroError(ex);
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.mensaje));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.mensaje), new FaultReason(ex.Detail.mensaje));
 
             }
 
@@ -72,7 +72,34 @@ namespace ServicioGloomm
             catch (FaultException<ManejadorExcepciones> ex)
             {
                 administradorLogger.RegistroError(ex);
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.mensaje));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.mensaje), new FaultReason(ex.Detail.mensaje));
+            }
+        }
+
+        public int ActualizarJugadorSinContrasena(BibliotecaClases.Jugador jugador)
+        {
+            AdministradorLogger administradorLogger = new AdministradorLogger(this.GetType());
+            try
+            {
+                var nuevoJugador = new AccesoDatos.Jugador
+                {
+                    NombreUsuario = jugador.nombreUsuario,
+                    Nombre = jugador.nombre,
+                    Apellidos = jugador.apellidos,
+                    Correo = jugador.correo,
+                    Tipo = jugador.tipo,
+                    Icono = jugador.icono,
+                };
+
+                int resultado = AccesoJugador.ActualizarJugadorSinContrasenaABaseDeDatos(nuevoJugador);
+                String mensaje = "Jugador actualizado " + jugador.nombreUsuario;
+                return resultado;
+
+            }
+            catch (FaultException<ManejadorExcepciones> ex)
+            {
+                administradorLogger.RegistroError(ex);
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.mensaje), new FaultReason(ex.Detail.mensaje));
             }
         }
 
@@ -97,7 +124,7 @@ namespace ServicioGloomm
             catch (FaultException<ManejadorExcepciones> ex)
             {
                 administradorLogger.RegistroError(ex);
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.mensaje));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.mensaje), new FaultReason(ex.Detail.mensaje));
             }
         }
 
@@ -105,7 +132,7 @@ namespace ServicioGloomm
         {
             if (usuarioConectado.Contains(nombreUsuario))
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("46", "Ya ha iniciado sesión anteriormente, cierre la sesión de ese dispositivo si desea continuar aquí "));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("46", "Ya ha iniciado sesión anteriormente, cierre la sesión de ese dispositivo si desea continuar aquí"), new FaultReason("Ya ha iniciado sesión anteriormente, cierre la sesión de ese dispositivo si desea continuar aquí"));
             }
         }
 
@@ -131,7 +158,7 @@ namespace ServicioGloomm
             catch (FaultException<ManejadorExcepciones> ex)
             {
                 administradorLogger.RegistroError(ex);
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.mensaje));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.mensaje), new FaultReason(ex.Detail.mensaje));
             }
         }
 

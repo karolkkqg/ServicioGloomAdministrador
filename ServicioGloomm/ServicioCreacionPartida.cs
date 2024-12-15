@@ -14,6 +14,7 @@ namespace ServicioGloomm
     {
         public BibliotecaClases.Sala BuscarSalaExistente(String nombreSala, String codigo)
         {
+
             AdministradorLogger administradorLogger = new AdministradorLogger(this.GetType());
             try
             {
@@ -36,7 +37,7 @@ namespace ServicioGloomm
             catch (FaultException<ManejadorExcepciones> ex)
             {
                 administradorLogger.RegistroError(ex);
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.mensaje));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.mensaje), new FaultReason(ex.Detail.mensaje));
             }
 
         }
@@ -66,17 +67,18 @@ namespace ServicioGloomm
             catch (FaultException<ManejadorExcepciones> ex)
             {
                 administradorLogger.RegistroError(ex);
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.mensaje));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.mensaje), new FaultReason(ex.Detail.mensaje));
             }
 
         }
 
         public void ValidarCantidadJugadoresEnSala(string numeroSala, int cantidadJugadores)
         {
-            
+
+            AsegurarSalaExistente(numeroSala);
             if (salaJugadores[numeroSala].Count() == cantidadJugadores)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("34", "La sala ya está llena, no puede ingresar"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("34", "La sala ya está llena, no puede ingresar"), new FaultReason("La sala ya está llena, no puede ingresar"));
             }
         }
 
@@ -84,7 +86,7 @@ namespace ServicioGloomm
         {
             if (partidaYaIniciada[numeroSala] == true)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("39", "La partida ya se encuentra iniciada, no puede ingresar"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("39", "La partida ya se encuentra iniciada, no puede ingresar"), new FaultReason("La partida ya se encuentra iniciada, no puede ingresar"));
             }
         }
 
@@ -111,7 +113,10 @@ namespace ServicioGloomm
             {
                 turnosPorSala[numeroSala] = new List<string>();
             }
-
+            if (!jugadoresVivos.ContainsKey(numeroSala))
+            {
+                jugadoresVivos[numeroSala] = new List<string>();
+            }
 
         }
 

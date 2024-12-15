@@ -41,6 +41,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BCrypt.Net-Next, Version=4.0.3.0, Culture=neutral, PublicKeyToken=1e11be04b6288443, processorArchitecture=MSIL">
+      <HintPath>..\packages\BCrypt.Net-Next.4.0.3\lib\net48\BCrypt.Net-Next.dll</HintPath>
+    </Reference>
     <Reference Include="Castle.Core, Version=5.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\packages\Castle.Core.5.1.1\lib\net462\Castle.Core.dll</HintPath>
     </Reference>
@@ -66,10 +69,20 @@
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
@@ -86,25 +99,30 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AmistadTest\EliminarAmigoTest.cs" />
     <Compile Include="AmistadTest\EnviarSolcitudAmistadTest.cs" />
-    <Compile Include="AmistadTest\ValidarSolicitudAmistadTest.cs" />
-    <Compile Include="AmistadTest\ObtenerListaAmigoTest.cs" />
-    <Compile Include="AmistadTest\ObtenerSolicitudesDeAmistadPorJugadorTest.cs" />
     <Compile Include="AmistadTest\ObtenerCorreoAmigoTest.cs" />
-    <Compile Include="AmistadTest\ArchivarAmistadTest.cs" />
+    <Compile Include="AmistadTest\ValidarSolcitudAmistadTest.cs" />
+    <Compile Include="AmistadTest\ObtenerListaAmigosTest.cs" />
+    <Compile Include="AmistadTest\ObtenerSolicitudesDeAmistadPorJugadorTest.cs" />
     <Compile Include="JugadorTest\ActualizarJugadorABaseDeDatosTest.cs" />
-    <Compile Include="JugadorTest\AgregarJugadorABaseDeDatosTest.cs" />
+    <Compile Include="JugadorTest\ActualizarJugadorSinContrasenaTest.cs" />
+    <Compile Include="JugadorTest\AgregarJugadorTest.cs" />
     <Compile Include="JugadorTest\AgregarJugadorInvitadoTest.cs" />
     <Compile Include="JugadorTest\AutenticarJugadorTest.cs" />
     <Compile Include="JugadorTest\BuscarJugadoresPorNombreUsuarioTest.cs" />
     <Compile Include="JugadorTest\BuscarJugadorPorNombreUsuarioTest.cs" />
-    <Compile Include="SalaTest\ActualizarGanadorTest.cs" />
+    <Compile Include="ServicioJuegoTableroTest\TerminarPartidaNormalTest.cs" />
     <Compile Include="SalaTest\AgregarParticipanteTest.cs" />
     <Compile Include="SalaTest\AgregarPartidaABaseDeDatosTest.cs" />
     <Compile Include="SalaTest\BuscarCodigoSalaTest.cs" />
-    <Compile Include="ServicioCreacionPartidaTest\BuscarSalaExistenteTest.cs" />
+    <Compile Include="SalaTest\BuscarPartidaTest.cs" />
     <Compile Include="SalaTest\ConectarConSala.cs" />
-    <Compile Include="SalaTest\CrearPartidaTest.cs" />
+    <Compile Include="ServicioCreacionPartidaTest\ObtenerResumenFamiliasPorSalaTest.cs" />
+    <Compile Include="ServicioJuegoTableroTest\ObtenerJugadoresVivosTest.cs" />
+    <Compile Include="ServicioSalaMiniPartidaTest\ConectarConSalaMiniPartidaTest.cs" />
+    <Compile Include="ServicioSalaNormalTest\ConectarConSalaNormalTest.cs" />
+    <Compile Include="ServicioCreacionPartidaTest\CrearPartidaTest.cs" />
     <Compile Include="SalaTest\EmpezarPartidaTest.cs" />
     <Compile Include="SalaTest\ObtenerJugadoresConectadosTest.cs" />
     <Compile Include="SalaTest\ObtenerPersonajesUsadosTest.cs" />
@@ -115,6 +133,7 @@
     <Compile Include="SalaTest\ObtenerSalasActivasConEstadoTest.cs" />
     <Compile Include="SalaTest\UnirseASalaPublicaNormalTest.cs" />
     <Compile Include="SalaTest\ObtenerCodigoSalaTest.cs" />
+    <Compile Include="SalaTest\SalirDeSalaTest.cs" />
     <Compile Include="SalaTest\ObtenerFamiliaSeleccionadaTest.cs" />
     <Compile Include="SalaTest\UnirseASalaPrivadaNormalTest.cs" />
     <Compile Include="SalaTest\UnirseASalaPrivadaMiniHistoriaTest.cs" />
@@ -123,19 +142,18 @@
     <Compile Include="ServicioCartaTest\ObtenerCartasBonusTest.cs" />
     <Compile Include="ServicioCartaTest\QuitarCartaDeMazoJugadorExternoTest.cs" />
     <Compile Include="ServicioCartaTest\ObtenerMazoRestanteTest.cs" />
-    <Compile Include="ServicioChatTest\ObtenerHistorialMensajesTest.cs" />
-    <Compile Include="ServicioChatTest\AgregarJugadorAChatTest.cs" />
     <Compile Include="ServicioCreacionPartidaTest\ObtenerFamiliasYPersonajesPorUsuarioTest.cs" />
     <Compile Include="ServicioCreacionPartidaTest\ObtenerFamiliaPorJugadorTest.cs" />
     <Compile Include="ServicioCreacionPartidaTest\ObtenerFamiliasYPersonajesTest.cs" />
     <Compile Include="ServicioCreacionPartidaTest\ValidarCantidadJugadoresEnSalaTest.cs" />
     <Compile Include="ServicioCreacionPartidaTest\ValidarPartidaNoIniciadaTest.cs" />
+    <Compile Include="ServicioChatTest\ObtenerHistorialMensajesTest.cs" />
     <Compile Include="ServicioJuegoTableroTest\AgregarCastigoTest.cs" />
     <Compile Include="ServicioJuegoTableroTest\EliminarJugadorDeJuegoTest.cs" />
     <Compile Include="SalaTest\SumarVidaPersonajeTest.cs" />
     <Compile Include="SalaTest\ValidacionPersonajesSeleccionadosTest.cs" />
-    <Compile Include="SalaTest\ObtenerHistorialPartidasTest.cs" />
-    <Compile Include="SalaTest\ObtenerParticipantesDeSalaTest.cs" />
+    <Compile Include="ServicioHistorialPartidaTest\ObtenerDatosHistorialTest.cs" />
+    <Compile Include="ServicioHistorialPartidaTest\ObtenerParticipantesDeJuegoTest.cs" />
     <Compile Include="SeleccionarFamilia.cs" />
     <Compile Include="ServicioCartaTest\ObtenerMazoJugadorTest.cs" />
     <Compile Include="ServicioCartaTest\QuitarCartaDeMazoJugadorTest.cs" />
@@ -147,10 +165,8 @@
     <Compile Include="ServicioJuegoTableroTest\IniciarPartidaPorAdministradorTest.cs" />
     <Compile Include="ServicioJuegoTableroTest\ObtenerCartasSobrantesTest.cs" />
     <Compile Include="ServicioJuegoTableroTest\ObtenerJugadorActualTest.cs" />
-    <Compile Include="ServicioJuegoTableroTest\MatarJugadorTest.cs" />
-    <Compile Include="SalaTest\SolicitarExpulsionTest.cs" />
-    <Compile Include="ServicioSalaMiniHistoriaTest\ConectarConSalaMiniPartidaTest.cs" />
-    <Compile Include="ServicioSalaNormalTest\ConectarConSalaNormalTest.cs" />
+    <Compile Include="ServicioJuegoTableroTest\TerminarPartidaMinijuegoTest.cs" />
+    <Compile Include="ServicioJuegoTableroTest\SolicitarExpulsionTest.cs" />
     <Compile Include="SpyCallbackCalculatorService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

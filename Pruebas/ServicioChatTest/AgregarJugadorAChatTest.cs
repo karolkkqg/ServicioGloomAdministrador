@@ -35,7 +35,7 @@ namespace Pruebas.ServicioChatTest
             {
                 using (OperationContextScope scope = new OperationContextScope((IContextChannel)client))
                 {
-
+                   
                     servicioChat.AgregarJugadorAChat(nombreUsuario);
 
                     Assert.IsTrue(ServicioJuego.jugadoresPartida.ContainsKey(nombreUsuario), "El jugador no fue agregado al chat.");
