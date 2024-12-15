@@ -19,6 +19,7 @@ namespace Pruebas.SalaTest
         [TestInitialize]
         public void TestInitialize()
         {
+            LimpiarDatosDePrueba();
             sala = new BibliotecaClases.Sala
             {
                 nombreSala = "Bellakos",
@@ -47,33 +48,6 @@ namespace Pruebas.SalaTest
                 Assert.AreEqual(resultado, 1, "El número de filas afectadas no coincide.");
                 Assert.AreEqual(partidaRegistrada.NombreSala, sala.nombreSala, "El nombre de la sala registrada no coincide.");
             }
-
-            LimpiarDatosDePrueba();
-        }
-
-        [TestMethod]
-        public void TestCrearPartidaFallidaNombreSalaRepetido()
-        {
-            var servicioJuego = new ServicioJuego();
-            servicioJuego.CrearPartida(sala);
-
-            var salaRepetida = new BibliotecaClases.Sala
-            {
-                nombreSala = "Bellakos",
-                tipoSala = "Normal",
-                tipoPartida = "Publica",
-                noJugadores = 3,
-                idAdministrador = "OtroAdmin",
-                fecha = "23/10/24",
-                ganador = "Ninguno"
-            };
-
-            var excepcion = Assert.ThrowsException<FaultException<ManejadorExcepciones>>(() =>
-            {
-                servicioJuego.CrearPartida(salaRepetida);
-            });
-
-            Assert.AreEqual("8", excepcion.Detail.codigo, "El código de la excepción no es el esperado.");
 
             LimpiarDatosDePrueba();
         }

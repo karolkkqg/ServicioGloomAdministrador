@@ -602,6 +602,63 @@ namespace ServicioGloomm
             return false;
         }
 
+<<<<<<< HEAD
+=======
+        public void UnirseASalaPublicaNormal(string idSala, string idUsuario)
+        {
+            if (salasActivasEnMemoria.TryGetValue(idSala, out var sala) && sala.tipoPartida == "Pública" && sala.tipoSala == "Normal")
+            {
+                if (!jugadoresEnSala.ContainsKey(idSala))
+                {
+                    jugadoresEnSala[idSala] = new HashSet<string>();
+                }
+                jugadoresEnSala[idSala].Add(idUsuario);
+                usuariosSalaCallback[idUsuario] = OperationContext.Current.GetCallbackChannel<IBusquedaPartidaCallback>();
+                
+            }
+            else
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("23", "La sala no es pública o no existe."));
+            }
+        }
+
+        public void UnirseASalaPrivadaNormal(string idUsuario, string idSala, string codigoAcceso)
+        {
+            if (!salasActivasEnMemoria.TryGetValue(idSala, out var sala) || sala.tipoSala != "Normal" || sala.codigo != codigoAcceso)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("24", "Verifique el código de la sala."));
+            }
+
+            if (!jugadoresEnSala.ContainsKey(idSala))
+            {
+                jugadoresEnSala[idSala] = new HashSet<string>();
+            }
+            jugadoresEnSala[idSala].Add(idUsuario);
+            usuariosSalaCallback[idUsuario] = OperationContext.Current.GetCallbackChannel<IBusquedaPartidaCallback>();
+            //ActualizarSalasParaTodos();
+            
+        }
+
+
+
+        public void UnirseASalaPrivadaMiniHistoria(string idUsuario, string idSala, string codigoAcceso)
+        {
+            if (!salasActivasEnMemoria.TryGetValue(idSala, out var sala) || sala.tipoSala != "Mini historia" || sala.codigo != codigoAcceso)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("24", "Verifique el código de la sala."));
+            }
+
+            if (!jugadoresEnSala.ContainsKey(idSala))
+            {
+                jugadoresEnSala[idSala] = new HashSet<string>();
+            }
+            jugadoresEnSala[idSala].Add(idUsuario);
+            usuariosSalaCallback[idUsuario] = OperationContext.Current.GetCallbackChannel<IBusquedaPartidaCallback>();
+            //ActualizarSalasParaTodos();
+            
+        }
+
+>>>>>>> 936f47926b14da06fc7b45166957ae1bf59032a1
         private void FamiliaEnSeleccion(string numeroSala, string nombreFamilia)
         {
             if (familiasSeleccionadasPorSala[numeroSala].Contains(nombreFamilia))
@@ -792,7 +849,6 @@ namespace ServicioGloomm
         public void AplicarCartaMuerte(string numeroSala, string nombreUsuario, string personajeObjetivo)
         {
 
-
             ValidarPersonajeObjetivo(personajeObjetivo);
 
             ValidarUsuarioObjetivo(nombreUsuario);
@@ -909,6 +965,22 @@ namespace ServicioGloomm
             }
 
             return jugadorConMenorPuntaje;
+
+
+
+        public void CambiarEstadoParaPartida(string numeroSala, string ganador)
+        {
+            AdministradorLogger administradorLogger = new AdministradorLogger(this.GetType());
+            try
+            {
+                AccesoSala.ActualizarEstadoPartida(numeroSala, ganador);
+            }
+            catch (FaultException<ManejadorExcepciones> ex)
+            {
+                administradorLogger.RegistroError(ex);
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Message));
+            }
+        }
         }
 
         public void UnirseASalaPublicaNormal(string idSala, string idUsuario)

@@ -1,28 +1,25 @@
 ﻿using AccesoDatos;
 using BibliotecaClases;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
+using ServicioGloomm;
 using System.Linq;
-using System.ServiceModel;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pruebas.AmistadTest
 {
     [TestClass]
-<<<<<<<< HEAD:Pruebas/AmistadTest/ObtenerListaAmigoTest.cs
-    public class ObtenerListaAmigoTest
-========
-    public class ObtenerListaAmigosTest
->>>>>>>> fc57b69e650943319e3eb2a4a59d7695bacdd073:Pruebas/AmistadTest/ObtenerListaAmigosTest.cs
+    public class ArchivarAmistadTest
     {
         private AccesoDatos.Jugador jugador;
         private AccesoDatos.Jugador jugadorAmigo;
 
+        private ServicioJuego servicioJuego;
+
         [TestInitialize]
         public void TestInitialize()
         {
+
+            servicioJuego = new ServicioJuego();
+
             jugador = new AccesoDatos.Jugador
             {
                 NombreUsuario = "UsuarioTest1",
@@ -47,32 +44,35 @@ namespace Pruebas.AmistadTest
             };
             AccesoJugador.AgregarJugadorABaseDeDatos(jugadorAmigo);
 
-            Amistad solicitud = new Amistad
+            var amistad = new Amistad
             {
-                nombreUsuario = new BibliotecaClases.Jugador { nombreUsuario = "UsuarioTest1" },
-                jugadorAmigo = new BibliotecaClases.Jugador { nombreUsuario = "UsuarioTest2" },
+                nombreUsuario = new BibliotecaClases.Jugador { nombreUsuario = jugador.NombreUsuario },
+                jugadorAmigo = new BibliotecaClases.Jugador { nombreUsuario = jugadorAmigo.NombreUsuario },
                 estado = "Aceptado"
             };
-            AccesoAmigos.AgregarSolcitudAmistad(solicitud);
+            AccesoAmigos.AgregarSolcitudAmistad(amistad);
         }
 
         [TestMethod]
-        public void TestObtenerAmigosDelJugadorExitoso()
+        public void ArchivarAmistad_EliminaAmistadCorrectamente()
         {
-            var amigos = AccesoAmigos.ObtenerAmigosDelJugador("UsuarioTest1");
+            var solicitud = new Amistad
+            {
+                nombreUsuario = new BibliotecaClases.Jugador { nombreUsuario = jugador.NombreUsuario },
+                jugadorAmigo = new BibliotecaClases.Jugador { nombreUsuario = jugadorAmigo.NombreUsuario }
+            };
 
-            Assert.AreEqual(1, amigos.Count);
-            Assert.AreEqual("UsuarioTest2", amigos.First().JugadorAmigo);
+            int filasAfectadas = servicioJuego.ArchivarAmistad(solicitud);
+
+            Assert.AreEqual(1, filasAfectadas, "La amistad no fue eliminada correctamente.");
+
+            using (var contexto = new EntidadesGloom())
+            {
+                var amistadEliminada = contexto.Amigos
+                    .FirstOrDefault(a => a.NombreUsuario == jugador.NombreUsuario && a.JugadorAmigo == jugadorAmigo.NombreUsuario);
+                Assert.IsNull(amistadEliminada, "La amistad no fue eliminada de la base de datos.");
+            }
         }
-
-        [TestMethod]
-        public void TestObtenerAmigosDelJugadorSinAmigos()
-        {
-            var amigos = AccesoAmigos.ObtenerAmigosDelJugador("UsuarioSinAmigos");
-
-            Assert.AreEqual(0, amigos.Count);
-        }
-
 
         [TestCleanup]
         public void LimpiarDatosDePrueba()

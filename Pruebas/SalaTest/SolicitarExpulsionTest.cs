@@ -47,7 +47,7 @@ namespace Pruebas.SalaTest
         [TestMethod]
         public void SolicitarExpulsion_NoHaceNada_SiJugadorNoConectado()
         {
-          
+
             servicioJuego.SolicitarExpulsion("Pinku", "JugadorDesconectado", "12345");
 
             Assert.IsFalse(ServicioJuego.votosExpulsion.ContainsKey("12345"), "No debería haberse iniciado una votación.");

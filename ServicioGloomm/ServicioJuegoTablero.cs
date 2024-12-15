@@ -591,7 +591,6 @@ namespace ServicioGloomm
                 }
             }
 
-        }
 
         private void NotificarFinPartidaSinGanador(string numeroSala)
         {
@@ -870,8 +869,8 @@ namespace ServicioGloomm
                 votosExpulsion[numeroSala] = new List<string>();
             }
 
-            votosExpulsion[numeroSala].Clear();
-            votosExpulsion[numeroSala].Add(solicitante);
+            votosExpulsion[numeroSala].Clear(); 
+            votosExpulsion[numeroSala].Add(solicitante); 
 
 
             foreach (var jugador in jugadoresConectadosTableroCallback.Keys.ToList())
@@ -901,6 +900,66 @@ namespace ServicioGloomm
                 }
             }
         }
+
+
+        public void RegistrarVotoExpulsion(string votante, string jugadorObjetivo, bool votoAFavor)
+        {
+            
+            if (!jugadoresConectadosTablero.TryGetValue(votante, out var numeroSala))
+            {
+                return;
+            }
+
+            if (!votosExpulsion.ContainsKey(numeroSala))
+                return;
+
+            if (votosExpulsion[numeroSala].Contains(votante))
+                return; 
+
+            votosExpulsion[numeroSala].Add(votante);
+
+            int totalJugadores = turnosPorSala[numeroSala].Count;
+            int votosAFavor = votosExpulsion[numeroSala].Count;
+
+            if (votosAFavor > totalJugadores / 2) 
+            {
+                ExpulsarJugador(jugadorObjetivo, numeroSala);
+            }
+            else if (votosExpulsion[numeroSala].Count == totalJugadores - 1)
+            {
+
+                ResultadoVotacionExpulsion(numeroSala, "No se alcanzó la mayoría para expulsar al jugador.");
+            }
+        }
+
+        private void ResultadoVotacionExpulsion(string numeroSala, string mensaje)
+        {
+
+            foreach (var jugador in jugadoresConectadosTableroCallback.Keys.ToList())
+            {
+                if (jugadoresConectadosTablero[jugador] == numeroSala)
+                {
+                    try
+                    {
+
+                        jugadoresConectadosTableroCallback[jugador].NotificarResultadoVotacion(mensaje);
+                    }
+                    catch (CommunicationException ex)
+                    {
+                        jugadoresConectadosTableroCallback.Remove(jugador); 
+                        jugadoresConectadosTablero.Remove(jugador);
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16", "No se pudo conectar el servidor con todos los jugadores"));
+                    }
+                    catch (TimeoutException ex)
+                    {
+                        jugadoresConectadosTableroCallback.Remove(jugador);
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18", "Se termino el tiempo de espera del servidor, intente realizar la operación más tarde"));
+                    }
+                
+                }
+            }
+        }
+
 
         public void RegistrarVotoExpulsion(string votante, string jugadorObjetivo, bool votoAFavor)
         {

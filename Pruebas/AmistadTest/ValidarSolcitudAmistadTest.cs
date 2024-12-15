@@ -10,7 +10,11 @@ using System.Threading.Tasks;
 namespace Pruebas.AmistadTest
 {
     [TestClass]
+<<<<<<<< HEAD:Pruebas/AmistadTest/ValidarSolicitudAmistadTest.cs
+    public class ValidarSolicitudAmistadTest
+========
     public class ValidarSolcitudAmistadTest
+>>>>>>>> fc57b69e650943319e3eb2a4a59d7695bacdd073:Pruebas/AmistadTest/ValidarSolcitudAmistadTest.cs
     {
         private AccesoDatos.Jugador jugador;
         private AccesoDatos.Jugador jugadorAmigo;

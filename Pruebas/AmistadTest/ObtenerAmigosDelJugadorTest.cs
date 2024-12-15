@@ -11,11 +11,7 @@ using System.Threading.Tasks;
 namespace Pruebas.AmistadTest
 {
     [TestClass]
-<<<<<<<< HEAD:Pruebas/AmistadTest/ObtenerListaAmigoTest.cs
-    public class ObtenerListaAmigoTest
-========
-    public class ObtenerListaAmigosTest
->>>>>>>> fc57b69e650943319e3eb2a4a59d7695bacdd073:Pruebas/AmistadTest/ObtenerListaAmigosTest.cs
+    public class ObtenerAmigosDelJugadorTest
     {
         private AccesoDatos.Jugador jugador;
         private AccesoDatos.Jugador jugadorAmigo;

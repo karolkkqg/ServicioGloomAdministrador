@@ -7,7 +7,7 @@ using System.ServiceModel;
 namespace Pruebas.AmistadTest
 {
     [TestClass()]
-    public class AgregarSolicitudAmistadTest
+    public class EnviarSolicitudAmistadTest
     {
         private AccesoDatos.Jugador jugador;
         private AccesoDatos.Jugador jugadorAmigo;

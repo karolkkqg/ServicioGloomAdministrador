@@ -19,6 +19,7 @@ namespace Pruebas.SalaTest
 
         public void TestInitialize()
         {
+            LimpiarDatosDePrueba();
             sala = new BibliotecaClases.Sala
             {
                 nombreSala = "Bellakos",

@@ -1,4 +1,5 @@
 ﻿using AccesoDatos;
+using BibliotecaClases;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -21,21 +22,22 @@ namespace Pruebas.ServicioHistorialPartidaTest
             LimpiarDatosDePrueba();
             nuevaSala = new BibliotecaClases.Sala
             {
-                idSala = "Sala0000",
-                nombreSala = "Sala de Juegos",
+                nombreSala = "Bellakos",
                 tipoSala = "Normal",
-                tipoPartida = "Pública",
+                tipoPartida = "Publica",
                 noJugadores = 4,
-                codigo = "1234",
-                idAdministrador = "TacoDePato",
-                fecha = DateTime.Now.ToString(),
-                ganador = "Jugador1"
+                codigo = "123450000",
+                idAdministrador = "Pinku",
+                fecha = "22/10/24",
+                ganador = "Ninguno",
+                idSala = "123450000",
+
             };
             AccesoSala.AgregarPartidaABaseDeDatos(nuevaSala);
 
             nuevaParticipante = new BibliotecaClases.Sala
             {
-                idSala = "Sala0000",
+                idSala = "123450000",
                 jugador = "Jugador1"
             };
             AccesoSala.AgregarParticipante(nuevaParticipante);
@@ -54,14 +56,14 @@ namespace Pruebas.ServicioHistorialPartidaTest
         {
             using (var contexto = new EntidadesGloom())
             {
-                var participante = contexto.Participantes.FirstOrDefault(s => s.IdPartida == "Sala0000");
+                var participante = contexto.Participantes.FirstOrDefault(s => s.IdPartida == "123450000");
                 if (participante != null)
                 {
                     contexto.Participantes.Remove(participante);
                     contexto.SaveChanges();
                 }
 
-                var sala = contexto.Sala.FirstOrDefault(s => s.IdSala == "Sala0000");
+                var sala = contexto.Sala.FirstOrDefault(s => s.IdSala == "123450000");
                 if (sala != null)
                 {
                     contexto.Sala.Remove(sala);

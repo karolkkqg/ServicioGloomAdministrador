@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ServiceModel;
 
 namespace Pruebas.ServicioSalaNormalTest
+
 {
     [TestClass]
     public class ConectarConSalaNormalTest
