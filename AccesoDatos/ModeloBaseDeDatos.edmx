@@ -22,15 +22,15 @@
           <Property Name="Nombre" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="Apellidos" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="Correo" Type="nvarchar" MaxLength="255" Nullable="false" />
-          <Property Name="Contraseña" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Contraseña" Type="varchar" MaxLength="255" />
           <Property Name="Tipo" Type="nvarchar" MaxLength="255" Nullable="false" />
-          <Property Name="Icono" Type="nvarchar" MaxLength="50" />
+          <Property Name="Icono" Type="nvarchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="Participantes">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="IdPartida" Type="nvarchar" MaxLength="50" />
+          <Property Name="IdPartida" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="NombreUsuario" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
         </EntityType>
@@ -38,15 +38,15 @@
           <Key>
             <PropertyRef Name="IdSala" />
           </Key>
-          <Property Name="NombreSala" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="TipoSala" Type="nvarchar" MaxLength="50" />
-          <Property Name="TipoPartida" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="IdSala" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="NombreSala" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="TipoSala" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="TipoPartida" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="NoJugadores" Type="int" Nullable="false" />
-          <Property Name="Codigo" Type="nchar" MaxLength="10" />
-          <Property Name="IdAdministrador" Type="nvarchar(max)" />
-          <Property Name="Fecha" Type="nchar" MaxLength="10" />
-          <Property Name="Ganador" Type="nvarchar" MaxLength="50" />
-          <Property Name="IdSala" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Codigo" Type="varchar" MaxLength="50" />
+          <Property Name="IdAdministrador" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Fecha" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Ganador" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="sysdiagrams">
           <Key>
@@ -70,18 +70,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Participantes_Sala">
-          <End Role="Sala" Type="Self.Sala" Multiplicity="0..1" />
-          <End Role="Participantes" Type="Self.Participantes" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Sala">
-              <PropertyRef Name="IdSala" />
-            </Principal>
-            <Dependent Role="Participantes">
-              <PropertyRef Name="IdPartida" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="ModeloGloomStoreContainer">
           <EntitySet Name="Amigos" EntityType="Self.Amigos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Jugador" EntityType="Self.Jugador" Schema="dbo" store:Type="Tables" />
@@ -91,10 +79,6 @@
           <AssociationSet Name="FK_Amigos_Jugador" Association="Self.FK_Amigos_Jugador">
             <End Role="Jugador" EntitySet="Jugador" />
             <End Role="Amigos" EntitySet="Amigos" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Participantes_Sala" Association="Self.FK_Participantes_Sala">
-            <End Role="Sala" EntitySet="Sala" />
-            <End Role="Participantes" EntitySet="Participantes" />
           </AssociationSet>
         </EntityContainer>
       </Schema>
@@ -120,34 +104,32 @@
           <Property Name="Nombre" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Apellidos" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Correo" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Contraseña" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Contraseña" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="Tipo" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Icono" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Icono" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Amigos" Relationship="Self.FK_Amigos_Jugador" FromRole="Jugador" ToRole="Amigos" />
         </EntityType>
         <EntityType Name="Participantes">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="IdPartida" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IdPartida" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="NombreUsuario" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <NavigationProperty Name="Sala" Relationship="Self.FK_Participantes_Sala" FromRole="Participantes" ToRole="Sala" />
         </EntityType>
         <EntityType Name="Sala">
           <Key>
             <PropertyRef Name="IdSala" />
           </Key>
-          <Property Name="NombreSala" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="TipoSala" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="TipoPartida" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="IdSala" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="NombreSala" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="TipoSala" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="TipoPartida" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="NoJugadores" Type="Int32" Nullable="false" />
-          <Property Name="Codigo" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
-          <Property Name="IdAdministrador" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Fecha" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
-          <Property Name="Ganador" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="IdSala" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Participantes" Relationship="Self.FK_Participantes_Sala" FromRole="Sala" ToRole="Participantes" />
+          <Property Name="Codigo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IdAdministrador" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Fecha" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Ganador" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="sysdiagrams">
           <Key>
@@ -171,18 +153,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Participantes_Sala">
-          <End Role="Sala" Type="Self.Sala" Multiplicity="0..1" />
-          <End Role="Participantes" Type="Self.Participantes" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Sala">
-              <PropertyRef Name="IdSala" />
-            </Principal>
-            <Dependent Role="Participantes">
-              <PropertyRef Name="IdPartida" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="EntidadesGloom" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Amigos" EntityType="Self.Amigos" />
           <EntitySet Name="Jugador" EntityType="Self.Jugador" />
@@ -192,10 +162,6 @@
           <AssociationSet Name="FK_Amigos_Jugador" Association="Self.FK_Amigos_Jugador">
             <End Role="Jugador" EntitySet="Jugador" />
             <End Role="Amigos" EntitySet="Amigos" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Participantes_Sala" Association="Self.FK_Participantes_Sala">
-            <End Role="Sala" EntitySet="Sala" />
-            <End Role="Participantes" EntitySet="Participantes" />
           </AssociationSet>
         </EntityContainer>
       </Schema>
@@ -239,6 +205,7 @@
           <EntitySetMapping Name="Sala">
             <EntityTypeMapping TypeName="ModeloGloom.Sala">
               <MappingFragment StoreEntitySet="Sala">
+                <ScalarProperty Name="IdSala" ColumnName="IdSala" />
                 <ScalarProperty Name="NombreSala" ColumnName="NombreSala" />
                 <ScalarProperty Name="TipoSala" ColumnName="TipoSala" />
                 <ScalarProperty Name="TipoPartida" ColumnName="TipoPartida" />
@@ -247,7 +214,6 @@
                 <ScalarProperty Name="IdAdministrador" ColumnName="IdAdministrador" />
                 <ScalarProperty Name="Fecha" ColumnName="Fecha" />
                 <ScalarProperty Name="Ganador" ColumnName="Ganador" />
-                <ScalarProperty Name="IdSala" ColumnName="IdSala" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

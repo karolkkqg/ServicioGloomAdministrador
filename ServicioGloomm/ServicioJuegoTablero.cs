@@ -487,15 +487,15 @@ namespace ServicioGloomm
 
             if (jugadorGanador != "Sin ganador")
             {
-                foreach (var jugador in jugadoresConectadosTableroCallback.Keys)
+                foreach (var jugador in jugadoresConectadosTableroCallback)
                 {
-                    if (jugadoresConectadosTablero[jugador] == numeroSala)
+                    if (jugadoresConectadosTableroCallback.ContainsKey(jugador.Key))
                     {
                         try
                         {
                             string mensajeGanador = jugador.Equals(jugadorGanador) ? jugadorGanador : "Sin ganador";
                             AsignarGanadorASala(numeroSala, jugadorGanador);
-                            jugadoresConectadosTableroCallback[jugador].EnviarGanador(mensajeGanador);
+                            jugadoresConectadosTableroCallback[jugador.Key].EnviarGanador(mensajeGanador);
                         }
                         catch (CommunicationException ex)
                         {

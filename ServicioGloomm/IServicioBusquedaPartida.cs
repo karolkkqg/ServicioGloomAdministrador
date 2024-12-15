@@ -21,6 +21,9 @@ namespace ServicioGloomm
         [OperationContract]
         void UnirseASalaPrivadaMiniHistoria(string idUsuario, string idSala, string codigoAcceso);
 
+        [OperationContract]
+        List<BibliotecaClases.Sala> ObtenerSalasActivas();
+
     }
 
     [ServiceContract]

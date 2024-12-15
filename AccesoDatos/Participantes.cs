@@ -17,7 +17,5 @@ namespace AccesoDatos
         public string IdPartida { get; set; }
         public string NombreUsuario { get; set; }
         public int Id { get; set; }
-    
-        public virtual Sala Sala { get; set; }
     }
 }

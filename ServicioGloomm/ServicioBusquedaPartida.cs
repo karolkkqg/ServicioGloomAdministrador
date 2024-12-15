@@ -12,55 +12,34 @@ namespace ServicioGloomm
 {
     public partial class ServicioJuego : IServicioBusquedaPartida
     {
-        public void UnirseASalaPublicaNormal(string idSala, string idUsuario)
+
+        public List<BibliotecaClases.Sala> ObtenerSalasActivas()
         {
-            if (salasActivasEnMemoria.TryGetValue(idSala, out var sala) && sala.tipoPartida == "Pública" && sala.tipoSala == "Normal")
+            AdministradorLogger administradorLogger = new AdministradorLogger(this.GetType());
+            try
             {
-                if (!jugadoresEnSala.ContainsKey(idSala))
+                var salasAccesoDatos = AccesoSala.ObtenerSalasEnPartida();
+
+                var salasBibliotecaClases = salasAccesoDatos.Select(s => new BibliotecaClases.Sala
                 {
-                    jugadoresEnSala[idSala] = new HashSet<string>();
-                }
-                jugadoresEnSala[idSala].Add(idUsuario);
-                usuariosSalaCallback[idUsuario] = OperationContext.Current.GetCallbackChannel<ISalaCallback>();
+                    idSala = s.IdSala,
+                    nombreSala = s.NombreSala,
+                    tipoSala = s.TipoSala,
+                    tipoPartida = s.TipoPartida,
+                    noJugadores = s.NoJugadores,
+                    codigo = s.Codigo,
+                    idAdministrador = s.IdAdministrador,
+                    fecha = s.Fecha,
+                    ganador = s.Ganador
+                }).ToList();
 
+                return salasBibliotecaClases;
             }
-            else
+            catch (FaultException<ManejadorExcepciones> ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("23", "La sala no es pública o no existe."), new FaultReason("La sala no es pública o no existe."));
+                administradorLogger.RegistroError(ex);
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Message));
             }
-        }
-
-        public void UnirseASalaPrivadaNormal(string idUsuario, string idSala, string codigoAcceso)
-        {
-            if (!salasActivasEnMemoria.TryGetValue(idSala, out var sala) || sala.tipoSala != "Normal" || sala.codigo != codigoAcceso)
-            {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("24", "Verifique el código de la sala."), new FaultReason("Verifique el código de la sala."));
-            }
-
-            if (!jugadoresEnSala.ContainsKey(idSala))
-            {
-                jugadoresEnSala[idSala] = new HashSet<string>();
-            }
-            jugadoresEnSala[idSala].Add(idUsuario);
-            usuariosSalaCallback[idUsuario] = OperationContext.Current.GetCallbackChannel<ISalaCallback>();
-
-        }
-
-
-
-        public void UnirseASalaPrivadaMiniHistoria(string idUsuario, string idSala, string codigoAcceso)
-        {
-            if (!salasActivasEnMemoria.TryGetValue(idSala, out var sala) || sala.tipoSala != "Mini historia" || sala.codigo != codigoAcceso)
-            {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("24", "Verifique el código de la sala."), new FaultReason("Verifique el código de la sala."));
-            }
-
-            if (!jugadoresEnSala.ContainsKey(idSala))
-            {
-                jugadoresEnSala[idSala] = new HashSet<string>();
-            }
-            jugadoresEnSala[idSala].Add(idUsuario);
-            usuariosSalaCallback[idUsuario] = OperationContext.Current.GetCallbackChannel<ISalaCallback>();
 
         }
     }
