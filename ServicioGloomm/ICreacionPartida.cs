@@ -43,10 +43,11 @@ namespace ServicioGloomm
         int CrearPartida(Sala sala);
 
         [OperationContract]
-        Dictionary<string, (string familia, int vidaTotal)> ObtenerResumenFamiliasPorSala(string numeroSala);
+        string ObtenerCodigoSala(string idAdminsitrador, string nombreSala);
 
         [OperationContract]
-        string ObtenerCodigoSala(string idAdminsitrador, string nombreSala);
+        Dictionary<string, (string familia, int vidaTotal)> ObtenerResumenFamiliasPorSala(string numeroSala);
+
 
     }
 }

@@ -16,7 +16,7 @@ namespace AccesoDatos
     {
         public static int AgregarSolcitudAmistad(Amistad solicitud)
         {
-            
+
             try
             {
                 ValidarSiEsMismoJugadorSolcitud(solicitud.nombreUsuario.nombreUsuario, solicitud.jugadorAmigo.nombreUsuario);
@@ -28,11 +28,16 @@ namespace AccesoDatos
             }
             catch (SqlException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString(), ex.Message));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString(), ex.Message),
+                    new FaultReason(ex.Message)
+                );
             }
             catch (EntityException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"),
+                    new FaultReason(ex.Message)
+                );
+
             }
         }
 
@@ -50,11 +55,15 @@ namespace AccesoDatos
             }
             catch (SqlException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString(), ex.Message));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString(), ex.Message),
+                    new FaultReason(ex.Message)
+                );
             }
             catch (EntityException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"),
+                    new FaultReason(ex.Message)
+                );
             }
         }
 
@@ -66,19 +75,22 @@ namespace AccesoDatos
                 {
                     var amistad = contexto.Amigos
                         .Where(a =>
-                            (a.NombreUsuario == nombreUsuario1 && a.JugadorAmigo == nombreUsuario2 && a.Estado == "Aceptado") ||
-                            (a.NombreUsuario == nombreUsuario2 && a.JugadorAmigo == nombreUsuario1 && a.Estado == "Aceptado"))
+                            (a.NombreUsuario == nombreUsuario1 && a.JugadorAmigo == nombreUsuario2 && a.Estado == "Aceptado"))
                         .FirstOrDefault();
 
                     if (amistad != null)
                     {
-                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("4", "Los jugadores ya son amigos"));
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("4", "Los jugadores ya son amigos"),
+                            new FaultReason("Los jugadores ya son amigos")
+                        );
                     }
                 }
             }
             catch (EntityException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"),
+                    new FaultReason(ex.Message)
+                );
             }
             
         }
@@ -97,13 +109,18 @@ namespace AccesoDatos
 
                     if (amistad != null)
                     {
-                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("5", "Ya se ha enviado una solicitud y está en espera de aceptar"));
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("5", "Ya se ha enviado una solicitud y está en espera de aceptar"),
+                            new FaultReason("Ya se ha enviado una solicitud y está en espera de aceptar")
+                        );
                     }
                 }
             }
             catch (EntityException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"),
+                    new FaultReason(ex.Message)
+                );
+
             }
            
         }
@@ -112,7 +129,9 @@ namespace AccesoDatos
         {
             if (nombreUsuario1.Equals(nombreUsuario2, StringComparison.OrdinalIgnoreCase))
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("6", "No se puede enviar una solicitud así mismo"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("6", "No se puede enviar una solicitud así mismo"),
+                    new FaultReason("No se puede enviar una solicitud así mismo")
+                );
             }
 
         }
@@ -136,11 +155,13 @@ namespace AccesoDatos
             }
             catch (SqlException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString(), ex.Message));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString(), ex.Message),
+                    new FaultReason(ex.Message)
+                );
             }
             catch (EntityException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"), new FaultReason(ex.Message));
             }
         }
         public static int EliminarAmigo(string nombreUsuario, string nombreAmigo)
@@ -158,11 +179,11 @@ namespace AccesoDatos
             }
             catch (SqlException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString(), ex.Message));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString(), ex.Message), new FaultReason(ex.Message));
             }
             catch (EntityException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"), new FaultReason(ex.Message));
             }
         }
 
@@ -172,18 +193,22 @@ namespace AccesoDatos
             {
                 using (var contexto = new EntidadesGloom())
                 {
-                    var amigosAceptados = contexto.Amigos.Where(a => (a.NombreUsuario == nombreUsuario || a.JugadorAmigo == nombreUsuario)
+                    var amigosAceptados = contexto.Amigos.Where(a => (a.NombreUsuario == nombreUsuario)
                 && a.Estado == "Aceptado").ToList();
                     return amigosAceptados;
                 }
             }
             catch (SqlException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString(), ex.Message));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString(), ex.Message), 
+                    new FaultReason(ex.Message)
+                );
             }
             catch (EntityException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"), 
+                    new FaultReason(ex.Message)
+                );
             }
         }
 
@@ -199,11 +224,15 @@ namespace AccesoDatos
             }
             catch (SqlException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString(), ex.Message));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString(), ex.Message), 
+                    new FaultReason(ex.Message)
+                );
             }
             catch (EntityException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"), 
+                    new FaultReason(ex.Message)
+                );
             }
         }
 
@@ -248,7 +277,9 @@ namespace AccesoDatos
 
                     if (correoJugadorAmigo == null)
                     {
-                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("42", "No se ha encontrado el correo del amigo"));
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("42", "No se ha encontrado el correo del amigo"),
+                            new FaultReason("No se ha encontrado el correo del amigo")
+                        );
                     }
 
                     return correoJugadorAmigo;
@@ -256,7 +287,9 @@ namespace AccesoDatos
             }
             catch (EntityException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"),
+                    new FaultReason(ex.Message)
+                 );
             }
         }
     }

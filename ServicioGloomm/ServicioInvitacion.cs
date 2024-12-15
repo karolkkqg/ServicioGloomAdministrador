@@ -29,11 +29,11 @@ namespace ServicioGloomm
             }
             catch (FileNotFoundException fileNotFoundException)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("25", "No se encuentra archivo para enviar correo."));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("25", "No se encuentra archivo para enviar correo."), new FaultReason("No se encuentra archivo para enviar correo."));
             }
             catch (IOException ioException)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("26", "No se tiene acceso al archivo para enviar correo."));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("26", "No se tiene acceso al archivo para enviar correo."), new FaultReason("No se tiene acceso al archivo para enviar correo."));
             }
 
                 return resultado;
@@ -78,20 +78,20 @@ namespace ServicioGloomm
 
             catch (FormatException formatException)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("27", "Formato inválido de correo."));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("27", "Formato inválido de correo."), new FaultReason("Formato inválido de correo."));
             }
 
             catch (SmtpFailedRecipientException failedRecipientException)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("28", "No se pudo enviar el correo."));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("28", "No se pudo enviar el correo."), new FaultReason("No se pudo enviar el correo."));
             }
             catch (SmtpException smtpException)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("29", "Problema al enviar correo."));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("29", "Problema al enviar correo."), new FaultReason("Problema al enviar correo."));
             }
             catch (InvalidOperationException invalidOperationException)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("30", "Operación de envió de correo no válida."));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("30", "Operación de envió de correo no válida."), new FaultReason("Operación de envió de correo no válida."));
             }
 
             return resultadoEnvioCorreo;

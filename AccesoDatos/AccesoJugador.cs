@@ -39,10 +39,15 @@ namespace AccesoDatos
             }
             catch (SqlException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString(), ex.Message));
-            }catch (EntityException ex)
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString(), ex.Message),
+                    new FaultReason(ex.Message)
+                 );
+            }
+            catch (EntityException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"),
+                    new FaultReason(ex.Message)
+                 );
             }
         }
 
@@ -53,6 +58,7 @@ namespace AccesoDatos
             {
                 using (var contexto = new EntidadesGloom())
                 {
+                    
                     var jugadorEntidad = ConvertirAJugador(jugador);
                     contexto.Jugador.Add(jugadorEntidad);
                     int filasAfectadas = contexto.SaveChanges();
@@ -61,11 +67,15 @@ namespace AccesoDatos
             }
             catch (SqlException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString(), ex.Message));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString(), ex.Message),
+                    new FaultReason(ex.Message)
+                 );
             }
             catch (EntityException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"),
+                    new FaultReason(ex.Message)
+                 );
             }
         }
         public static int ActualizarJugadorABaseDeDatos(Jugador jugador)
@@ -78,11 +88,74 @@ namespace AccesoDatos
             }
             catch (SqlException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString(), ex.Message));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString(), ex.Message),
+                    new FaultReason(ex.Message)
+                 );
             }
             catch (EntityException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"),
+                    new FaultReason(ex.Message)
+                 );
+            }
+        }
+
+        public static int ActualizarJugadorSinContrasenaABaseDeDatos(Jugador jugador)
+        {
+            try
+            {
+                ValidarCorreoActualizacionJugador(jugador);
+                int resultado = EjecutarActualizacionSinCOntrasenaABaseDeDatos(jugador);
+                return resultado;
+            }
+            catch (SqlException ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString(), ex.Message),
+                    new FaultReason(ex.Message)
+                 );
+            }
+            catch (EntityException ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"),
+                    new FaultReason(ex.Message)
+                 );
+            }
+        }
+
+        private static int EjecutarActualizacionSinCOntrasenaABaseDeDatos(Jugador jugador)
+        {
+            try
+            {
+                using (var contexto = new EntidadesGloom())
+                {
+                    jugador.Contraseña = "sin contraseña";
+                    var jugadorEntidad = ConvertirAJugador(jugador);
+                    contexto.Jugador.Attach(jugadorEntidad);
+
+                    contexto.Entry(jugadorEntidad).Property(j => j.NombreUsuario).IsModified = true;
+                    contexto.Entry(jugadorEntidad).Property(j => j.Nombre).IsModified = true;
+                    contexto.Entry(jugadorEntidad).Property(j => j.Apellidos).IsModified = true;
+                    contexto.Entry(jugadorEntidad).Property(j => j.Correo).IsModified = true;
+                    contexto.Entry(jugadorEntidad).Property(j => j.Tipo).IsModified = true;
+                    contexto.Entry(jugadorEntidad).Property(j => j.Icono).IsModified = true;
+
+                    contexto.Entry(jugadorEntidad).Property(j => j.Contraseña).IsModified = false;
+
+                    int filasAfectadas = contexto.SaveChanges();
+                    return filasAfectadas;
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString(), ex.Message),
+                    new FaultReason(ex.Message)
+                 );
+            }
+            catch (EntityException ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"),
+                    new FaultReason(ex.Message)
+                 );
             }
         }
 
@@ -101,11 +174,15 @@ namespace AccesoDatos
             }
             catch (SqlException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString(), ex.Message));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString(), ex.Message),
+                    new FaultReason(ex.Message)
+                 );
             }
             catch (EntityException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"),
+                    new FaultReason(ex.Message)
+                 );
             }
         }
         private static Jugador ValidarCorreoActualizacionJugador(Jugador jugador)
@@ -119,7 +196,9 @@ namespace AccesoDatos
 
                     if (jugadorConCorreo != null)
                     {
-                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("2", "Correo registrado"));
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("2", "Correo registrado"),
+                            new FaultReason("Correo registrado")
+                         );
                     }
 
                     return jugador;
@@ -127,7 +206,10 @@ namespace AccesoDatos
             }
             catch (EntityException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"),
+                    new FaultReason(ex.Message)
+                );
+
             }
             
         }
@@ -141,14 +223,18 @@ namespace AccesoDatos
                     var jugadorConCorreo = contexto.Jugador.FirstOrDefault(j => j.Correo == jugador.Correo);
                     if (jugadorConCorreo != null)
                     {
-                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("2", "Correo registrado"));
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("2", "Correo registrado"),
+                            new FaultReason("Correo registrado")
+                        );
                     }
                     return jugador;
                 }
             }
             catch (EntityException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"),
+                    new FaultReason(ex.Message)
+                );
             }
           
         }
@@ -161,14 +247,18 @@ namespace AccesoDatos
                     var jugadorConNombreUsuario = contexto.Jugador.FirstOrDefault(j => j.NombreUsuario == jugador.NombreUsuario);
                     if (jugadorConNombreUsuario != null)
                     {
-                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("1", "Nombre de usuario registrado"));
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("1", "Nombre de usuario registrado"),
+                            new FaultReason("Nombre de usuario registrado")
+                        );
                     }
                     return jugador;
                 }
             }
             catch (EntityException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"),
+                    new FaultReason(ex.Message)
+                );
             }
         }
         public static int ValidarJugadorParaAutenticacion(Jugador jugador)
@@ -184,20 +274,24 @@ namespace AccesoDatos
                    
                     if (jugadorEncontrado == null)
                         {
-                            throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("3", "Nombre usuario no encontrado en registro"));
+                            throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("3", "Nombre usuario no encontrado en registro"),
+                                new FaultReason("Nombre usuario no encontrado en registro"));
                         }
                     jugadorEncontrado.Contraseña = jugadorEncontrado.Contraseña.Trim();
                     contrasenaValida = BCrypt.Net.BCrypt.Verify(jugador.Contraseña, jugadorEncontrado.Contraseña);
                     if (!contrasenaValida)
                     {
-                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("3", "Contraseña incorrecta"));
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("3", "Contraseña incorrecta"),
+                            new FaultReason("Contraseña incorrecta"));
                     }
                     return 1;
                 }
             }
             catch (EntityException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"),
+                    new FaultReason(ex.Message)
+                );
             }
             
         }
@@ -211,7 +305,9 @@ namespace AccesoDatos
                     var jugadorConNombreUsuario = contexto.Jugador.FirstOrDefault(j => j.NombreUsuario == nombreUsuario);
                     if (jugadorConNombreUsuario == null)
                     {
-                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("57", "El jugador no está registrado"));
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("57", "El jugador no está registrado"),
+                            new FaultReason("El jugador no está registrado")
+                        );
                     }
                     BibliotecaClases.Jugador jugadorBiblioteca = ConvertirAClasesBiblioteca(jugadorConNombreUsuario);
                     return jugadorConNombreUsuario;
@@ -219,7 +315,9 @@ namespace AccesoDatos
             }
             catch (EntityException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"),
+                    new FaultReason(ex.Message)
+                );
             }
         }
 
@@ -242,7 +340,9 @@ namespace AccesoDatos
             }
             catch (EntityException ex)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("41", "Error con la base de datos"),
+                    new FaultReason(ex.Message)
+                );
             }
         }
 

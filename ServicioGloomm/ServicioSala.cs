@@ -20,7 +20,7 @@ namespace ServicioGloomm
         public static readonly Dictionary<string, List<string>> salaJugadores = new Dictionary<string, List<string>>();
         public static readonly Dictionary<string, Dictionary<string, (string nombrePersonaje, int vida)>> personajesPorSala = new Dictionary<string, Dictionary<string, (string, int)>>();
         public static readonly Dictionary<string, HashSet<string>> jugadoresEnSala = new Dictionary<string, HashSet<string>>();
-        public static readonly Dictionary<string, IBusquedaPartidaCallback> usuariosSalaCallback = new Dictionary<string, IBusquedaPartidaCallback>();
+        public static readonly Dictionary<string, ISalaCallback> usuariosSalaCallback = new Dictionary<string, ISalaCallback>();
         public static readonly Dictionary<string, HashSet<string>> familiasSeleccionadasPorSala = new Dictionary<string, HashSet<string>>();
         public static readonly Dictionary<string, List<(string nombrePersonaje, int vida)>> personajesFamiliaDeUsuario = new Dictionary<string, List<(string, int)>>();
         public static readonly Dictionary<string, BibliotecaClases.Sala> salasActivasEnMemoria = new Dictionary<string, BibliotecaClases.Sala>();
@@ -85,20 +85,22 @@ namespace ServicioGloomm
                     jugadoresEnSala[sala.idSala].Add(sala.idAdministrador);
 
 
-                    //ActualizarSalasParaTodos();
-
                     return resultado;
                 }
             }
             catch (FaultException<ManejadorExcepciones> ex)
             {
                 administradorLogger.RegistroError(ex);
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.mensaje));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.mensaje),
+                    new FaultReason(ex.Detail.mensaje)
+                    );
             }
             catch (CommunicationException ex)
             {
                 throw new FaultException<ManejadorExcepciones>(
-                    new ManejadorExcepciones("16", ex.Message));
+                    new ManejadorExcepciones("16", ex.Message),
+                    new FaultReason(ex.Message)
+                    );
             }
             return -1;
         }
@@ -140,7 +142,9 @@ namespace ServicioGloomm
             {
                 valido = false;
                 administradorLogger.RegistroError(ex);
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString(), ex.Message ));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Number.ToString(), ex.Message ),
+                    new FaultReason(ex.Message)
+                    );
 
             }
 
@@ -169,12 +173,16 @@ namespace ServicioGloomm
                     {
                         administradorLogger.RegistroError(ex);
                         salaJugadoresPorSala[numeroSala].Remove(jugador.Key);
-                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16", "No se pudo conectar el servidor con todos los jugadores"));
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16", "No se pudo conectar el servidor con todos los jugadores"),
+                            new FaultReason("No se pudo conectar el servidor con todos los jugadores")
+                    );
                     }
                     catch (TimeoutException ex)
                     {
                         administradorLogger.RegistroError(ex);
-                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18", "Se termino el tiempo de espera del servidor, intente realizar la operación más tarde"));
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18", "Se termino el tiempo de espera del servidor, intente realizar la operación más tarde"),
+                            new FaultReason("Se termino el tiempo de espera del servidor, intente realizar la operación más tarde")
+                    );
                     }
                 }
             }
@@ -184,7 +192,9 @@ namespace ServicioGloomm
         {
             if (cantidadJugadores != personajesUsadosPorSala[numeroSala].Count())
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("15", "No todos los jugadores han seleccionado un personaje"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("15", "No todos los jugadores han seleccionado un personaje"),
+                    new FaultReason("No todos los jugadores han seleccionado un personaje")
+                    );
             }
         }
 
@@ -210,21 +220,33 @@ namespace ServicioGloomm
                 {
                     try
                     {
+                        VerificarParticipantesListos(idSala);
                         jugador.Value.EmpezarJuego();
+                    }
+                    catch (FaultException<ManejadorExcepciones> ex)
+                    {
+                        administradorLogger.RegistroError(ex);
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.Mensaje),
+                            new FaultReason(ex.Detail.Mensaje)
+                    );
                     }
                     catch (CommunicationException ex)
                     {
                         administradorLogger.RegistroError(ex);
 
                         salaJugadoresPorSala[idSala].Remove(jugador.Key);
-                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16", "No se pudo conectar el servidor con todos los jugadores"));
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16", "No se pudo conectar el servidor con todos los jugadores"),
+                             new FaultReason("No se pudo conectar el servidor con todos los jugadores")
+                    );
                     }
                     catch (TimeoutException ex)
                     {
                         administradorLogger.RegistroError(ex);
 
                         salaJugadoresPorSala[idSala].Remove(jugador.Key);
-                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18", "Se termino el tiempo de espera del servidor, intente realizar la operación más tarde"));
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18", "Se termino el tiempo de espera del servidor, intente realizar la operación más tarde"),
+                            new FaultReason("Se termino el tiempo de espera del servidor, intente realizar la operación más tarde")
+                    );
                     }
                 }
             }
@@ -277,14 +299,18 @@ namespace ServicioGloomm
                             administradorLogger.RegistroError(ex);
 
                             salaJugadoresPorSala[idSala].Remove(jugador.Key);
-                            throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16", "No se pudo conectar el servidor con todos los jugadores"));
+                            throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16", "No se pudo conectar el servidor con todos los jugadores"),
+                                 new FaultReason("No se pudo conectar el servidor con todos los jugadores")
+                    );
                         }
                         catch (TimeoutException ex)
                         {
                             administradorLogger.RegistroError(ex);
 
                             salaJugadoresPorSala[idSala].Remove(jugador.Key);
-                            throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18", "Se termino el tiempo de espera del servidor, intente realizar la operación más tarde"));
+                            throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18", "Se termino el tiempo de espera del servidor, intente realizar la operación más tarde"),
+                                new FaultReason("Se termino el tiempo de espera del servidor, intente realizar la operación más tarde")
+                    );
                         }
                     }
 
@@ -412,7 +438,9 @@ namespace ServicioGloomm
 
                         salaJugadoresPorSala[sala].Remove(jugador);
 
-                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16", "No se pudo conectar el servidor con todos los jugadores"));
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16", "No se pudo conectar el servidor con todos los jugadores"),
+                             new FaultReason("No se pudo conectar el servidor con todos los jugadores")
+                    );
                     }
                     catch (TimeoutException ex)
                     {
@@ -420,41 +448,14 @@ namespace ServicioGloomm
 
                         salaJugadoresPorSala[sala].Remove(jugador);
 
-                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18", "Se termino el tiempo de espera del servidor, intente realizar la operación más tarde"));
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18", "Se termino el tiempo de espera del servidor, intente realizar la operación más tarde"),
+                            new FaultReason("Se termino el tiempo de espera del servidor, intente realizar la operación más tarde")
+                    );
                     }
                 }
             }
         }
 
-        /*public List<BibliotecaClases.Sala> ObtenerSalasActivas()
-        {
-            AdministradorLogger administradorLogger = new AdministradorLogger(this.GetType());
-            try
-            {
-                var salasAccesoDatos = AccesoSala.ObtenerSalasEnPartida();
-
-                var salasBibliotecaClases = salasAccesoDatos.Select(s => new BibliotecaClases.Sala
-                {
-                    idSala = s.IdSala,
-                    nombreSala = s.NombreSala,
-                    tipoSala = s.TipoSala,
-                    tipoPartida = s.TipoPartida,
-                    noJugadores = s.NoJugadores,
-                    codigo = s.Codigo,
-                    idAdministrador = s.IdAdministrador,
-                    fecha = s.Fecha,
-                    ganador = s.Ganador
-                }).ToList();
-
-                return salasBibliotecaClases;
-            }
-            catch (FaultException<ManejadorExcepciones> ex)
-            {
-                administradorLogger.RegistroError(ex);
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Message));
-            }
-
-        }*/
 
         public List<BibliotecaClases.Sala> ObtenerSalasActivasConEstado()
         {
@@ -471,31 +472,6 @@ namespace ServicioGloomm
 
             return listaSalasActivas;
         }
-
-
-
-        public void SalirDeSala(string idSala, string idUsuario)
-        {/*
-            if (jugadoresEnSala.ContainsKey(idSala) && jugadoresEnSala[idSala].Remove(idUsuario))
-            {
-                if (jugadoresEnSala[idSala].Count == 0)
-                {
-                    jugadoresEnSala.Remove(idSala);
-                    salasActivasEnMemoria.Remove(idSala);
-                }
-                ActualizarSalasParaTodos();
-            }*/
-        }
-
-        /*public void ActualizarSalasParaTodos()
-        {
-            var listaActualizada = ObtenerSalasActivasConEstado();
-            foreach (var callback in usuariosSalaCallback.Values)
-            {
-                callback.ActualizarSalasActivas(listaActualizada);
-            }
-        }*/
-
 
         public Dictionary<string, string> ObtenerFamiliaPorJugador(string numeroSala)
         {
@@ -535,14 +511,18 @@ namespace ServicioGloomm
             catch (FaultException<ManejadorExcepciones> ex)
             {
                 administradorLogger.RegistroError(ex);
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.Mensaje));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.Mensaje),
+                    new FaultReason(ex.Detail.Mensaje)
+                    );
             }
         }
         private void ValidarExistenciaSala(string numeroSala, Dictionary<string, object> jugadoresEnSala, Dictionary<string, object> familiasSeleccionadasPorSala)
         {
             if (!jugadoresEnSala.ContainsKey(numeroSala) || !familiasSeleccionadasPorSala.ContainsKey(numeroSala))
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("50", "No hay información de la sala"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("50", "No hay información de la sala"),
+                    new FaultReason("No hay información de la sala")
+                    );
             }
         }
 
@@ -556,48 +536,34 @@ namespace ServicioGloomm
         {
             var resultado = new Dictionary<string, (string familia, List<(string nombrePersonaje, int vida)> personajes)>();
 
-            try
+            if (!jugadoresEnSala.ContainsKey(numeroSala))
             {
-                if (!jugadoresEnSala.ContainsKey(numeroSala))
-                {
-                    return resultado;
-                }
-
-                if (!familiasSeleccionadasPorSala.ContainsKey(numeroSala))
-                {
-                    return resultado;
-                }
-
-                foreach (var usuario in jugadoresEnSala[numeroSala])
-                {
-                    if (personajesFamiliaDeUsuario.TryGetValue(usuario, out var personajesFamilia))
-                    {
-                        string familia = familias.FirstOrDefault(kv =>
-                            kv.Value.OrderBy(p => p.nombrePersonaje).SequenceEqual(personajesFamilia.OrderBy(p => p.nombrePersonaje))
-                        ).Key;
-
-                        if (!string.IsNullOrEmpty(familia))
-                        {
-                            resultado[usuario] = (familia, personajesFamilia);
-                        }
-                        else
-                        {
-                            Console.WriteLine($"No se encontró una familia válida para el usuario {usuario}");
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine($"El usuario {usuario} no tiene personajes asociados.");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error en ObtenerFamiliaYPersonajesPorUsuario: {ex.Message}");
+                return resultado;
             }
 
+            if (!familiasSeleccionadasPorSala.ContainsKey(numeroSala))
+            {
+                return resultado;
+            }
+
+            foreach (var usuario in jugadoresEnSala[numeroSala])
+            {
+                if (personajesFamiliaDeUsuario.TryGetValue(usuario, out var personajesFamilia))
+                {
+                    string familia = familias.FirstOrDefault(kv =>
+                        kv.Value.OrderBy(p => p.nombrePersonaje).SequenceEqual(personajesFamilia.OrderBy(p => p.nombrePersonaje))
+                    ).Key;
+
+                    if (!string.IsNullOrEmpty(familia))
+                    {
+                        resultado[usuario] = (familia, personajesFamilia);
+                    }
+                }
+
+            }
             return resultado;
         }
+
         public void ValidarFamiliaSeleccionada(int cantidadJugadores, string idSala)
         {
             AdministradorLogger administradorLogger = new AdministradorLogger(this.GetType());
@@ -609,12 +575,14 @@ namespace ServicioGloomm
 
                     if (cantidadFamiliasSeleccionadas != cantidadJugadores)
                     {
-                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("48", "Faltan jugadores por seleccionar una familia."));
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("48", "Faltan jugadores por seleccionar una familia."),
+                            new FaultReason("Faltan jugadores por seleccionar una familia.")
+                    );
                     }
                 }
                 else
                 {
-                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("49", "No hay familias seleccionadas para esta sala."));
+                    throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("49", "No hay familias seleccionadas para esta sala."), new FaultReason("No hay familias seleccionadas para esta sala."));
                 }
             }
             catch (FaultException<ManejadorExcepciones> ex)
@@ -634,68 +602,11 @@ namespace ServicioGloomm
             return false;
         }
 
-<<<<<<< HEAD
-=======
-        public void UnirseASalaPublicaNormal(string idSala, string idUsuario)
-        {
-            if (salasActivasEnMemoria.TryGetValue(idSala, out var sala) && sala.tipoPartida == "Pública" && sala.tipoSala == "Normal")
-            {
-                if (!jugadoresEnSala.ContainsKey(idSala))
-                {
-                    jugadoresEnSala[idSala] = new HashSet<string>();
-                }
-                jugadoresEnSala[idSala].Add(idUsuario);
-                usuariosSalaCallback[idUsuario] = OperationContext.Current.GetCallbackChannel<IBusquedaPartidaCallback>();
-                
-            }
-            else
-            {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("23", "La sala no es pública o no existe."));
-            }
-        }
-
-        public void UnirseASalaPrivadaNormal(string idUsuario, string idSala, string codigoAcceso)
-        {
-            if (!salasActivasEnMemoria.TryGetValue(idSala, out var sala) || sala.tipoSala != "Normal" || sala.codigo != codigoAcceso)
-            {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("24", "Verifique el código de la sala."));
-            }
-
-            if (!jugadoresEnSala.ContainsKey(idSala))
-            {
-                jugadoresEnSala[idSala] = new HashSet<string>();
-            }
-            jugadoresEnSala[idSala].Add(idUsuario);
-            usuariosSalaCallback[idUsuario] = OperationContext.Current.GetCallbackChannel<IBusquedaPartidaCallback>();
-            //ActualizarSalasParaTodos();
-            
-        }
-
-
-
-        public void UnirseASalaPrivadaMiniHistoria(string idUsuario, string idSala, string codigoAcceso)
-        {
-            if (!salasActivasEnMemoria.TryGetValue(idSala, out var sala) || sala.tipoSala != "Mini historia" || sala.codigo != codigoAcceso)
-            {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("24", "Verifique el código de la sala."));
-            }
-
-            if (!jugadoresEnSala.ContainsKey(idSala))
-            {
-                jugadoresEnSala[idSala] = new HashSet<string>();
-            }
-            jugadoresEnSala[idSala].Add(idUsuario);
-            usuariosSalaCallback[idUsuario] = OperationContext.Current.GetCallbackChannel<IBusquedaPartidaCallback>();
-            //ActualizarSalasParaTodos();
-            
-        }
-
->>>>>>> 936f47926b14da06fc7b45166957ae1bf59032a1
         private void FamiliaEnSeleccion(string numeroSala, string nombreFamilia)
         {
             if (familiasSeleccionadasPorSala[numeroSala].Contains(nombreFamilia))
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("14", "Verifique el código de la sala."));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("14", "Verifique el código de la sala."), new FaultReason("Verifique el código de la sala."));
             }
             else
             {
@@ -724,6 +635,22 @@ namespace ServicioGloomm
             }
 
             return familiaAnterior;
+        }
+
+        public string ObtenerCodigoSala(string idAdminsitrador, string nombreSala)
+        {
+            try
+            {
+                string codigoSala;
+
+                codigoSala = AccesoSala.BuscarCodigoSala(idAdminsitrador, nombreSala);
+
+                return codigoSala.Trim();
+            }
+            catch (FaultException<ManejadorExcepciones> ex)
+            {
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.mensaje), new FaultReason(ex.Detail.mensaje));
+            }
         }
 
        
@@ -771,7 +698,7 @@ namespace ServicioGloomm
             catch (FaultException<ManejadorExcepciones> ex)
             {
                 administradorLogger.RegistroError(ex);
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.Mensaje));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.Mensaje), new FaultReason(ex.Detail.mensaje));
             }
         }
 
@@ -807,19 +734,23 @@ namespace ServicioGloomm
                     catch (CommunicationException ex)
                     {
                         administradorLogger.RegistroError(ex);
-                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16", "No se pudo conectar el servidor con todos los jugadores"));
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("16", "No se pudo conectar el servidor con todos los jugadores"),
+                             new FaultReason("No se pudo conectar el servidor con todos los jugadores")
+                    );
                     }
                     catch (TimeoutException ex)
                     {
                         administradorLogger.RegistroError(ex);
-                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18", "Se termino el tiempo de espera del servidor, intente realizar la operación más tarde"));
+                        throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("18", "Se termino el tiempo de espera del servidor, intente realizar la operación más tarde"),
+                            new FaultReason("Se termino el tiempo de espera del servidor, intente realizar la operación más tarde")
+                    );
                     }
                 }
             }
             catch (FaultException<ManejadorExcepciones> ex)
             {
                 administradorLogger.RegistroError(ex);
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.Mensaje));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.Mensaje), new FaultReason(ex.Detail.mensaje));
             }
 
         }
@@ -828,7 +759,7 @@ namespace ServicioGloomm
         {
             if (string.IsNullOrEmpty(usuarioObjetivo) || !personajesFamiliaDeUsuario.ContainsKey(usuarioObjetivo))
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("51", "El jugador objetivo no tiene personajes asociados"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("51", "El jugador objetivo no tiene personajes asociados"), new FaultReason("El jugador objetivo no tiene personajes asociados"));
             }
         }
 
@@ -836,7 +767,7 @@ namespace ServicioGloomm
         {
             if (string.IsNullOrEmpty(personajeObjetivo))
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("52", "El familiar objetivo no existe"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("52", "El familiar objetivo no existe"), new FaultReason("El familiar objetivo no existe"));
 
             }
         }
@@ -845,7 +776,7 @@ namespace ServicioGloomm
         {
             if (personajeIndex == -1)
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("53", "El familiar objetivo no pertenece a la familia del jugador"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("53", "El familiar objetivo no pertenece a la familia del jugador"), new FaultReason("El familiar objetivo no pertenece a la familia del jugador"));
 
             }
         }
@@ -900,7 +831,7 @@ namespace ServicioGloomm
 
             if (personaje.nombrePersonaje == null || string.IsNullOrEmpty(personaje.nombrePersonaje))
             {
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("53", "El familiar objetivo no pertenece a la familia del jugador"));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("53", "El familiar objetivo no pertenece a la familia del jugador"), new FaultReason("El familiar objetivo no pertenece a la familia del jugador"));
             }
         }
 
@@ -935,10 +866,25 @@ namespace ServicioGloomm
             catch (FaultException<ManejadorExcepciones> ex)
             {
                 administradorLogger.RegistroError(ex);
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.Mensaje));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.Mensaje), new FaultReason(ex.Detail.mensaje));
             }
 
             return resultado;
+        }
+
+
+        public void CambiarEstadoParaPartida(string numeroSala, string ganador)
+        {
+            AdministradorLogger administradorLogger = new AdministradorLogger(this.GetType());
+            try
+            {
+                AccesoSala.ActualizarEstadoPartida(numeroSala, ganador);
+            }
+            catch (FaultException<ManejadorExcepciones> ex)
+            {
+                administradorLogger.RegistroError(ex);
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Message), new FaultReason(ex.Detail.mensaje));
+            }
         }
 
         public string ObtenerUsuarioConMenorPuntaje(string numeroSala)
@@ -977,26 +923,10 @@ namespace ServicioGloomm
             catch (FaultException<ManejadorExcepciones> ex)
             {
                 administradorLogger.RegistroError(ex);
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.Mensaje));
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Detail.Mensaje), new FaultReason(ex.Detail.mensaje));
             }
 
             return jugadorConMenorPuntaje;
-        }
-
-
-
-        public void CambiarEstadoParaPartida(string numeroSala, string ganador)
-        {
-            AdministradorLogger administradorLogger = new AdministradorLogger(this.GetType());
-            try
-            {
-                AccesoSala.ActualizarEstadoPartida(numeroSala, ganador);
-            }
-            catch (FaultException<ManejadorExcepciones> ex)
-            {
-                administradorLogger.RegistroError(ex);
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Message));
-            }
         }
     }
 

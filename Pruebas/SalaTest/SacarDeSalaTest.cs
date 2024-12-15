@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Pruebas.SalaTest
 {
     [TestClass]
-    public class ServicioJuegoTests
+    public class SacarDeSalaTest
     {
         private ServicioJuego servicioJuego;
 

@@ -21,10 +21,7 @@ namespace Pruebas.SalaTest
         public void SetUp()
         {
             servicioJuego = new ServicioJuego();
-
-            // Limpiar las estructuras de datos estáticas antes de cada prueba
-            typeof(ServicioJuego).GetField("mensajes", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).SetValue(null, new Queue<Chat>());
-            typeof(ServicioJuego).GetField("jugadoresPartida", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).SetValue(null, new Dictionary<string, IChatCallback>());
+            servicioJuego.AsegurarSalaExistente("Sala1");
         }
 
         [TestMethod]

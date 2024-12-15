@@ -52,13 +52,7 @@ namespace Pruebas.SalaTest
         {
             using (var contexto = new EntidadesGloom())
             {
-                var participante = contexto.Participantes.FirstOrDefault(s => s.NombreUsuario == "Jugador010");
-                if (participante != null)
-                {
-                    contexto.Participantes.Remove(participante);
-                    contexto.SaveChanges();
-                }
-
+              
                 var sala = contexto.Sala.FirstOrDefault(s => s.IdSala == "Omagaaaaa");
                 if (sala != null)
                 {

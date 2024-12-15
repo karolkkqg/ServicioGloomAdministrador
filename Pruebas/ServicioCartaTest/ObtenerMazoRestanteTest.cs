@@ -17,7 +17,7 @@ namespace Pruebas.ServicioCartaTest
         [TestMethod]
         public void ObtenerMazoRestante_CartasDisponibles_DevuelveTrue()
         {
-            
+
             var cartasEsperadas = new List<Carta>
             {
                 new Carta { identificador = "Carta1.png", valor = 10, tipo = "modificador" },
@@ -28,30 +28,30 @@ namespace Pruebas.ServicioCartaTest
 
             var servicio = new ServicioJuego();
 
-            
+
             var resultado = servicio.ObtenerMazoRestante();
 
-            
+
             Assert.IsTrue(resultado, "El método debería devolver true porque hay cartas disponibles.");
         }
 
         [TestMethod]
         public void ObtenerMazoRestante_SinCartas_DevuelveFalse()
         {
-            
+
             var servicio = new ServicioJuego();
 
-            
+
             var resultado = servicio.ObtenerMazoRestante();
 
-            
+
             Assert.IsFalse(resultado, "El método debería devolver false porque no hay cartas disponibles.");
         }
 
         [TestMethod]
         public void ObtenerMazoRestante_AgregarCartasDespues_DevuelveTrueCuandoSeAgreganCartas()
         {
-            
+
             var cartasIniciales = new List<Carta>
             {
                 new Carta { identificador = "Carta1.png", valor = 10, tipo = "modificador" }

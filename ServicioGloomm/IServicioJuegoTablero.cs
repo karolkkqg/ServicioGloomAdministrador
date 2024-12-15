@@ -50,7 +50,6 @@ namespace ServicioGloomm
         [OperationContract(IsOneWay = true)]
         void AplicarCartaMuerte(string numeroSala, string nombreUsuario, string personajeObjetivo);
 
-
         [OperationContract(IsOneWay = true)]
         void SolicitarExpulsion(string solicitante, string jugadorObjetivo, string numeroSala);
 
@@ -58,17 +57,18 @@ namespace ServicioGloomm
         void TerminarPartidaNormal(string numeroSala);
 
         [OperationContract]
-        bool EsSalaActiva(string numeroSala);
-
-        [OperationContract(IsOneWay = true)]
-        void IncrementarTurnos(string numeroSala);
-
-        [OperationContract]
         void BorrarEstructurasPorSala(string numeroSala);
 
         [OperationContract]
         List<string> ObtenerJugadoresPartida(string numeroSala);
 
+        [OperationContract]
+        List<string> ObtenerJugadoresVivos(string numeroSala);
+
+        [OperationContract]
+        void RegistrarVotoExpulsion(string votante, string jugadorObjetivo, bool votoAFavor);
+
+        
     }
 
     [ServiceContract]
@@ -92,8 +92,8 @@ namespace ServicioGloomm
         [OperationContract(IsOneWay = true)]
         void EnviarGanador(string jugador);
 
-        //[OperationContract(IsOneWay = true)]
-        //void ActualizarJugadorMuerto(string jugadorMuerto);
+        [OperationContract(IsOneWay = true)]
+        void ActualizarJugadorMuerto(string jugadorMuerto);
 
         [OperationContract(IsOneWay = true)]
         void NotificarVotacionExpulsion(string jugadorPropuesto);
@@ -103,6 +103,10 @@ namespace ServicioGloomm
 
         [OperationContract(IsOneWay = true)]
         void ActualizarInterfazExpulsion(string jugadorExpulsado);
+
+        [OperationContract(IsOneWay = true)]
+        void NotificarResultadoVotacion(string mensaje);
+
     }
 
     

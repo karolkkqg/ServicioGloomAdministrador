@@ -30,7 +30,7 @@ namespace ServicioGloomm
             return listaSalas;
         }
 
-        public List<String> ObtenrParticipantesDeJuego(string identificadorSala)
+        public List<String> ObtenerParticipantesDeJuego(string identificadorSala)
         {
             var participantes = AccesoSala.ObtenerParticipantesDeSala(identificadorSala);
 
