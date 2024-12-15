@@ -42,26 +42,7 @@ namespace ServicioGloomm
 
         }
 
-        /*public void ActualizarSalasParaTodos()
-        {
-            var listaActualizada = ObtenerSalasActivasConEstado();
-            foreach (var callback in usuariosSalaCallback.Values)
-            {
-                callback.ActualizarSalasActivas(listaActualizada);
-            }
-        }*/
-        /*
-        public void NotificarResultadoUnirseASala(string idUsuario, string idSala, bool esExitoso)
-        {
-            if (usuariosSalaCallback.TryGetValue(idUsuario, out var callback))
-            {
-                callback.ResultadoUnirseASala(idSala, salasActivasEnMemoria[idSala].codigo, esExitoso);
-            }
-<<<<<<< HEAD
-        }
+        
 
-=======
-        }*/
->>>>>>> 936f47926b14da06fc7b45166957ae1bf59032a1
     }
 }

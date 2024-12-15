@@ -88,7 +88,7 @@ namespace ServicioGloomm
             }
         }
 
-        private void AsegurarSalaExistente(string numeroSala)
+        public void AsegurarSalaExistente(string numeroSala)
         {
 
             if (!salaJugadores.ContainsKey(numeroSala))

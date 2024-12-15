@@ -86,10 +86,12 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AmistadTest\AgregarSolcitudAmistadTest.cs" />
-    <Compile Include="AmistadTest\CambiarEstadoSolicitudTest.cs" />
-    <Compile Include="AmistadTest\ObtenerAmigosDelJugadorTest.cs" />
-    <Compile Include="AmistadTest\ObtenerSolicitudesJugadorTest.cs" />
+    <Compile Include="AmistadTest\EnviarSolcitudAmistadTest.cs" />
+    <Compile Include="AmistadTest\ValidarSolicitudAmistadTest.cs" />
+    <Compile Include="AmistadTest\ObtenerListaAmigoTest.cs" />
+    <Compile Include="AmistadTest\ObtenerSolicitudesDeAmistadPorJugadorTest.cs" />
+    <Compile Include="AmistadTest\ObtenerCorreoAmigoTest.cs" />
+    <Compile Include="AmistadTest\ArchivarAmistadTest.cs" />
     <Compile Include="JugadorTest\ActualizarJugadorABaseDeDatosTest.cs" />
     <Compile Include="JugadorTest\AgregarJugadorABaseDeDatosTest.cs" />
     <Compile Include="JugadorTest\AgregarJugadorInvitadoTest.cs" />
@@ -100,26 +102,29 @@
     <Compile Include="SalaTest\AgregarParticipanteTest.cs" />
     <Compile Include="SalaTest\AgregarPartidaABaseDeDatosTest.cs" />
     <Compile Include="SalaTest\BuscarCodigoSalaTest.cs" />
-    <Compile Include="SalaTest\BuscarPartidaTest.cs" />
+    <Compile Include="ServicioCreacionPartidaTest\BuscarSalaExistenteTest.cs" />
     <Compile Include="SalaTest\ConectarConSala.cs" />
     <Compile Include="SalaTest\CrearPartidaTest.cs" />
     <Compile Include="SalaTest\EmpezarPartidaTest.cs" />
     <Compile Include="SalaTest\ObtenerJugadoresConectadosTest.cs" />
     <Compile Include="SalaTest\ObtenerPersonajesUsadosTest.cs" />
-    <Compile Include="SalaTest\ObtenerUsuariosYPersonajesTest.cs" />
+    <Compile Include="ServicioCreacionPartidaTest\ObtenerUsuariosYPersonajesTest.cs" />
     <Compile Include="SalaTest\SacarATodosLosJugadoresDeSalaTest.cs" />
     <Compile Include="SalaTest\SacarDeSalaTest.cs" />
     <Compile Include="SalaTest\SeleccionarPersonajeTest.cs" />
     <Compile Include="SalaTest\ObtenerSalasActivasConEstadoTest.cs" />
     <Compile Include="SalaTest\UnirseASalaPublicaNormalTest.cs" />
     <Compile Include="SalaTest\ObtenerCodigoSalaTest.cs" />
-    <Compile Include="SalaTest\SalirDeSalaTest.cs" />
     <Compile Include="SalaTest\ObtenerFamiliaSeleccionadaTest.cs" />
+    <Compile Include="SalaTest\UnirseASalaPrivadaNormalTest.cs" />
+    <Compile Include="SalaTest\UnirseASalaPrivadaMiniHistoriaTest.cs" />
     <Compile Include="SalaTest\ValidarFamiliaSeleccionadaTest.cs" />
     <Compile Include="ServicioCartaTest\AgregarCartaAMazoJugadorTest.cs" />
     <Compile Include="ServicioCartaTest\ObtenerCartasBonusTest.cs" />
     <Compile Include="ServicioCartaTest\QuitarCartaDeMazoJugadorExternoTest.cs" />
     <Compile Include="ServicioCartaTest\ObtenerMazoRestanteTest.cs" />
+    <Compile Include="ServicioChatTest\ObtenerHistorialMensajesTest.cs" />
+    <Compile Include="ServicioChatTest\AgregarJugadorAChatTest.cs" />
     <Compile Include="ServicioCreacionPartidaTest\ObtenerFamiliasYPersonajesPorUsuarioTest.cs" />
     <Compile Include="ServicioCreacionPartidaTest\ObtenerFamiliaPorJugadorTest.cs" />
     <Compile Include="ServicioCreacionPartidaTest\ObtenerFamiliasYPersonajesTest.cs" />
@@ -127,7 +132,7 @@
     <Compile Include="ServicioCreacionPartidaTest\ValidarPartidaNoIniciadaTest.cs" />
     <Compile Include="ServicioJuegoTableroTest\AgregarCastigoTest.cs" />
     <Compile Include="ServicioJuegoTableroTest\EliminarJugadorDeJuegoTest.cs" />
-    <Compile Include="ServicioJuegoTableroTest\SumarVidaPersonajeTest.cs" />
+    <Compile Include="SalaTest\SumarVidaPersonajeTest.cs" />
     <Compile Include="SalaTest\ValidacionPersonajesSeleccionadosTest.cs" />
     <Compile Include="SalaTest\ObtenerHistorialPartidasTest.cs" />
     <Compile Include="SalaTest\ObtenerParticipantesDeSalaTest.cs" />
@@ -142,8 +147,10 @@
     <Compile Include="ServicioJuegoTableroTest\IniciarPartidaPorAdministradorTest.cs" />
     <Compile Include="ServicioJuegoTableroTest\ObtenerCartasSobrantesTest.cs" />
     <Compile Include="ServicioJuegoTableroTest\ObtenerJugadorActualTest.cs" />
-    <Compile Include="ServicioJuegoTableroTest\TerminarPartidaMinijuegoTest.cs" />
-    <Compile Include="ServicioJuegoTableroTest\SolicitarExpulsionTest.cs" />
+    <Compile Include="ServicioJuegoTableroTest\MatarJugadorTest.cs" />
+    <Compile Include="SalaTest\SolicitarExpulsionTest.cs" />
+    <Compile Include="ServicioSalaMiniHistoriaTest\ConectarConSalaMiniPartidaTest.cs" />
+    <Compile Include="ServicioSalaNormalTest\ConectarConSalaNormalTest.cs" />
     <Compile Include="SpyCallbackCalculatorService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

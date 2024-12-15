@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using System.ServiceModel;
 
-namespace Pruebas
+namespace Pruebas.SalaTest
 {
     [TestClass]
     public class AgregarPartidaABaseDeDatosTest
@@ -16,6 +16,7 @@ namespace Pruebas
 
         public void TestInitialize()
         {
+            LimpiarDatosDePrueba();
             sala = new BibliotecaClases.Sala
             {
                 nombreSala = "Bellakos",

@@ -43,8 +43,6 @@ namespace ServicioGloomm
         [FaultContract(typeof(ManejadorExcepciones))]
         List<Sala> ObtenerSalasActivasConEstado();
 
-        [OperationContract]
-        void SalirDeSala(string idSala, string idUsuario);
 
         [OperationContract]
         List<string> ObtenerFamiliaSeleccionada(string idSala);

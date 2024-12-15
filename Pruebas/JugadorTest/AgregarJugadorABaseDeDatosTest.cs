@@ -12,7 +12,7 @@ using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServicioGloom.Tests
+namespace Pruebas.JugadorTest
 {
     [TestClass()]
     public class AgregarJugadorABaseDeDatosTest

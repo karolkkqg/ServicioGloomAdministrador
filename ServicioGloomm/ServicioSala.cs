@@ -85,8 +85,6 @@ namespace ServicioGloomm
                     jugadoresEnSala[sala.idSala].Add(sala.idAdministrador);
 
 
-                    //ActualizarSalasParaTodos();
-
                     return resultado;
                 }
             }
@@ -426,35 +424,6 @@ namespace ServicioGloomm
             }
         }
 
-        /*public List<BibliotecaClases.Sala> ObtenerSalasActivas()
-        {
-            AdministradorLogger administradorLogger = new AdministradorLogger(this.GetType());
-            try
-            {
-                var salasAccesoDatos = AccesoSala.ObtenerSalasEnPartida();
-
-                var salasBibliotecaClases = salasAccesoDatos.Select(s => new BibliotecaClases.Sala
-                {
-                    idSala = s.IdSala,
-                    nombreSala = s.NombreSala,
-                    tipoSala = s.TipoSala,
-                    tipoPartida = s.TipoPartida,
-                    noJugadores = s.NoJugadores,
-                    codigo = s.Codigo,
-                    idAdministrador = s.IdAdministrador,
-                    fecha = s.Fecha,
-                    ganador = s.Ganador
-                }).ToList();
-
-                return salasBibliotecaClases;
-            }
-            catch (FaultException<ManejadorExcepciones> ex)
-            {
-                administradorLogger.RegistroError(ex);
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Message));
-            }
-
-        }*/
 
         public List<BibliotecaClases.Sala> ObtenerSalasActivasConEstado()
         {
@@ -474,27 +443,7 @@ namespace ServicioGloomm
 
 
 
-        public void SalirDeSala(string idSala, string idUsuario)
-        {/*
-            if (jugadoresEnSala.ContainsKey(idSala) && jugadoresEnSala[idSala].Remove(idUsuario))
-            {
-                if (jugadoresEnSala[idSala].Count == 0)
-                {
-                    jugadoresEnSala.Remove(idSala);
-                    salasActivasEnMemoria.Remove(idSala);
-                }
-                ActualizarSalasParaTodos();
-            }*/
-        }
-
-        /*public void ActualizarSalasParaTodos()
-        {
-            var listaActualizada = ObtenerSalasActivasConEstado();
-            foreach (var callback in usuariosSalaCallback.Values)
-            {
-                callback.ActualizarSalasActivas(listaActualizada);
-            }
-        }*/
+        
 
 
         public Dictionary<string, string> ObtenerFamiliaPorJugador(string numeroSala)
@@ -556,8 +505,6 @@ namespace ServicioGloomm
         {
             var resultado = new Dictionary<string, (string familia, List<(string nombrePersonaje, int vida)> personajes)>();
 
-            try
-            {
                 if (!jugadoresEnSala.ContainsKey(numeroSala))
                 {
                     return resultado;
@@ -580,21 +527,10 @@ namespace ServicioGloomm
                         {
                             resultado[usuario] = (familia, personajesFamilia);
                         }
-                        else
-                        {
-                            Console.WriteLine($"No se encontró una familia válida para el usuario {usuario}");
-                        }
                     }
-                    else
-                    {
-                        Console.WriteLine($"El usuario {usuario} no tiene personajes asociados.");
-                    }
+                    
                 }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error en ObtenerFamiliaYPersonajesPorUsuario: {ex.Message}");
-            }
+
 
             return resultado;
         }
@@ -634,8 +570,7 @@ namespace ServicioGloomm
             return false;
         }
 
-<<<<<<< HEAD
-=======
+
         public void UnirseASalaPublicaNormal(string idSala, string idUsuario)
         {
             if (salasActivasEnMemoria.TryGetValue(idSala, out var sala) && sala.tipoPartida == "Pública" && sala.tipoSala == "Normal")
@@ -645,7 +580,7 @@ namespace ServicioGloomm
                     jugadoresEnSala[idSala] = new HashSet<string>();
                 }
                 jugadoresEnSala[idSala].Add(idUsuario);
-                usuariosSalaCallback[idUsuario] = OperationContext.Current.GetCallbackChannel<IBusquedaPartidaCallback>();
+                //usuariosSalaCallback[idUsuario] = OperationContext.Current.GetCallbackChannel<IBusquedaPartidaCallback>();
                 
             }
             else
@@ -666,8 +601,8 @@ namespace ServicioGloomm
                 jugadoresEnSala[idSala] = new HashSet<string>();
             }
             jugadoresEnSala[idSala].Add(idUsuario);
-            usuariosSalaCallback[idUsuario] = OperationContext.Current.GetCallbackChannel<IBusquedaPartidaCallback>();
-            //ActualizarSalasParaTodos();
+            //usuariosSalaCallback[idUsuario] = OperationContext.Current.GetCallbackChannel<IBusquedaPartidaCallback>();
+            
             
         }
 
@@ -685,12 +620,12 @@ namespace ServicioGloomm
                 jugadoresEnSala[idSala] = new HashSet<string>();
             }
             jugadoresEnSala[idSala].Add(idUsuario);
-            usuariosSalaCallback[idUsuario] = OperationContext.Current.GetCallbackChannel<IBusquedaPartidaCallback>();
-            //ActualizarSalasParaTodos();
+            //usuariosSalaCallback[idUsuario] = OperationContext.Current.GetCallbackChannel<IBusquedaPartidaCallback>();
+            
             
         }
 
->>>>>>> 936f47926b14da06fc7b45166957ae1bf59032a1
+
         private void FamiliaEnSeleccion(string numeroSala, string nombreFamilia)
         {
             if (familiasSeleccionadasPorSala[numeroSala].Contains(nombreFamilia))
@@ -879,7 +814,6 @@ namespace ServicioGloomm
         public void AplicarCartaMuerte(string numeroSala, string nombreUsuario, string personajeObjetivo)
         {
 
-
             ValidarPersonajeObjetivo(personajeObjetivo);
 
             ValidarUsuarioObjetivo(nombreUsuario);
@@ -998,6 +932,7 @@ namespace ServicioGloomm
                 throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Detail.codigo, ex.Message));
             }
         }
+
     }
 
 }

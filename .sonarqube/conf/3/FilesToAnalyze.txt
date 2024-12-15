@@ -1,0 +1,4 @@
+﻿C:\5to Semestre\Tecnologías para la construcción de software\Intento 1\Host\Program.cs
+C:\5to Semestre\Tecnologías para la construcción de software\Intento 1\Host\Properties\AssemblyInfo.cs
+C:\5to Semestre\Tecnologías para la construcción de software\Intento 1\Host\App.config
+C:\5to Semestre\Tecnologías para la construcción de software\Intento 1\Host\packages.config

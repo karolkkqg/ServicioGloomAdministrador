@@ -149,6 +149,11 @@ namespace Pruebas.ServicioJuegoTableroTest
             {
                 throw new NotImplementedException();
             }
+
+            void IJuegoAdministradorCallback.NotificarResultadoVotacion(string mensaje)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

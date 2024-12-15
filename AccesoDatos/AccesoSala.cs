@@ -83,9 +83,9 @@ namespace AccesoDatos
                 using (var contexto = new EntidadesGloom())
                 {
                     var salas = contexto.Sala
-                .Where(s => s.Ganador != "Sin ganador" &&
-                            contexto.Participantes.Any(p => p.IdPartida == s.IdSala && p.NombreUsuario == nombreJugador))
-                .ToList();
+        .Where(s => s.Ganador != "Sin ganador" &&
+                    s.Ganador != "En partida" &&
+                    contexto.Participantes.Any(p => p.IdPartida == s.IdSala && p.NombreUsuario == nombreJugador)).ToList();
 
                     return salas;
                 }

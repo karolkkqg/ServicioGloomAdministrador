@@ -1,4 +1,5 @@
 ﻿using AccesoDatos;
+using BibliotecaClases;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -18,23 +19,27 @@ namespace Pruebas.SalaTest
         public void TestInitialize()
         {
             LimpiarDatosDePrueba();
+            
+                LimpiarDatosDePrueba();
             nuevaSala = new BibliotecaClases.Sala
-            {
-                idSala = "Omagaaaaa",
-                nombreSala = "Sala de Juegos",
-                tipoSala = "Normal",
-                tipoPartida = "Pública",
-                noJugadores = 4,
-                codigo = "12345",
-                idAdministrador = "TacoDePato",
-                fecha = DateTime.Now.ToString(),
-                ganador = "Jugador1"
-            };
+                {
+                    nombreSala = "Bellakos",
+                    tipoSala = "Normal",
+                    tipoPartida = "Publica",
+                    noJugadores = 4,
+                    codigo = "123450000",
+                    idAdministrador = "Pinku",
+                    fecha = "22/10/24",
+                    ganador = "Ninguno",
+                    idSala = "123450000",
+
+                };
+            
             AccesoSala.AgregarPartidaABaseDeDatos(nuevaSala);
 
             nuevaParticipante = new BibliotecaClases.Sala
             {
-                idSala = "Omagaaaaa",
+                idSala = "123450000",
                 jugador = "Jugador010"
             };
         }
@@ -59,12 +64,17 @@ namespace Pruebas.SalaTest
                     contexto.SaveChanges();
                 }
 
-                var sala = contexto.Sala.FirstOrDefault(s => s.IdSala == "Omagaaaaa");
-                if (sala != null)
-                {
+               
+                    var sala = contexto.Sala
+                        .FirstOrDefault(p => p.NombreSala == "Bellakos");
+
+                    if (sala != null)
+                    {
                     contexto.Sala.Remove(sala);
                     contexto.SaveChanges();
-                }
+                    }
+
+                
 
             }
         }

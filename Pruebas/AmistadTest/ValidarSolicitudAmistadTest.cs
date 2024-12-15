@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Pruebas.AmistadTest
 {
     [TestClass]
-    public class ObtenerSolicitudesJugadorTest
+    public class ValidarSolicitudAmistadTest
     {
         private AccesoDatos.Jugador jugador;
         private AccesoDatos.Jugador jugadorAmigo;
@@ -41,7 +41,11 @@ namespace Pruebas.AmistadTest
                 Icono = "Icono2"
             };
             AccesoJugador.AgregarJugadorABaseDeDatos(jugadorAmigo);
+        }
 
+        [TestMethod]
+        public void TestCambiarEstadoSolicitudAceptadoExitoso()
+        {
             Amistad solicitud = new Amistad
             {
                 nombreUsuario = new BibliotecaClases.Jugador { nombreUsuario = "UsuarioTest1" },
@@ -49,25 +53,12 @@ namespace Pruebas.AmistadTest
                 estado = "Pendiente"
             };
             AccesoAmigos.AgregarSolcitudAmistad(solicitud);
+
+            solicitud.estado = "Aceptado";
+            int filasAfectadas = AccesoAmigos.CambiarEstadoSolicitud(solicitud);
+
+            Assert.AreEqual(1, filasAfectadas, "El estado de la solicitud no fue actualizado correctamente.");
         }
-
-        [TestMethod]
-        public void TestObtenerSolicitudesDelJugadorExitoso()
-        {
-            var amigos = AccesoAmigos.ObtenerSolicitudesJugador("UsuarioTest2");
-
-            Assert.AreEqual(1, amigos.Count);
-            Assert.AreEqual("UsuarioTest1", amigos.First().NombreUsuario);
-        }
-
-        [TestMethod]
-        public void TestObtenerSolicitudesDelJugadorSinSolicitudes()
-        {
-            var amigos = AccesoAmigos.ObtenerSolicitudesJugador("UsuarioSinAmigos");
-
-            Assert.AreEqual(0, amigos.Count);
-        }
-
 
         [TestCleanup]
         public void LimpiarDatosDePrueba()

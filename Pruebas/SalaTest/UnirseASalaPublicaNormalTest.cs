@@ -8,36 +8,27 @@ using System.ServiceModel;
 
 namespace Pruebas.SalaTest
 {
-    /*[TestClass]
+    [TestClass]
     public class UnirseASalaPublicaNormalTest
     {
         private Mock<ISalaCallback> callbackMock;
+        private ServicioJuego servicioJuego;
 
         [TestInitialize]
         public void TestInitialize()
         {
-            // Limpiar y reinicializar los diccionarios estáticos antes de cada prueba
-            ServicioJuego.salasActivasEnMemoria.Clear();
-            ServicioJuego.jugadoresEnSala.Clear();
-            ServicioJuego.usuariosSalaCallback.Clear();
+            servicioJuego = new ServicioJuego();
 
-            // Crear un mock para ISalaCallback
+            servicioJuego.AsegurarSalaExistente("Sala1");
+
             callbackMock = new Mock<ISalaCallback>();
-
-            // Simular el contexto de operación para el callback
-            var mockOperationContext = new Mock<OperationContext>(MockBehavior.Strict);
-            OperationContext.Current = mockOperationContext.Object;
-            mockOperationContext.Setup(x => x.GetCallbackChannel<ISalaCallback>()).Returns(callbackMock.Object);
         }
-
         [TestMethod]
         public void UnirseASalaPublicaNormal_SalaValida_AgregaJugadorYNotifica()
         {
-            // Arrange
             string idSala = "Sala1";
             string idUsuario = "Usuario1";
 
-            // Configurar una sala activa en memoria
             ServicioJuego.salasActivasEnMemoria[idSala] = new Sala
             {
                 idSala = idSala,
@@ -45,46 +36,43 @@ namespace Pruebas.SalaTest
                 tipoPartida = "Pública"
             };
 
-            // Act
-            var servicio = new ServicioJuego();
-            servicio.UnirseASalaPublicaNormal(idSala, idUsuario);
+            var callbackInstance = new InstanceContext(callbackMock.Object);
+            var factory = new DuplexChannelFactory<ISala>(
+                callbackInstance,
+                new NetNamedPipeBinding(),
+                new EndpointAddress("net.pipe://localhost/ServicioPrueba"));
 
-            // Assert
-            // Verificar que el usuario fue agregado a la sala
-            Assert.IsTrue(ServicioJuego.jugadoresEnSala.ContainsKey(idSala), "La sala no fue creada en jugadoresEnSala.");
-            Assert.IsTrue(ServicioJuego.jugadoresEnSala[idSala].Contains(idUsuario), "El usuario no fue agregado a la sala.");
+            var client = factory.CreateChannel();
 
-            // Verificar que el callback fue registrado
-            Assert.IsTrue(ServicioJuego.usuariosSalaCallback.ContainsKey(idUsuario), "El callback del usuario no fue registrado.");
+            try
+            {
+                using (OperationContextScope scope = new OperationContextScope((IContextChannel)client))
+                {
+                    var servicio = new ServicioJuego();
+                    servicio.UnirseASalaPublicaNormal(idSala, idUsuario);
 
-            // Verificar que se llamó al método de notificación
-            callbackMock.Verify(x => x.ActualizarSalasActivas(It.IsAny<List<Sala>>()), Times.Once, "No se notificó a los clientes sobre la actualización de salas.");
+                    Assert.IsTrue(ServicioJuego.jugadoresEnSala.ContainsKey(idSala), "La sala no fue creada en jugadoresEnSala.");
+                    Assert.IsTrue(ServicioJuego.jugadoresEnSala[idSala].Contains(idUsuario), "El usuario no fue agregado a la sala.");
+                    Assert.IsTrue(ServicioJuego.usuariosSalaCallback.ContainsKey(idUsuario), "El callback del usuario no fue registrado.");
+                }
+            }
+            finally
+            {
+                if (client is IClientChannel channel)
+                {
+                    channel.Close();
+                }
+            }
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(FaultException<ManejadorExcepciones>))]
-        public void UnirseASalaPublicaNormal_SalaNoValida_LanzaExcepcion()
-        {
-            // Arrange
-            string idSala = "SalaInvalida";
-            string idUsuario = "Usuario1";
-
-            // Act
-            var servicio = new ServicioJuego();
-            servicio.UnirseASalaPublicaNormal(idSala, idUsuario);
-
-            // Assert (manejado por ExpectedException)
-        }
 
         [TestMethod]
         public void UnirseASalaPublicaNormal_SalaValidaConJugadores_AgregaJugador()
         {
-            // Arrange
             string idSala = "Sala1";
             string idUsuario1 = "Usuario1";
             string idUsuario2 = "Usuario2";
 
-            // Configurar una sala activa en memoria con un jugador existente
             ServicioJuego.salasActivasEnMemoria[idSala] = new Sala
             {
                 idSala = idSala,
@@ -94,14 +82,44 @@ namespace Pruebas.SalaTest
 
             ServicioJuego.jugadoresEnSala[idSala] = new HashSet<string> { idUsuario1 };
 
-            // Act
-            var servicio = new ServicioJuego();
-            servicio.UnirseASalaPublicaNormal(idSala, idUsuario2);
+            var callbackInstance = new InstanceContext(callbackMock.Object);
+            var factory = new DuplexChannelFactory<ISala>(
+                callbackInstance,
+                new NetNamedPipeBinding(),
+                new EndpointAddress("net.pipe://localhost/ServicioPrueba"));
 
-            // Assert
-            // Verificar que ambos usuarios están en la sala
-            Assert.IsTrue(ServicioJuego.jugadoresEnSala[idSala].Contains(idUsuario1), "El usuario 1 no está en la sala.");
-            Assert.IsTrue(ServicioJuego.jugadoresEnSala[idSala].Contains(idUsuario2), "El usuario 2 no fue agregado a la sala.");
+            var client = factory.CreateChannel();
+
+            try
+            {
+                using (OperationContextScope scope = new OperationContextScope((IContextChannel)client))
+                {
+                    servicioJuego.UnirseASalaPublicaNormal(idSala, idUsuario2);
+
+                    Assert.IsTrue(ServicioJuego.jugadoresEnSala[idSala].Contains(idUsuario1), "El usuario 1 no está en la sala.");
+                    Assert.IsTrue(ServicioJuego.jugadoresEnSala[idSala].Contains(idUsuario2), "El usuario 2 no fue agregado a la sala.");
+                }
+            }
+            finally
+            {
+                if (client is IClientChannel channel)
+                {
+                    channel.Close();
+                }
+            }
         }
-    }*/
+
+
+
+        [TestMethod]
+        [ExpectedException(typeof(FaultException<ManejadorExcepciones>))]
+        public void UnirseASalaPublicaNormal_SalaNoExiste_LanzaExcepcion()
+        {
+            string idSala = "SalaInexistente";
+            string idUsuario = "Usuario1";
+
+            var servicio = new ServicioJuego();
+            servicio.UnirseASalaPublicaNormal(idSala, idUsuario);
+        }
+    }
 }

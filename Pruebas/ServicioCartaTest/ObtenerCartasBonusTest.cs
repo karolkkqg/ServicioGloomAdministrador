@@ -108,6 +108,11 @@ namespace Pruebas.ServicioCartaTest
 
             public void ResultadoUnirseASala(string idSala, string codigo, bool esExitoso) => throw new NotImplementedException();
             public void SacarDeSalaATodosJugadores() => throw new NotImplementedException();
+
+            void IJuegoAdministradorCallback.NotificarResultadoVotacion(string mensaje)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

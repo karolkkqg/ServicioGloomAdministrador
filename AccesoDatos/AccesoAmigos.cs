@@ -66,8 +66,7 @@ namespace AccesoDatos
                 {
                     var amistad = contexto.Amigos
                         .Where(a =>
-                            (a.NombreUsuario == nombreUsuario1 && a.JugadorAmigo == nombreUsuario2 && a.Estado == "Aceptado") ||
-                            (a.NombreUsuario == nombreUsuario2 && a.JugadorAmigo == nombreUsuario1 && a.Estado == "Aceptado"))
+                            (a.NombreUsuario == nombreUsuario1 && a.JugadorAmigo == nombreUsuario2 && a.Estado == "Aceptado"))
                         .FirstOrDefault();
 
                     if (amistad != null)
@@ -172,7 +171,7 @@ namespace AccesoDatos
             {
                 using (var contexto = new EntidadesGloom())
                 {
-                    var amigosAceptados = contexto.Amigos.Where(a => (a.NombreUsuario == nombreUsuario || a.JugadorAmigo == nombreUsuario)
+                    var amigosAceptados = contexto.Amigos.Where(a => (a.NombreUsuario == nombreUsuario)
                 && a.Estado == "Aceptado").ToList();
                     return amigosAceptados;
                 }

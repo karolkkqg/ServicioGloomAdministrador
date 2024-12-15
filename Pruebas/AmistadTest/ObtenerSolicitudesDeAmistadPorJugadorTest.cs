@@ -4,14 +4,13 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Pruebas.AmistadTest
 {
     [TestClass]
-    public class ObtenerAmigosDelJugadorTest
+    public class ObtenerSolicitudesDeAmistadPorJugadorTest
     {
         private AccesoDatos.Jugador jugador;
         private AccesoDatos.Jugador jugadorAmigo;
@@ -47,24 +46,24 @@ namespace Pruebas.AmistadTest
             {
                 nombreUsuario = new BibliotecaClases.Jugador { nombreUsuario = "UsuarioTest1" },
                 jugadorAmigo = new BibliotecaClases.Jugador { nombreUsuario = "UsuarioTest2" },
-                estado = "Aceptado"
+                estado = "Pendiente"
             };
             AccesoAmigos.AgregarSolcitudAmistad(solicitud);
         }
 
         [TestMethod]
-        public void TestObtenerAmigosDelJugadorExitoso()
+        public void TestObtenerSolicitudesDelJugadorExitoso()
         {
-            var amigos = AccesoAmigos.ObtenerAmigosDelJugador("UsuarioTest1");
+            var amigos = AccesoAmigos.ObtenerSolicitudesJugador("UsuarioTest2");
 
             Assert.AreEqual(1, amigos.Count);
-            Assert.AreEqual("UsuarioTest2", amigos.First().JugadorAmigo);
+            Assert.AreEqual("UsuarioTest1", amigos.First().NombreUsuario);
         }
 
         [TestMethod]
-        public void TestObtenerAmigosDelJugadorSinAmigos()
+        public void TestObtenerSolicitudesDelJugadorSinSolicitudes()
         {
-            var amigos = AccesoAmigos.ObtenerAmigosDelJugador("UsuarioSinAmigos");
+            var amigos = AccesoAmigos.ObtenerSolicitudesJugador("UsuarioSinAmigos");
 
             Assert.AreEqual(0, amigos.Count);
         }

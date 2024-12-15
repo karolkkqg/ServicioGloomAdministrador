@@ -69,6 +69,9 @@ namespace ServicioGloomm
         [OperationContract]
         List<string> ObtenerJugadoresPartida(string numeroSala);
 
+        [OperationContract]
+        void RegistrarVotoExpulsion(string votante, string jugadorObjetivo, bool votoAFavor);
+
     }
 
     [ServiceContract]
@@ -92,8 +95,8 @@ namespace ServicioGloomm
         [OperationContract(IsOneWay = true)]
         void EnviarGanador(string jugador);
 
-        //[OperationContract(IsOneWay = true)]
-        //void ActualizarJugadorMuerto(string jugadorMuerto);
+        [OperationContract(IsOneWay = true)]
+        void ActualizarJugadorMuerto(string jugadorMuerto);
 
         [OperationContract(IsOneWay = true)]
         void NotificarVotacionExpulsion(string jugadorPropuesto);
@@ -103,6 +106,9 @@ namespace ServicioGloomm
 
         [OperationContract(IsOneWay = true)]
         void ActualizarInterfazExpulsion(string jugadorExpulsado);
+
+        [OperationContract(IsOneWay = true)]
+        void NotificarResultadoVotacion(string mensaje);
     }
 
     

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Pruebas.SalaTest
 {
     [TestClass]
-    public class BuscarPartidaTest
+    public class BuscarSalaExistenteTest
     {
         private BibliotecaClases.Sala sala;
 
@@ -19,6 +19,7 @@ namespace Pruebas.SalaTest
 
         public void TestInitialize()
         {
+            LimpiarDatosDePrueba();
             sala = new BibliotecaClases.Sala
             {
                 nombreSala = "Bellakos",
@@ -39,9 +40,9 @@ namespace Pruebas.SalaTest
         [TestMethod()]
         public void TestBuscarpartidaExitoso()
         {
-            var resultado= AccesoSala.BuscarPartida("12345", "12345");
+            var resultado = AccesoSala.BuscarPartida("Bellakos", "12345");
 
-           Assert.IsNotNull(resultado);
+            Assert.IsNotNull(resultado);
 
             LimpiarDatosDePrueba();
         }

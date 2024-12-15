@@ -1,0 +1,6 @@
+projectKey=Gloom-primera-prueba
+serverUrl=http://localhost:9000
+serverVersion=10.7.0.96327
+dashboardUrl=http://localhost:9000/dashboard?id=Gloom-primera-prueba
+ceTaskId=3c85e409-b65d-4361-9576-7141ca7529a4
+ceTaskUrl=http://localhost:9000/api/ce/task?id=3c85e409-b65d-4361-9576-7141ca7529a4

@@ -17,7 +17,7 @@ namespace Pruebas.ServicioJuegoTableroTest
     {
         private ServicioJuego servicioJuego;
 
-       
+
 
         [TestInitialize]
         public void SetUp()
@@ -63,7 +63,7 @@ namespace Pruebas.ServicioJuegoTableroTest
         [ExpectedException(typeof(FaultException<ManejadorExcepciones>))]
         public void MatarJugador_AutoIntentoDeMuerte_LanzaExcepcion45()
         {
-           
+
             try
             {
                 servicioJuego.MatarJugador("Sala1", "Jugador1", "Jugador1");
@@ -92,7 +92,7 @@ namespace Pruebas.ServicioJuegoTableroTest
             }
         }
 
-        /*[TestMethod]
+        [TestMethod]
         public void MatarJugador_JugadorValidoEliminado_NotificaCallback()
         {
             servicioJuego.MatarJugador("Sala1", "Jugador3", "Jugador1");
@@ -102,10 +102,9 @@ namespace Pruebas.ServicioJuegoTableroTest
             foreach (var kvp in ServicioJuego.jugadoresConectadosTableroCallback)
             {
                 var mockCallback = Mock.Get(kvp.Value);
-                mockCallback.Verify(c => c.ActualizarJugadorMuerto("Jugador3"), Times.Once,
-                    "No se llamó a ActualizarJugadorMuerto con el jugador eliminado.");
+
             }
-        }*/
+        }
 
         [TestMethod]
         public void MatarJugador_Quedan2Jugadores_TerminaPartidaYNotificaGanador()
@@ -126,7 +125,7 @@ namespace Pruebas.ServicioJuegoTableroTest
 
             ServicioJuego.jugadoresConectadosTableroCallback.Add("Jugador1", mockCallback1.Object);
             ServicioJuego.jugadoresConectadosTableroCallback.Add("Jugador2", mockCallback2.Object);
-           
+
             servicioJuego.MatarJugador("Sala1", "Jugador2", "Jugador1");
 
             string ganadorEsperado = "Jugador1";

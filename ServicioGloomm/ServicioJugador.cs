@@ -94,11 +94,6 @@ namespace ServicioGloomm
                 return resultado;
 
             }
-            catch (InvalidOperationException ex)
-            {
-                administradorLogger.RegistroError(ex);
-                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones(ex.Message, ex.Message));
-            }
             catch (FaultException<ManejadorExcepciones> ex)
             {
                 administradorLogger.RegistroError(ex);
@@ -110,7 +105,7 @@ namespace ServicioGloomm
         {
             if (usuarioConectado.Contains(nombreUsuario))
             {
-                throw new InvalidOperationException("46");
+                throw new FaultException<ManejadorExcepciones>(new ManejadorExcepciones("46", "Ya ha iniciado sesión anteriormente, cierre la sesión de ese dispositivo si desea continuar aquí "));
             }
         }
 

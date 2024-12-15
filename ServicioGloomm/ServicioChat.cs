@@ -30,6 +30,10 @@ namespace ServicioGloomm
             {
                 jugadoresPartida.Add(nombreUsuario, callback);
             }
+            else
+            {
+                jugadoresPartida[nombreUsuario] = callback;
+            }
         }
 
 

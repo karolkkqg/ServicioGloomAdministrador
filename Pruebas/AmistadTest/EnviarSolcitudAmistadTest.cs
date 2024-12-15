@@ -4,10 +4,10 @@ using System.Linq;
 using BibliotecaClases;
 using System.ServiceModel;
 
-namespace AccesoDatos.Tests
+namespace Pruebas.AmistadTest
 {
     [TestClass()]
-    public class AgregarSolicitudAmistadTest
+    public class EnviarSolicitudAmistadTest
     {
         private AccesoDatos.Jugador jugador;
         private AccesoDatos.Jugador jugadorAmigo;
